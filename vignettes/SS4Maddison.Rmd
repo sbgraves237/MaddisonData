@@ -1,0 +1,24 @@
+---
+title: "SS4Maddison"
+author: "Spencer Graves"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Abstract
+
+This vignette describes how to fit a state-space model to `MaddisonData` using `GBR` and `USA` as examples. 
+
+## Get the data 
+
+```{r getData}
+library(MaddisonData)
+str(GBR <- MaddisonData[MaddisonData$ISO=='GBR', ])
+str(USA <- MaddisonData[MaddisonData$ISO=='USA', ])
+```
+
+oops: USA starts with 1820, but Maddison has data on `pop` in year 1 and `gdppc` in 1650. 

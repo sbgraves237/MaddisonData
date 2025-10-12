@@ -4,3 +4,4 @@ MaddisonData.Rproj
 .RData
 .Ruserdata
 .DS_Store
+inst/.gitignore

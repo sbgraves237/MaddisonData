@@ -2,4 +2,5 @@
 
 export(MadDateRanges)
 export(getMaddisonSources)
+export(logMaddison)
 export(path_package2)

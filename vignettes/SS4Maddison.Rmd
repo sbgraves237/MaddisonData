@@ -2,7 +2,11 @@
 title: "SS4Maddison"
 author: "Spencer Graves"
 date: "`r Sys.Date()`"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{UpdateMaddisonData}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
@@ -21,4 +25,3 @@ str(GBR <- MaddisonData[MaddisonData$ISO=='GBR', ])
 str(USA <- MaddisonData[MaddisonData$ISO=='USA', ])
 ```
 
-oops: USA starts with 1820, but Maddison has data on `pop` in year 1 and `gdppc` in 1650. 

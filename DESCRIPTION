@@ -1,7 +1,7 @@
 Package: MaddisonData
 Title: Maddison Project Data
 Version: 0.0.1
-Date: 2025-10-12
+Date: 2025-10-13
 Authors@R: 
     person("Spencer", "Graves", , "spencer.graves@effectivedefense.org", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0005-5387-729X"))

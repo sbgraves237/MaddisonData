@@ -5,3 +5,7 @@ MaddisonData.Rproj
 .Ruserdata
 .DS_Store
 inst/.gitignore
+MaddisonCountries.rdb
+MaddisonData.rdb
+MaddisonSources.rdb
+MaddisonYears.rdb

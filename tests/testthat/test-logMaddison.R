@@ -1,5 +1,5 @@
 test_that("logMaddison", {
-  expect_error(logMaddison('x'))
+  expect_error(logMaddison(c('GBR', 'x')))
 #  
   MDPa_ <- MaddisonData
   MDPa_$lnGDPpc <- log(MDPa_$gdppc)

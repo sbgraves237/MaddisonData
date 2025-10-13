@@ -13,7 +13,7 @@ A data frame with 4 columns:
 \item{year}{numeric year starting with year 1 CE}
 \item{gdppc}{Gross domestic product (GDP) per capita in 2011 dollars at
 puchasing power parity (PPP)}
-\item{pop}{population}
+\item{pop}{Population, mid-year (thousands)}
 }
 }
 }

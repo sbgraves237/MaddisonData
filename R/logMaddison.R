@@ -32,13 +32,14 @@ logMaddison <- function(ISO=NULL){
 ## 1. check ISO
 ## 
   if(is.null(ISO) || (length(ISO)<1)){
-    logMad <- MaddisonData
+    logMad <- MaddisonData::MaddisonData
   } else {
 ##
 ## 2. check ISO 
 ## 
-    testthat::expect_true(all(ISO %in% MaddisonCountries$ISO))
-    logMad <- MaddisonData[MaddisonData$ISO %in% ISO, ]
+    testthat::expect_true(all(ISO %in% MaddisonData::MaddisonCountries$ISO))
+    logMad <- MaddisonData::MaddisonData[
+      MaddisonData::MaddisonData$ISO %in% ISO, ]
   }
 ##
 ## 3. add logs

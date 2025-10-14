@@ -7,8 +7,8 @@
 getMaddisonSources(
   ISO = NULL,
   plot = TRUE,
-  sources = MaddisonSources,
-  years = MaddisonYears
+  sources = MaddisonData::MaddisonSources,
+  years = MaddisonData::MaddisonYears
 )
 }
 \arguments{

@@ -4,7 +4,7 @@ author: "Spencer Graves"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{UpdateMaddisonData}
+  %\VignetteIndexEntry{SS4Maddison}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

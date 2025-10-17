@@ -1,7 +1,7 @@
 Package: MaddisonData
 Title: Maddison Project Data
-Version: 0.0.1
-Date: 2025-10-13
+Version: 1.0.0
+Date: 2025-10-17
 Authors@R: 
     person("Spencer", "Graves", , "spencer.graves@effectivedefense.org", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0005-5387-729X"))
@@ -16,6 +16,7 @@ Depends:
 Suggests: 
     ggplot2, 
     ipumsr,
+    KFAS, 
     knitr,
     lubridate,
     readxl,

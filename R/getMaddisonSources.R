@@ -21,9 +21,13 @@
 #' codes for the countries included in the analysis or a [`data.frame`] with 
 #' the first column being the ISO codes followed by `yearBegin` and optionally 
 #' `yearEnd`. 
-#' @param plot if TRUE: Return all relevant `MaddisonSources`. If FALSE, 
-#' returns all sources in `ISO` only if there are less than a dozen; return a 
-#' citation for the Maddison Project Database. Default = TRUE. 
+#' @param plot logical indicating whether the use does nor does not include 
+#' plotting data. The Maddison project requires citing all relevant 
+#' `MaddisonSources` if they are plotted, denoted here by `plot` = TRUE. If no 
+#' data are plotted, then the Maddison project requires citing all sources only 
+#' if less than a dozen are used, denoted here by `plot` = FALSE, in which 
+#' case, the Maddison project requires a specific project-level citation. 
+#' Default = TRUE. 
 #' @param sources list of sources in the format of [`MaddisonSources`]; 
 #' default is `MaddisonSources`. 
 #' @param years `data.frame` in the format of [`MaddisonYears`]; default is 

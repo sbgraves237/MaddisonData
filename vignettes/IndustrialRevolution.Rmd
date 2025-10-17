@@ -1,0 +1,70 @@
+---
+title: "Industrial Revolution began in 1649?"
+author: "Spencer Graves"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{IndustrialRevolution}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Abstract
+
+Acemoglu and Robinson (2012) say that the Industrial Revolution began in England following the English Bill of Rights of 1689. Maddison Project data suggest that it began close to 40 years earlier when the English chopped the head off of King Charles I for abuse of power as discussed in this brief note,. 
+
+## Introduction  
+
+The [`MaddisonData`](https://github.com/sbgraves237/MaddisonData) package for R includes a [`plotMaddison`](https://github.com/sbgraves237/MaddisonData/blob/main/man/plotMaddison.Rd) function that makes it easy to plot [Maddison project data](https://www.rug.nl/ggdc/historicaldevelopment/maddison/?lang=en) for any country or group of countries plus a  [`getMaddisonSources`](https://github.com/sbgraves237/MaddisonData/blob/main/man/getMaddisonSources.Rd) function that makes it easy to get the citations required for publication of such a plot. We illustrate that here applied to England / Great Britain / the United Kingdom, whose 3-letter ISO code is `GBR`. We select that, because it suggests that the [Industrial Revolution](https://en.wikipedia.org/wiki/Industrial_Revolution) began in England close to 1649, when the English chopped the head off their [King Charles I](https://en.wikipedia.org/wiki/Charles_I_of_England) for abuse of power, 40 years earlier than the English Bill of Rights, which Acemoglu and Robinson (2012) claim started the Industrial Revolution 
+
+## Plot
+
+```{r plotMad}
+library(MaddisonData)
+
+(GBRgdppc <- MaddisonData::plotMaddison('GBR')) 
+head(GBR <- subset(MaddisonData::MaddisonData, ISO=='GBR'))
+```
+
+The first two observations in these data are for 1000 and 1252. The two biggest events in that period are the Norman Conquest and the Magna Carta. Dates are conveniently given in the Wikipiedia article on ["Timeline of English history"](https://en.wikipedia.org/wiki/Timeline_of_English_history). 
+
+```{r UKevents1}
+UKevents1 <- matrix(c(
+  "1066-10-14", "Norman Conquest", 
+  '1215-06-16', 'Magna Carta' 
+), ncol=2)
+```
+
+Let's zoom in on 1250 to 1350. 
+
+```{r 1250_1350}
+GBRgdppc + ggplot2::coord_cartesian(xlim=c(1250, 1350), ylim=c(0.9, 2)) 
+```
+
+`GDPpc` declines from 1252 to around 1290 then rebounds until around 1300, when it mostly stops growing until around 1349, the year after the [Black Death](https://en.wikipedia.org/wiki/Black_Death) arrived in England. 
+
+```{r UKevents2}
+UKevents2 <- rbind(UKevents1, 
+  c("1348-06", "Black Death") )
+subset(GBR, (1347<year) & (year<1451))
+(GBRpop <- plotMaddison('GBR', 'pop'))
+head(GBRpop@data)
+```
+
+The first three years  for which Maddison project has data on population are 1, 1000, and 1500. The Wikipedia article on the [Black Death](https://en.wikipedia.org/wiki/Black_Death) quotes [Geoffrey the Baker](Geoffrey the Baker) as having written in 1350, "The seventh year after it began, it came to England ... . [It] so wasted the people that scarce the tenth person of any sort was left alive." Clearly, no such population crash appears in these data. 
+
+## Maddison sources
+
+Let's get the sources that the Maddison Project says we should cite if we want to publish a plot like this: 
+
+```{r MadSources}
+(GBRsources <- MaddisonData::getMaddisonSources('GBR'))
+```
+
+Before we publish a plot like this we want to annotate it with major events, especially transitions in head of state ... 
+
+

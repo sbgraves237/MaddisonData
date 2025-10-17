@@ -97,20 +97,27 @@ plotMaddison <- function(ISO, y, lty, col, lwd,
          class(data) ) 
   }
   dat0 <- cbind(data[, c(1:2)], data[, Y]/scaley)
-  names(dat0) <- c('ISO', 'x_', 'y_')
+#  names(dat0) <- c('ISO', 'x_', 'y_')
   dat <- dat0[!is.na(dat0[, 3]), ]
 ##
 ## 5. plot ISO
 ##  
+# I could plot multiple lines with one aes call with stacked data
+# but I don't know how to control the colors, line types, widths, individually
+# doing that.
+#  iso <- ISO 
+#  dat1 <- select(dat, ISO %in% iso)
   sel1 <- (dat[, 1] == ISO[1])
   dat1 <- dat[sel1, 2:3]
+  Y_ <- names(data)[Y]
+  Aest <- paste("ggplot2::aes(x = year, y =", Y_, ')')
+  Aes <- eval(parse(text=Aest))
   if(logy){
-    p1 <- (ggplot2::ggplot(dat1, ggplot2::aes(x_, y_)) 
-           + ggplot2::scale_y_log10()
+    p1 <- (ggplot2::ggplot(dat1, Aes) + ggplot2::scale_y_log10()
            + ggplot2::geom_path(color = col[1], linetype = lty[1], 
                                 linewidth = lwd[1]))
   } else {
-    p1 <- (ggplot2::ggplot(dat1, ggplot2::aes(x_, y_)) 
+    p1 <- (ggplot2::ggplot(dat1, Aes) 
          + ggplot2::geom_path(color = col[1], linetype = lty[1], 
                      linewidth = lwd[1]))
   }
@@ -140,9 +147,12 @@ plotMaddison <- function(ISO, y, lty, col, lwd,
   if(nISO>1)for(i in 2:nISO){
     seli <- (dat[, 1] == ISO[i])
     dati <- dat[seli, 2:3]
-    p1 <- (p1 + ggplot2::geom_path(data=dati, ggplot2::aes(x_, y_), 
-                  color = col[i], linetype = lty[i], 
-                  linewidth = lwd[i]))
+    p1 <- (p1 + ggplot2::geom_path(data=dati, Aes, 
+                                   color = col[i], linetype = lty[i], 
+                                   linewidth = lwd[i]))
+#    p1 <- (p1 + ggplot2::geom_path(data=dati, ggplot2::aes(x_, y_), 
+#                  color = col[i], linetype = lty[i], 
+#                  linewidth = lwd[i]))
     if(!missing(ISOlabelLoc)){
       ISOlli <- which(rownames(ISOlabelLoc) == ISO[i])
       if(length(ISOlli)>0){

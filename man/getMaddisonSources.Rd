@@ -17,9 +17,13 @@ codes for the countries included in the analysis or a \code{\link{data.frame}} w
 the first column being the ISO codes followed by \code{yearBegin} and optionally
 \code{yearEnd}.}
 
-\item{plot}{if TRUE: Return all relevant \code{MaddisonSources}. If FALSE,
-returns all sources in \code{ISO} only if there are less than a dozen; return a
-citation for the Maddison Project Database. Default = TRUE.}
+\item{plot}{logical indicating whether the use does nor does not include
+plotting data. The Maddison project requires citing all relevant
+\code{MaddisonSources} if they are plotted, denoted here by \code{plot} = TRUE. If no
+data are plotted, then the Maddison project requires citing all sources only
+if less than a dozen are used, denoted here by \code{plot} = FALSE, in which
+case, the Maddison project requires a specific project-level citation.
+Default = TRUE.}
 
 \item{sources}{list of sources in the format of \code{\link{MaddisonSources}};
 default is \code{MaddisonSources}.}

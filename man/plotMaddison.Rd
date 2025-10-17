@@ -57,9 +57,9 @@ code.
 \examples{
 (GBR_USA <- plotMaddison(c('GBR', 'USA'))) # GBR, USA
 GBR_USA+ggplot2::coord_cartesian(xlim=c(1500, 1850)) # for only 1500-1850 
-GBR_USA+ggplot2::coord_cartesian(xlim=c(1925, 1950), ylim=c(7, 17)) 
+GBR_USA+ggplot2::coord_cartesian(xlim=c(1600, 1700), ylim=c(7, 17)) 
 
-ISOll <- matrix(c(1500, 1750, 1.5, .67), 2, dimnames=
+ISOll <- matrix(c(1500, 1750, 1.4, .7), 2, dimnames=
             list(c('GBR', 'USA'), c('x', 'yAdj')))
 (GBR_USA_ <- plotMaddison(c('GBR', 'USA'), ISOlabelLoc=ISOll) ) 
 # label the lines

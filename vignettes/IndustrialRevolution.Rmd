@@ -55,7 +55,71 @@ subset(GBR, (1347<year) & (year<1451))
 head(GBRpop@data)
 ```
 
-The first three years  for which Maddison project has data on population are 1, 1000, and 1500. The Wikipedia article on the [Black Death](https://en.wikipedia.org/wiki/Black_Death) quotes [Geoffrey the Baker](Geoffrey the Baker) as having written in 1350, "The seventh year after it began, it came to England ... . [It] so wasted the people that scarce the tenth person of any sort was left alive." Clearly, no such population crash appears in these data. 
+The first three years for which the Maddison project has data on population are 1, 1000, and 1500. The Wikipedia article on the [Black Death](https://en.wikipedia.org/wiki/Black_Death) quotes [Geoffrey the Baker](Geoffrey the Baker) as having written in 1350, "The seventh year after it began, it came to England ... . [It] so wasted the people that scarce the tenth person of any sort was left alive." Clearly, no such population crash appears in these data. 
+
+```{r 1300_1700}
+GBRgdppc + ggplot2::coord_cartesian(xlim=c(1300, 1700), ylim=c(0.98, 2.7)) 
+```
+
+`GDPpc` grew until around 1390 and then was mostly flat until 1649. 
+
+```{r 1380_1400}
+GBRgdppc + ggplot2::coord_cartesian(xlim=c(1380, 1400), ylim=c(1.5, 2)) 
+```
+
+I don't know what happened around 1390. Richard II ruled from 1377 to 1399. The British economy was stagnant until close to the time that King Charles I was beheaded 1649-01-30. 
+
+Let's zoom on on various parts of this history. 
+
+```{r 1640_1700}
+GBRgdppc + ggplot2::coord_cartesian(xlim=c(1640, 1700), ylim=c(1.5, 3)) 
+GBRgdppc + ggplot2::coord_cartesian(xlim=c(1640, 1730), ylim=c(1.5, 3)) 
+GBRgdppc + ggplot2::coord_cartesian(xlim=c(1640, 1920), ylim=c(1.5, 9)) 
+GBRgdppc + ggplot2::coord_cartesian(xlim=c(1900, 2022), ylim=c(6, 40)) 
+GBRgdppc + ggplot2::coord_cartesian(xlim=c(2000, 2022), ylim=c(30, 40)) 
+```
+
+
+
+```{r UKevents3}
+UKevents3 <- rbind(UKevents2, 
+  c("1377-06-21", "King Richard II"), 
+  c('1399-09-40', 'King Henry IV'), 
+  c('1413-03-21', 'King Henry V'), 
+  c('1422-09-01', 'King Henry VI'), 
+  c('1461-03-04', 'King Edward IV'), 
+  c('1483-04-09', 'King Edward V'), 
+  c('1483-06-26', 'King Richard III'), 
+  c('1485-08-22', 'House of Tudor'), 
+  c('1603-03-24', 'King James I'), 
+  c('1625-03-27', 'King Charles I'), 
+  c('1649-02-14', 'Lord Protector Oliver Cromwell'), 
+  c('1658-09-03', 'Lord Protector Richard Cromwell'), 
+  c('1660-05-29', 'King Charles II'), 
+  c('1685-02-06', 'King James II'), 
+  c('1689-01-01', 'William and Mary'), 
+  c('1702-03-01', 'Queene Ann'), 
+  c('1714-08-01', 'King George I'), 
+  c('1722-06-22', 'King George II'), 
+  c('1760-10-25', 'King George III'), 
+  c('1820-01-29', 'King George IV'), 
+  c('1830-06-29', 'King William IV'), 
+  c('1837-06-20', 'Queen Victoria'), 
+  c('1901-01-22', 'King Edward VII'), 
+  c('1910-05-06', 'King George V'), 
+  c('1936-01-20', 'King Edward VIII'), 
+  c('1936-12-11', 'King George VI'), 
+  c('1952-02-06', 'Queen Elizabeth II'), 
+  c('1997-05-02', 'PM Tony Blair'), 
+  c('2007-06-27', 'PM Gordon Brown'), 
+  c('2010-05-11', 'PM David Cameron'),
+  c('2016-07-13', 'PM Theresa May'), 
+  c('2019-07-22', 'PM Boris Johnson'), 
+  c('2022-09-06', 'PM Liz Truss') 
+  )
+```
+
+
 
 ## Maddison sources
 
@@ -63,8 +127,19 @@ Let's get the sources that the Maddison Project says we should cite if we want t
 
 ```{r MadSources}
 (GBRsources <- MaddisonData::getMaddisonSources('GBR'))
+# the print method for a tibble does not print all; 
+# convert to a data.frame: 
+as.data.frame(GBRsources)
 ```
 
 Before we publish a plot like this we want to annotate it with major events, especially transitions in head of state ... 
 
+## Bibliography 
 
+Acemoglu and Robinson (2012) *Why Nations Fail* (Crown) 
+
+Broadberry, S.N., B. Campbell, A. Klein, M. Overton and B. van Leeuwen (2015), British Economic Growth 1270-1870 (Cambridge: Cambridge University Press) for England 1252-1700 and for Great Britain 1700-1870. 
+
+Conference Board: Total Economy Database (TED) for GDP pc since 2008 and population since 1990. 
+
+Scheidel, W. and Friesen, S. J., ‘The size of the economy and the distribution of income in the Roman Empire’, Journal of Roman Studies, 99 (2009, pp. 61–91) for the population at year 1. 

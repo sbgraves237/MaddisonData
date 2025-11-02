@@ -33,10 +33,10 @@
 #' \describe{
 #'   \item{ISO}{3-letter country code. }
 #'   \item{yearBegin, yearEnd}{
-#'      Numeric year begin and end for each source.
+#'      Integer year begin and end for each source.
 #'    }
 #'   \item{sourceNum}{
-#'      Number of the source for these years in `MaddisonSources`
+#'      Integer of the source within `MaddisonSources[[ISO]]`. 
 #'   }
 #' }
 #'

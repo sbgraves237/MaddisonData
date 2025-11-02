@@ -31,10 +31,10 @@ A \code{\link{data.frame}}s with 4 columns:
 \describe{
 \item{ISO}{3-letter country code. }
 \item{yearBegin, yearEnd}{
-Numeric year begin and end for each source.
+Integer year begin and end for each source.
 }
 \item{sourceNum}{
-Number of the source for these years in \code{MaddisonSources}
+Integer of the source within \code{MaddisonSources[[ISO]]}.
 }
 }
 }

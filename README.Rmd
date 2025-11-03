@@ -49,4 +49,3 @@ pak::pak("sbgraves237/MaddisonData")
 library(MaddisonData)
 ## basic example code
 ```
-

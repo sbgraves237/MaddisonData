@@ -105,6 +105,7 @@ ctryRgn <- sort(with(MaddisonData0, unique(
             paste0(countrycode, region))))
 MaddisonCountries <- cbind(cd_Ctry, 
             region = substring(ctryRgn, 4))
+rownames(MaddisonCountries) <- MaddisonCountries$ISO
 save(MaddisonCountries, file='MaddisonCountries.rdb', 
        compress=TRUE)  
 # CANNOT include MaddisonCountries.rda in .Rbuildignore, 

@@ -4,7 +4,11 @@ test_that("MaddisonCountries", {
     subset(MaddisonCountries, ISO=='GBR', country), 
     'United Kingdom'
   )
-# Find Yugoslavia 
+# Or   
+  expect_contains(
+    MaddisonCountries['GBR', 'country'], 'United Kingdom'
+  )
+  # Find Yugoslavia 
   YUG0 <- data.frame(ISO='YUG', 
                      country='Former Yugoslavia', 
                      region = 'Eastern Europe')

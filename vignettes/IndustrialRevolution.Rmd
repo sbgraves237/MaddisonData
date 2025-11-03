@@ -1,5 +1,5 @@
 ---
-title: "Industrial Revolution began in 1649?"
+title: "Industrial Revolution began in 1689 or 1649?"
 author: "Spencer Graves"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -15,11 +15,62 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Abstract
 
-Acemoglu and Robinson (2012) say that the Industrial Revolution began in England following the English Bill of Rights of 1689. Maddison Project data suggest that it began close to 40 years earlier when the English chopped the head off of King Charles I for abuse of power as discussed in this brief note,. 
+Acemoglu and Robinson (2012) say that the Industrial Revolution began in England following the English Bill of Rights of 1689. Maddison Project data suggest that it began close to 40 years earlier when the English chopped the head off of [King Charles I](https://en.wikipedia.org/wiki/Charles_I_of_England) for abuse of power as discussed in this brief note,. 
 
 ## Introduction  
 
 The [`MaddisonData`](https://github.com/sbgraves237/MaddisonData) package for R includes a [`plotMaddison`](https://github.com/sbgraves237/MaddisonData/blob/main/man/plotMaddison.Rd) function that makes it easy to plot [Maddison project data](https://www.rug.nl/ggdc/historicaldevelopment/maddison/?lang=en) for any country or group of countries plus a  [`getMaddisonSources`](https://github.com/sbgraves237/MaddisonData/blob/main/man/getMaddisonSources.Rd) function that makes it easy to get the citations required for publication of such a plot. We illustrate that here applied to England / Great Britain / the United Kingdom, whose 3-letter ISO code is `GBR`. We select that, because it suggests that the [Industrial Revolution](https://en.wikipedia.org/wiki/Industrial_Revolution) began in England close to 1649, when the English chopped the head off their [King Charles I](https://en.wikipedia.org/wiki/Charles_I_of_England) for abuse of power, 40 years earlier than the English Bill of Rights, which Acemoglu and Robinson (2012) claim started the Industrial Revolution 
+
+## World leader in GDPpc by year
+
+Let's compute the world leader in `gdppc` for each year in MaddisonData. 
+
+```{r leaders}
+library(MaddisonData)
+
+MaddisonLeaders <- function(except=character(0), y='gdppc', 
+                            group='ISO', data=MaddisonData){
+  years <- table(MaddisonData$year)
+  nYrs <- length(years)
+  Leaders <- data.frame(year=as.integer(names(years)), 
+                      maxGDPpc=rep(0L, nYrs), ISO=rep('', nYrs))
+  rownames(Leaders) <- names(years)
+  ctries <- with(MaddisonCountries, ISO[!(ISO %in% except)])
+  nCtries <- length(ctries)
+  for(i in 1:nCtries){
+    dati <- subset(MaddisonData, ISO==ctries[i])
+    yrsi <- as.character(dati$year)
+
+    seleq <- which(Leaders[yrsi, 'maxGDPpc']==dati$gdppc)
+    if(length(seleq)>0){
+      Leaders[yrsi, 3][seleq] <- 
+        paste0(Leaders[yrsi, 3][seleq], ":", dati[seleq, 'ISO'])
+    }
+  
+    seli <- which(Leaders[yrsi, 'maxGDPpc'] < dati$gdppc)
+    if(length(seli)>0){
+      Leaders[yrsi, 2:3][seli, ] <- dati[seli, c(3, 1)]
+    }
+  }
+  Leaders
+}
+
+Leaders0 <- MaddisonLeaders()
+Leaders00 <- table(Leaders0$ISO)
+rownames(MaddisonCountries) <- MaddisonCountries$ISO
+MaddisonCountries[names(Leaders00), 1:2]
+```
+
+Let's redo this without countries like `ARE`, `KWT`, and `QAT` that have clearly NOT been technology leaders. 
+
+```{r leaders1}
+Leaders1 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT'))
+Leaders10 <- table(Leaders1$ISO)
+MaddisonCountries[names(Leaders10), 1:2]
+```
+
+
+
 
 ## Plot
 

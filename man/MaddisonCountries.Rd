@@ -33,7 +33,7 @@ collates historical economic statistics from many sources.
 \examples{
 # Get the country for a countrycode (IS)
 subset(MaddisonCountries, ISO=='GBR', country)
-Or
+# Or
 Maddisoncountries['GBR', 'country']
 # Find Yugoslavia 
 subset(MaddisonCountries, grepl('Yugo', country), 1:3)

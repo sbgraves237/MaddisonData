@@ -21,7 +21,7 @@
 #' # Get the country for a countrycode (IS)
 #' subset(MaddisonCountries, ISO=='GBR', country)
 #' # Or
-#' Maddisoncountries['GBR', 'country']
+#' MaddisonCountries['GBR', 'country']
 #' # Find Yugoslavia 
 #' subset(MaddisonCountries, grepl('Yugo', country), 1:3)
 #' # number of countries by region 

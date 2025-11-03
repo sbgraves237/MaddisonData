@@ -13,6 +13,8 @@ A data frame with 3 columns:
 \item{country}{Country name used by the Maddison project}
 \item{region}{Geographic region including \code{country}}
 }
+
+Its \code{rownames} = \code{ISO}.
 }
 }
 \source{
@@ -31,6 +33,8 @@ collates historical economic statistics from many sources.
 \examples{
 # Get the country for a countrycode (IS)
 subset(MaddisonCountries, ISO=='GBR', country)
+Or
+Maddisoncountries['GBR', 'country']
 # Find Yugoslavia 
 subset(MaddisonCountries, grepl('Yugo', country), 1:3)
 # number of countries by region 

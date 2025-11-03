@@ -14,9 +14,14 @@
 #'   \item{country}{Country name used by the Maddison project}
 #'   \item{region}{Geographic region including `country`}
 #' }
+#' 
+#' Its `rownames` = `ISO`. 
+#' 
 #' @examples
 #' # Get the country for a countrycode (IS)
 #' subset(MaddisonCountries, ISO=='GBR', country)
+#' Or
+#' Maddisoncountries['GBR', 'country']
 #' # Find Yugoslavia 
 #' subset(MaddisonCountries, grepl('Yugo', country), 1:3)
 #' # number of countries by region 

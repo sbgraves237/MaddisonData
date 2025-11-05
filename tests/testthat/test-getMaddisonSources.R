@@ -45,4 +45,7 @@ test_that("getMaddisonSources", {
   GBR_USA1500_1790_ <- rbind(MDP1, GBRsince1500, USA_[-3,])
   row.names(GBR_USA1500_1790_) <- NULL
   expect_equal(GBR_USA1500_1790, GBR_USA1500_1790_) 
+# AUS 
+  AUS <- getMaddisonSources('AUS') # AUS: no special sources for AUS. 
+  expect_equal(AUS, MDPall[1:2, ])
 })

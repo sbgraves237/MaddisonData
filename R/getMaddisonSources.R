@@ -51,6 +51,7 @@
 #' getMaddisonSources(names(MaddisonSources)[1:12], FALSE) # only MDP 
 #' getMaddisonSources(data.frame(ISO=c('GBR', 'USA'), 
 #'              yearBegin=rep(1500, 2)) ) #GBR, USA since 1500 
+#' getMaddisonSources('AUS') # AUS: no special sources for AUS. 
 #' 
 #' @keywords manip 
 getMaddisonSources <- function(ISO=NULL, plot=TRUE, 
@@ -92,8 +93,10 @@ getMaddisonSources <- function(ISO=NULL, plot=TRUE,
         }
         isoSrc1 <- isoSrc[!nosel, ]
       } else isoSrc1 <- isoSrc
-      isoS <- cbind(ISO=iso, isoSrc1)
-      ISOsrc <- rbind(ISOsrc, isoS)
+      if(!is.null(isoSrc1)){ 
+        isoS <- cbind(ISO=iso, isoSrc1)
+        ISOsrc <- rbind(ISOsrc, isoS)
+      }
     }
 ## 
 ## 3. Add boilerplate

@@ -29,9 +29,11 @@ being \code{ISO} and \code{year} and \code{y} being the name of another column.}
 \item{x}{time variable. Default = \code{year}.}
 }
 \value{
-an \code{\link{data.frame}} with columns \code{yearBegin}, \code{yearEnd}, and
-\code{{{group}}} (default for the the third column = \code{ISO}) with an attribute
-\code{LeaderByYear} = a \code{data.frame} with columns, \code{year}, \code{maxGDPpc}, \code{ISO}.
+an \code{\link{data.frame}} with columns \verb{paste0(x, 'Begin)},
+\code{paste0(x, 'End')}, \code{paste0(y, '0')}, \code{paste0(y, '1')}, and \code{{{group}}}
+(defaults: \code{yearBegin}, \code{yearEnd}, \code{gdppc0}, \code{gdppc1}, and \code{ISO}) with an
+attribute \code{LeaderByYear} = a \code{data.frame} with columns, \code{{{x}}},
+\code{paste0('max', y)}, and \code{{{group}}} (defaults: \code{year}, \code{maxgdppc}, \code{ISO}).
 }
 \description{
 \code{MaddisonLeaders} computes the countries with the highest \code{gdppc} for each

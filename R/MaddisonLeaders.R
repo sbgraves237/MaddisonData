@@ -67,8 +67,8 @@ MaddisonLeaders <- function(except=character(0), y='gdppc',
       LeaderSum[i, 'yearEnd'] <- Leaders[j, 'year']
     } else {
       i <- i+1 
-      LeaderSum[i, c('yearBegin', 'yearEnd')] <- Leaders[i, 'year']
-      LeaderSum[i, 'ISO'] <- Leaders[i, 'ISO']
+      LeaderSum[i, c('yearBegin', 'yearEnd')] <- Leaders[j, 'year']
+      LeaderSum[i, 'ISO'] <- Leaders[j, 'ISO']
     }
   }
 ##

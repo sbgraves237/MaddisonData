@@ -12,6 +12,8 @@ test_that("MaddisonLeaders", {
   LbY0NA <- sapply(LeaderByYear0, function(x)sum(is.na(x)))
   expect_equal(LbY0NA, c(year=0, maxGDPpc=0, ISO=0))
   expect_gt(length(table(LeaderByYear0$ISO)), 1)
+  expect_equal(length(table(Leaders0$ISO)), 
+               length(table(LeaderByYear0$ISO)))
 # Presumed technology leaders without commodity leaders with narrow 
 # economies 
   Leaders1 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT')) 
@@ -27,4 +29,7 @@ test_that("MaddisonLeaders", {
   LbY1NA <- sapply(LeaderByYear1, function(x)sum(is.na(x)))
   expect_equal(LbY1NA, c(year=0, maxGDPpc=0, ISO=0))
   expect_gt(length(table(LeaderByYear1$ISO)), 1)
+  expect_equal(length(table(Leaders1$ISO)), 
+               length(table(LeaderByYear1$ISO)))
+  
 })

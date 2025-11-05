@@ -65,6 +65,7 @@ getMaddisonSources('GBR') # GBR
 getMaddisonSources(names(MaddisonSources)[1:12], FALSE) # only MDP 
 getMaddisonSources(data.frame(ISO=c('GBR', 'USA'), 
              yearBegin=rep(1500, 2)) ) #GBR, USA since 1500 
+getMaddisonSources('AUS') # AUS: no special sources for AUS. 
 
 }
 \keyword{manip}

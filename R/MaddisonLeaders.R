@@ -14,9 +14,11 @@
 #' being `ISO` and `year` and `y` being the name of another column. 
 #' @param x time variable. Default = `year`. 
 #' 
-#' @returns an [`data.frame`] with columns `yearBegin`, `yearEnd`, and 
-#' `{{group}}` (default for the the third column = `ISO`) with an attribute 
-#' `LeaderByYear` = a `data.frame` with columns, `year`, `maxGDPpc`, `ISO`. 
+#' @returns an [`data.frame`] with columns `paste0(x, 'Begin)`, 
+#' `paste0(x, 'End')`, `paste0(y, '0')`, `paste0(y, '1')`, and `{{group}}` 
+#' (defaults: `yearBegin`, `yearEnd`, `gdppc0`, `gdppc1`, and `ISO`) with an 
+#' attribute `LeaderByYear` = a `data.frame` with columns, `{{x}}`, 
+#' `paste0('max', y)`, and `{{group}}` (defaults: `year`, `maxgdppc`, `ISO`). 
 #' 
 #' @export
 #'
@@ -60,20 +62,26 @@ MaddisonLeaders <- function(except=character(0), y='gdppc',
 ##
   i <- 1
   LeaderSum <- data.frame(yearBegin=Leaders[1, 'year'], 
-                           yearEnd =Leaders[1, 'year'], 
-                           ISO = Leaders[1, 'ISO'])
+                          yearEnd =Leaders[1, 'year'], 
+                          gdppc0 = Leaders[1, 'maxGDPpc'], 
+                          gdppc1 = Leaders[1, 'maxGDPpc'], 
+                          ISO = Leaders[1, 'ISO'])
   for(j in 2:nYrs){
     if(Leaders[j, 'ISO']==Leaders[j-1, 'ISO']){
       LeaderSum[i, 'yearEnd'] <- Leaders[j, 'year']
+      LeaderSum[i, 'gdppc1'] <- Leaders[j, 'maxGDPpc']
     } else {
       i <- i+1 
       LeaderSum[i, c('yearBegin', 'yearEnd')] <- Leaders[j, 'year']
+      LeaderSum[i, c('gdppc0', 'gdppc1')] <- Leaders[j, 'maxGDPpc']
       LeaderSum[i, 'ISO'] <- Leaders[j, 'ISO']
     }
   }
 ##
 ## 3. Done
 ##
+  names(Leaders) <- c(x, paste0('max', y), group)
+  names(LeaderSum) <- c(paste0(x, c('Begin', 'End')), paste0(y, 0:1), group) 
   attr(LeaderSum, 'LeaderByYear') <- Leaders
   LeaderSum
 }

@@ -69,10 +69,10 @@ plotMaddison <- function(ISO, y, lty, col, lwd,
     if(length(y) != 1){
       print(y)
       stop('length(y) must be 1; is ', length(y))
-    }
+    } 
     if(!(y %in% names(data))){
         stop('y = ', y, ' not found in names(data) ')
-    } else { 
+    } else {
       Y <- which(names(data) == y)
     }
   }

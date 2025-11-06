@@ -15,8 +15,8 @@ test_that("MaddisonLeaders", {
   expect_gt(length(table(LeaderByYear0$ISO)), 1)
   expect_equal(length(table(Leaders0$ISO)), 
                length(table(LeaderByYear0$ISO)))
-# Presumed technology leaders without commodity leaders with narrow 
-# economies 
+# Presumed technology leaders 
+#   without obvious commodity leaders with narrow economies 
   Leaders1 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT')) 
   expect_in('data.frame', class(Leaders1))
   expect_equal(colnames(Leaders1), c(
@@ -33,5 +33,8 @@ test_that("MaddisonLeaders", {
   expect_gt(length(table(LeaderByYear1$ISO)), 1)
   expect_equal(length(table(Leaders1$ISO)), 
                length(table(LeaderByYear1$ISO)))
-  
+# since 16MadDat1600 <- subset(MaddisonData, year>1600)
+  MadDat1600 <- subset(MaddisonData, year>1600)
+  Leaders1600 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT'), data=MadDat1600)
+  expect_gt(min(Leaders1600$yearBegin), 1600)
 })

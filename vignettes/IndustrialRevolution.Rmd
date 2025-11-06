@@ -28,9 +28,9 @@ Let's compute the world leader in `gdppc` for each year in MaddisonData.
 ```{r leaders}
 library(MaddisonData)
 
-Leaders0 <- MaddisonLeaders()
+Leaders0 <- MaddisonData::MaddisonLeaders()
 Leaders00 <- table(Leaders0$ISO)
-MaddisonCountries[names(Leaders00), 1:2]
+MaddisonData::MaddisonCountries[names(Leaders00), 1:2]
 ```
 
 Let's redo this without countries like `ARE`, `KWT`, and `QAT` that seem NOT to have been technology leaders. 
@@ -38,7 +38,7 @@ Let's redo this without countries like `ARE`, `KWT`, and `QAT` that seem NOT to 
 ```{r leaders1}
 Leaders1 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT'))
 Leaders10 <- table(Leaders1$ISO)
-MaddisonCountries[names(Leaders10), 1:2]
+MaddisonData::MaddisonCountries[names(Leaders10), 1:2]
 ```
 
 Let's plot.  
@@ -71,8 +71,8 @@ tail(Leaders1)
 ```
 
 ```{r plotMad1600}
-MadDat1600 <- subset(MaddisonData, year>1600)
-Leaders1600 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT'), 
+MadDat1600 <- subset(MaddisonData::MaddisonData, year>1600)
+Leaders1600 <- MaddisonData::MaddisonLeaders(c('ARE', 'KWT', 'QAT'), 
                                data=MadDat1600)
 
 table(Leaders1600$ISO)
@@ -90,7 +90,7 @@ plotLeaders1600 + ggplot2::xlim(1601, 2022)
 
 The first two observations in these data are for 1000 and 1252. The two biggest events in that period are the Norman Conquest and the Magna Carta. Dates are conveniently given in the Wikipiedia article on ["Timeline of English history"](https://en.wikipedia.org/wiki/Timeline_of_English_history). 
 
-```{r UKevents1}
+```{r UKevents1, eval=FALSE}
 UKevents1 <- matrix(c(
   "1066-10-14", "Norman Conquest", 
   '1215-06-16', 'Magna Carta' 
@@ -99,13 +99,13 @@ UKevents1 <- matrix(c(
 
 Let's zoom in on 1250 to 1350. 
 
-```{r 1250_1350}
+```{r 1250_1350, eval=FALSE}
 GBRgdppc + ggplot2::coord_cartesian(xlim=c(1250, 1350), ylim=c(0.9, 2)) 
 ```
 
 `GDPpc` declines from 1252 to around 1290 then rebounds until around 1300, when it mostly stops growing until around 1349, the year after the [Black Death](https://en.wikipedia.org/wiki/Black_Death) arrived in England. 
 
-```{r UKevents2}
+```{r UKevents2, eval=FALSE}
 UKevents2 <- rbind(UKevents1, 
   c("1348-06", "Black Death") )
 subset(GBR, (1347<year) & (year<1451))
@@ -115,13 +115,13 @@ head(GBRpop@data)
 
 The first three years for which the Maddison project has data on population are 1, 1000, and 1500. The Wikipedia article on the [Black Death](https://en.wikipedia.org/wiki/Black_Death) quotes [Geoffrey the Baker](Geoffrey the Baker) as having written in 1350, "The seventh year after it began, it came to England ... . [It] so wasted the people that scarce the tenth person of any sort was left alive." Clearly, no such population crash appears in these data. 
 
-```{r 1300_1700}
+```{r 1300_1700, eval=FALSE}
 GBRgdppc + ggplot2::coord_cartesian(xlim=c(1300, 1700), ylim=c(0.98, 2.7)) 
 ```
 
 `GDPpc` grew until around 1390 and then was mostly flat until 1649. 
 
-```{r 1380_1400}
+```{r 1380_1400, eval=FALSE}
 GBRgdppc + ggplot2::coord_cartesian(xlim=c(1380, 1400), ylim=c(1.5, 2)) 
 ```
 
@@ -129,7 +129,7 @@ I don't know what happened around 1390. Richard II ruled from 1377 to 1399. The 
 
 Let's zoom on on various parts of this history. 
 
-```{r 1640_1700}
+```{r 1640_1700, eval=FALSE}
 GBRgdppc + ggplot2::coord_cartesian(xlim=c(1640, 1700), ylim=c(1.5, 3)) 
 GBRgdppc + ggplot2::coord_cartesian(xlim=c(1640, 1730), ylim=c(1.5, 3)) 
 GBRgdppc + ggplot2::coord_cartesian(xlim=c(1640, 1920), ylim=c(1.5, 9)) 
@@ -139,7 +139,7 @@ GBRgdppc + ggplot2::coord_cartesian(xlim=c(2000, 2022), ylim=c(30, 40))
 
 
 
-```{r UKevents3}
+```{r UKevents3, eval=FALSE}
 UKevents3 <- rbind(UKevents2, 
   c("1377-06-21", "King Richard II"), 
   c('1399-09-40', 'King Henry IV'), 
@@ -179,11 +179,12 @@ UKevents3 <- rbind(UKevents2,
 
 
 
+
 ## Maddison sources
 
 Let's get the sources that the Maddison Project says we should cite if we want to publish a plot like this: 
 
-```{r MadSources}
+```{r MadSources2, eval=FALSE}
 (GBRsources <- MaddisonData::getMaddisonSources('GBR'))
 # the print method for a tibble does not print all; 
 # convert to a data.frame: 

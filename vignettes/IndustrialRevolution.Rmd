@@ -28,40 +28,12 @@ Let's compute the world leader in `gdppc` for each year in MaddisonData.
 ```{r leaders}
 library(MaddisonData)
 
-MaddisonLeaders <- function(except=character(0), y='gdppc', 
-                            group='ISO', data=MaddisonData){
-  years <- table(MaddisonData$year)
-  nYrs <- length(years)
-  Leaders <- data.frame(year=as.integer(names(years)), 
-                      maxGDPpc=rep(0L, nYrs), ISO=rep('', nYrs))
-  rownames(Leaders) <- names(years)
-  ctries <- with(MaddisonCountries, ISO[!(ISO %in% except)])
-  nCtries <- length(ctries)
-  for(i in 1:nCtries){
-    dati <- subset(MaddisonData, ISO==ctries[i])
-    yrsi <- as.character(dati$year)
-
-    seleq <- which(Leaders[yrsi, 'maxGDPpc']==dati$gdppc)
-    if(length(seleq)>0){
-      Leaders[yrsi, 3][seleq] <- 
-        paste0(Leaders[yrsi, 3][seleq], ":", dati[seleq, 'ISO'])
-    }
-  
-    seli <- which(Leaders[yrsi, 'maxGDPpc'] < dati$gdppc)
-    if(length(seli)>0){
-      Leaders[yrsi, 2:3][seli, ] <- dati[seli, c(3, 1)]
-    }
-  }
-  Leaders
-}
-
 Leaders0 <- MaddisonLeaders()
 Leaders00 <- table(Leaders0$ISO)
-rownames(MaddisonCountries) <- MaddisonCountries$ISO
 MaddisonCountries[names(Leaders00), 1:2]
 ```
 
-Let's redo this without countries like `ARE`, `KWT`, and `QAT` that have clearly NOT been technology leaders. 
+Let's redo this without countries like `ARE`, `KWT`, and `QAT` that seem NOT to have been technology leaders. 
 
 ```{r leaders1}
 Leaders1 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT'))
@@ -69,17 +41,52 @@ Leaders10 <- table(Leaders1$ISO)
 MaddisonCountries[names(Leaders10), 1:2]
 ```
 
-
-
+Let's plot.  
 
 ## Plot
 
 ```{r plotMad}
 library(MaddisonData)
 
-(GBRgdppc <- MaddisonData::plotMaddison('GBR')) 
-head(GBR <- subset(MaddisonData::MaddisonData, ISO=='GBR'))
+plotLeaders1 <- MaddisonData::plotMaddison(names(Leaders10))
 ```
+
+`MaddisonSources` for all 15 leaders? 
+
+```{r MadSources}
+MadSources15 <- MaddisonData::getMaddisonSources(names(Leaders10))
+head(MadSources15)
+```
+
+How long was each country the leader? 
+
+```{r plotDur}
+  plot(yearEnd-yearBegin+1~yearBegin, Leaders1, log='y', las=1)
+
+Leaders1$dYrs0 <- with(Leaders1, yearEnd-yearBegin+1)
+Leaders1$dYrs1 <- c(tail(Leaders1$yearBegin, -1) - head(Leaders1$yearEnd, -1),
+                    NA)
+Leaders1
+tail(Leaders1)
+```
+
+```{r plotMad1600}
+MadDat1600 <- subset(MaddisonData, year>1600)
+Leaders1600 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT'), 
+                               data=MadDat1600)
+
+table(Leaders1600$ISO)
+
+plotLeaders1600 <- MaddisonData::plotMaddison(names(table(Leaders1600$ISO)))
+plotLeaders1600 + ggplot2::xlim(1601, 2022)
+
+```
+
+
+
+
+
+
 
 The first two observations in these data are for 1000 and 1252. The two biggest events in that period are the Norman Conquest and the Magna Carta. Dates are conveniently given in the Wikipiedia article on ["Timeline of English history"](https://en.wikipedia.org/wiki/Timeline_of_English_history). 
 

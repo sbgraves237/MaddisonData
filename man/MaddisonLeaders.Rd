@@ -45,6 +45,9 @@ Leaders0 <- MaddisonLeaders() # max GDPpc for each year.
 # Presumed technology leaders without commodity leaders with narrow 
 # economies 
 Leaders1 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT')) 
+# since 1600 
+MadDat1600 <- subset(MaddisonData, year>1600)
+Leaders1600 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT'), data=MadDat1600)
 
 }
 \keyword{manip}

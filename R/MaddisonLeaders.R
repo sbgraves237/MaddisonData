@@ -15,9 +15,14 @@
 #' @param x time variable. Default = `year`. 
 #' 
 #' @returns an [`data.frame`] with columns `paste0(x, 'Begin)`, 
-#' `paste0(x, 'End')`, `paste0(y, '0')`, `paste0(y, '1')`, and `{{group}}` 
-#' (defaults: `yearBegin`, `yearEnd`, `gdppc0`, `gdppc1`, and `ISO`) with an 
-#' attribute `LeaderByYear` = a `data.frame` with columns, `{{x}}`, 
+#' `paste0(x, 'End')`, `paste0(y, '0')`, `paste0(y, '1')`, and `{{group}}`  
+#' (defaults: `yearBegin`, `yearEnd`, `gdppc0`, `gdppc1`, and `ISO`), plus 
+#' `dy0 = paste0(x, 'End') - paste0(x, 'Begin')` and 
+#' `dy1 = c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA) 
+#' (defaults: 
+#' `dy0 = yearEnd- yearBegin` and 
+#' `dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA) 
+#' with an attribute `LeaderByYear` = a `data.frame` with columns, `{{x}}`, 
 #' `paste0('max', y)`, and `{{group}}` (defaults: `year`, `maxgdppc`, `ISO`). 
 #' 
 #' @export
@@ -84,7 +89,12 @@ MaddisonLeaders <- function(except=character(0), y='gdppc',
 ## 3. Done
 ##
   names(Leaders) <- c(x, paste0('max', y), group)
-  names(LeaderSum) <- c(paste0(x, c('Begin', 'End')), paste0(y, 0:1), group) 
+#
+  LeaderSum$dy0 <- with(LeaderSum, yearEnd- yearBegin)
+  LeaderSum$dy1 <- with(LeaderSum, c(tail(yearBegin, -1) - 
+                                     head(yearEnd, -1), NA)) 
+  names(LeaderSum)[1:5] <- c(paste0(x, c('Begin', 'End')), paste0(y, 0:1), 
+                             group) 
   attr(LeaderSum, 'LeaderByYear') <- Leaders
   LeaderSum
 }

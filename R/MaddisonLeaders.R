@@ -28,6 +28,9 @@
 #' # Presumed technology leaders without commodity leaders with narrow 
 #' # economies 
 #' Leaders1 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT')) 
+#' # since 1600 
+#' MadDat1600 <- subset(MaddisonData, year>1600)
+#' Leaders1600 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT'), data=MadDat1600)
 #' 
 #' @keywords manip 
 MaddisonLeaders <- function(except=character(0), y='gdppc', 
@@ -35,7 +38,7 @@ MaddisonLeaders <- function(except=character(0), y='gdppc',
 ##
 ## 1. compute LeaderByYear [named "Leaders" for historical reasons]
 ##   
-  years <- table(MaddisonData[, x])
+  years <- table(data[, x])
   nYrs <- length(years)
   Leaders <- data.frame(year=as.integer(names(years)), 
                         maxGDPpc=rep(0L, nYrs), ISO=rep('', nYrs))
@@ -43,8 +46,8 @@ MaddisonLeaders <- function(except=character(0), y='gdppc',
   ctries <- with(MaddisonCountries, ISO[!(ISO %in% except)])
   nCtries <- length(ctries)
   for(i in 1:nCtries){
-    seli0 <- which(MaddisonData[, group] == ctries[i])
-    dati <- MaddisonData[seli0, ]
+    seli0 <- which(data[, group] == ctries[i])
+    dati <- data[seli0, ]
     yrsi <- as.character(dati[, x, drop=TRUE])
 #   are there ties?     
     seleq <- which(Leaders[yrsi, 'maxGDPpc']==dati[, y])

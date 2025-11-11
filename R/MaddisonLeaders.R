@@ -38,8 +38,8 @@
 #' Leaders1600 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT'), data=MadDat1600)
 #' 
 #' @keywords manip 
-MaddisonLeaders <- function(except=character(0), y='gdppc', 
-                            group='ISO', data=MaddisonData, x='year'){
+MaddisonLeaders <- function(except=character(0), y='gdppc', group='ISO', 
+                            data=MaddisonData::MaddisonData, x='year'){
 ##
 ## 1. compute LeaderByYear [named "Leaders" for historical reasons]
 ##   
@@ -48,7 +48,7 @@ MaddisonLeaders <- function(except=character(0), y='gdppc',
   Leaders <- data.frame(year=as.integer(names(years)), 
                         maxGDPpc=rep(0L, nYrs), ISO=rep('', nYrs))
   rownames(Leaders) <- names(years)
-  ctries <- with(MaddisonCountries, ISO[!(ISO %in% except)])
+  ctries <- with(MaddisonData::MaddisonCountries, ISO[!(ISO %in% except)])
   nCtries <- length(ctries)
   for(i in 1:nCtries){
     seli0 <- which(data[, group] == ctries[i])

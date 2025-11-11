@@ -8,7 +8,7 @@ MaddisonLeaders(
   except = character(0),
   y = "gdppc",
   group = "ISO",
-  data = MaddisonData,
+  data = MaddisonData::MaddisonData,
   x = "year"
 )
 }

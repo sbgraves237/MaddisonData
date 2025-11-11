@@ -3,6 +3,7 @@
 export(MadDateRanges)
 export(MaddisonLeaders)
 export(getMaddisonSources)
+export(ggplotPath)
 export(logMaddison)
 export(path_package2)
 export(plotMaddison)

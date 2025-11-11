@@ -38,13 +38,17 @@ numbers in thousands are plotted in millions.}
 \item{Size}{size of axis text labels, tick labels and ISO code in a named
 3-vector with default = c(axLab=14, tickLabs=11, ISO=14).}
 
-\item{ISOlabelLoc}{location of line labels as a matrix with rownames = ISO
-codes and columns \code{x} and \code{yAdj}: The algorithm finds the closest points
+\item{ISOlabelLoc}{~legend:
+If a character vector of length 1 or a numeric vector of length 2, it is
+used as the \code{legend.position} argument in \code{theme}.
+Otherwise, it should be a matrix with rownames = ISO codes and columns \code{x}
+and \code{yAdj}: The algorithm finds the closest points
 above and below \code{x} and averages both \code{x} and \code{y} for the 1, 2, or 3 points
 found bracketing \code{x}, then multiplies the average \code{y} by \code{yAdj} and plots
 the \code{ISO} label there with \code{col} specified for that \code{ISO} code. If
-\code{ISOlabelLoc} is missing or \code{ISO} is not found
-among the rownames of \code{ISOlabelLoc}, that line is not labeled.}
+\code{ISOlabelLoc} is missing or \code{ISO} is not found among the rownames of
+\code{ISOlabelLoc}, that line is not labeled.
+Default = c(.1, .9) for top left inside the plot.}
 }
 \value{
 an object of class \code{\link[ggplot2:ggplot]{ggplot2::ggplot}}, which can be subequently

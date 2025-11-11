@@ -16,13 +16,17 @@
 #' @param logy logical: if `TRUE`, y axis is on a log scale; default = `TRUE`.`
 #' @param Size size of axis text labels, tick labels and ISO code in a named 
 #' 3-vector with default = c(axLab=14, tickLabs=11, ISO=14). 
-#' @param ISOlabelLoc location of line labels as a matrix with rownames = ISO 
-#' codes and columns `x` and `yAdj`: The algorithm finds the closest points 
+#' @param ISOlabelLoc ~legend: 
+#' If a character vector of length 1 or a numeric vector of length 2, it is 
+#' used as the `legend.position` argument in `theme`. 
+#' Otherwise, it should be a matrix with rownames = ISO codes and columns `x` 
+#' and `yAdj`: The algorithm finds the closest points 
 #' above and below `x` and averages both `x` and `y` for the 1, 2, or 3 points 
 #' found bracketing `x`, then multiplies the average `y` by `yAdj` and plots 
 #' the `ISO` label there with `col` specified for that `ISO` code. If 
-#' `ISOlabelLoc` is missing or `ISO` is not found 
-#' among the rownames of `ISOlabelLoc`, that line is not labeled. 
+#' `ISOlabelLoc` is missing or `ISO` is not found among the rownames of 
+#' `ISOlabelLoc`, that line is not labeled. 
+#' Default = c(.1, .9) for top left inside the plot. 
 #' 
 #' @returns an object of class [`ggplot2::ggplot`], which can be subequently 
 #' edited, and whose [`print`] method produces the desired plot. 
@@ -97,13 +101,41 @@ plotMaddison <- function(ISO, y, lty, col, lwd,
          class(data) ) 
   }
   dat0 <- cbind(data[, c(1:2)], data[, Y]/scaley)
-  names(dat0) <- c('ISO', 'x_', 'y_')
   dat <- dat0[!is.na(dat0[, 3]), ]
 ##
 ## 5. plot ISO
 ##  
-  sel1 <- (dat[, 1] == ISO[1])
-  dat1 <- dat[sel1, 2:3]
+  p0 <- ggplot(dat, aes_string(x=x, y=y, colour='ISO'))
+  p1 <- p0 + geom_path()
+  if(logy){
+    p1 <- p1 + scale_y_log10()
+  }
+  nISO <- length(chkISO)
+  if(nISO>1){
+    
+    
+    
+    
+    ISOlabelLoc
+    
+  }
+  
+  
+
+    if(length(ISO_)<12){
+    yp <- (0.9 - 0.029*(length(ISO_)-1))
+    p2 <- p2 + theme(legend.position=c(.1, yp))
+  }
+  
+  
+  
+  ISO_ <- table(dat$ISO)
+  if(length(ISO_)<12){
+    yp <- (0.9 - 0.029*(length(ISO_)-1))
+    p2 <- p2 + theme(legend.position=c(.1, yp))
+  }
+  
+  
   if(logy){
     p1 <- (ggplot2::ggplot(dat1, ggplot2::aes(x_, y_)) 
            + ggplot2::scale_y_log10()

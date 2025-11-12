@@ -101,7 +101,8 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
 ## 4. check group
 ## 
   if(missing(group)){
-    p0 <- ggplot2::ggplot(dat, ggplot2::aes(.data[[x]], .data[[y]]))
+    p0 <- ggplot2::ggplot(dat, ggplot2::aes(ggplot2::.data[[x]], 
+                                            ggplot2::.data[[y]]))
   } else{
     Gp <- which(names(dat) == group)
     if(length(Gp) < 1){
@@ -112,8 +113,9 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
       stop('group = ', group, ' found more once in names(data) = ', 
            paste(names(dat), collapse=', '))
     }
-    p0 <- ggplot2::ggplot(dat, ggplot2::aes(.data[[x]], .data[[y]], 
-                            group=.data[[group]], color=.data[[group]]))
+    p0 <- ggplot2::ggplot(dat, ggplot2::aes(ggplot2::.data[[x]], 
+                      ggplot2::.data[[y]], group=ggplot2::.data[[group]], 
+                      color=ggplot2::.data[[group]]))
   }
   p1 <- (p0 + ggplot2::geom_path())  
   if(logy){
@@ -129,7 +131,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
         p2 <- (p1 + ggplot2::theme(legend.position=c(.1, .5)))
       } else p2 <- p1 
     } else {
-      p2 <- (p1 + ggplot2::theme(legend.position=legend.posiiton))
+      p2 <- (p1 + ggplot2::theme(legend.position=legend.position))
     }
   } else p2 <- p1 
 ##
@@ -141,24 +143,32 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
     lty <- attr(vlines, 'lty')
     if(is.null(col)){
       if(is.null(lty)){
-        p2 <- (p2 + ggplot2::geom_vline(
-                    ggplot2::aes(xintercept = vlines)))
+        for(v in vlines){ 
+          p2 <- (p2 + ggplot2::geom_vline(
+                    ggplot2::aes(xintercept = v)))
+        }
       } else {
-        p2 <- (p2 + ggplot2::geom_vline(
-                    ggplot2::aes(xintercept = vlines, lty=lty)))
+        for(v in vlines){ 
+          p2 <- (p2 + ggplot2::geom_vline(
+                    ggplot2::aes(xintercept = v, lty=lty)))
+        }
       }
     } else {
       if(is.null(lty)){
-        p2 <- (p2 + ggplot2::geom_vline(
-          ggplot2::aes(xintercept = vlines, color=col)))
+        for(v in vlines){ 
+          p2 <- (p2 + ggplot2::geom_vline(
+                ggplot2::aes(xintercept = v, color=col)))
+        }
       } else {
-        p2 <- (p2 + ggplot2::geom_vline(
-          ggplot2::aes(xintercept = vlines, lty=lty, color=col)))
+        for(v in vlines){ 
+          p2 <- (p2 + ggplot2::geom_vline(
+                ggplot2::aes(xintercept = v, lty=lty, color=col)))
+        }
       }
     }
   } 
 ##
-## 7. vlines
+## 7. labels
 ##  
   if(!missing(labels)){
     if(!inherits(labels, 'data.frame')){

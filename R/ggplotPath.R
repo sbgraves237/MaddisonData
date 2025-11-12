@@ -156,7 +156,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
           ggplot2::aes(xintercept = vlines, lty=lty, color=col)))
       }
     }
-  }
+  } 
 ##
 ## 7. vlines
 ##  

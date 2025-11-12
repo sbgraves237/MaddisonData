@@ -39,8 +39,8 @@ for which we typically want \code{scaley} = 1000.}
 
 \item{legend.position}{argument passed to \code{\link[ggplot2:theme]{ggplot2::theme}}. Default depends on
 \verb{nGps <- length(unique(data[, group]}: If \code{nGps} = 1, there is no legend. If
-\code{nGps > 11}, \code{legend.position = 'right'}. In between, \code{legend.position} =
-c(.1, .5) = center left. For alternatives, see \code{\link[ggplot2:theme]{ggplot2::theme}}.}
+\code{nGps > 10}, \code{legend.position = 'right'}. In between, \code{legend.position} =
+c(.15, .5) = center left. For alternatives, see \code{\link[ggplot2:theme]{ggplot2::theme}}.}
 
 \item{vlines}{= locations on the \code{x} axis for vertical lines using
 \code{ggplot2::geom_vline(aes(xintercept = .data[[x]]), data=vlines, ...)} with

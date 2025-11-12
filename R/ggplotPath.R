@@ -131,7 +131,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
     } else {
       p2 <- (p1 + ggplot2::theme(legend.position=legend.posiiton))
     }
-  }
+  } else p2 <- p1 
 ##
 ## 6. vlines
 ##  

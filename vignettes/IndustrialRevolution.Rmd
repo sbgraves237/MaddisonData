@@ -3,6 +3,8 @@ title: "Industrial Revolution began in 1689 or 1649?"
 author: "Spencer Graves"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+#output: rmarkdown::word_document
+# output: word_document
 vignette: >
   %\VignetteIndexEntry{IndustrialRevolution}
   %\VignetteEngine{knitr::rmarkdown}

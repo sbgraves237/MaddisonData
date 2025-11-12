@@ -125,7 +125,13 @@ UKevents2 <- rbind(UKevents1,
   c("1348-06", "Black Death") )
 
 GBR <- subset(MaddisonData, (ISO == 'GBR') & (1347<year) & (year<1451))
-(GBRpop <- plotMaddison('GBR', 'pop'))
+(GBRpop <- 
+    
+    
+    plotMaddison('GBR', 'pop'))
+
+
+
 head(GBRpop@data)
 ```
 

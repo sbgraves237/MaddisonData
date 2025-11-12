@@ -59,9 +59,9 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
 ##
 ## 1. check x and data 
 ## 
-  if(missing(x)){
-    stop('x missing with no default')
-  }
+#  if(missing(x)){
+#    stop('x missing with no default')
+#  }
   if(missing(data)){
     stop('data missing with no default')
   }

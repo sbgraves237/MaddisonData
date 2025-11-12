@@ -58,9 +58,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
 ##
 ## 1. check x and data 
 ## 
-#  if(missing(x)){
-#    stop('x missing with no default')
-#  }
+#  localTrace <- TRUE
   if(missing(data)){
     stop('data missing with no default')
   }
@@ -100,9 +98,14 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
 ##
 ## 4. check group
 ## 
+#  if(localTrace){
+#    cat('Check group: x = ', x, '; y = ', y, '\n')
+#  }
   if(missing(group)){
-    p0 <- ggplot2::ggplot(dat, ggplot2::aes(ggplot2::.data[[x]], 
-                                            ggplot2::.data[[y]]))
+#    p0 <- ggplot2::ggplot(dat, ggplot2::aes(X=ggplot2::.data[[x]], 
+#                                            Y=ggplot2::.data[[y]]))
+    names(dat)[c(X, Y)] <- c('x', 'y')
+    p0 <- ggplot2::ggplot(dat, ggplot2::aes(x, y))
   } else{
     Gp <- which(names(dat) == group)
     if(length(Gp) < 1){
@@ -113,9 +116,14 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
       stop('group = ', group, ' found more once in names(data) = ', 
            paste(names(dat), collapse=', '))
     }
-    p0 <- ggplot2::ggplot(dat, ggplot2::aes(ggplot2::.data[[x]], 
-                      ggplot2::.data[[y]], group=ggplot2::.data[[group]], 
-                      color=ggplot2::.data[[group]]))
+#    if(localTrace){
+#      cat('found group = ', group, ': x = ', x, '; y = ', y, '\n')
+#    }
+    names(dat)[c(X, Y, Gp)] <- c('x', 'y', 'group')
+#    p0 <- ggplot2::ggplot(dat, ggplot2::aes(x=ggplot2::.data[[x]], 
+#                      y=ggplot2::.data[[y]], group=ggplot2::.data[[group]], 
+#                      color=ggplot2::.data[[group]]))
+    p0 <- ggplot2::ggplot(dat, ggplot2::aes(x=x, y=y, group=group))
   }
   p1 <- (p0 + ggplot2::geom_path())  
   if(logy){
@@ -126,7 +134,8 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
 ##  
   if(!missing(group)){
     if(missing(legend.position)){
-      gps <- table(dat[, group])
+#      gps <- table(dat[, group])
+      gps <- table(dat[, "group"])
       if(length(gps)<11) {
         p2 <- (p1 + ggplot2::theme(legend.position=c(.1, .5)))
       } else p2 <- p1 

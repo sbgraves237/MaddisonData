@@ -19,8 +19,8 @@
 #' @param logy logical: if `TRUE`, y axis is on a log scale; default = `TRUE`.`
 #' @param legend.position argument passed to [`theme`]. Default depends on 
 #' `nGps <- length(unique(data[, group]`: If `nGps` = 1, there is no legend. If 
-#' `nGps > 11`, `legend.position = 'right'`. In between, `legend.position` = 
-#' c(.1, .5) = center left. For alternatives, see [`ggplot2::theme`]. 
+#' `nGps > 10`, `legend.position = 'right'`. In between, `legend.position` = 
+#' c(.15, .5) = center left. For alternatives, see [`ggplot2::theme`]. 
 #' @param vlines = locations on the `x` axis for vertical lines using 
 #' `ggplot2::geom_vline(aes(xintercept = .data[[x]]), data=vlines, ...)` with 
 #' `color='grey', lty='dotted'` unless `color` or `colour` and / or `lty` are 
@@ -123,7 +123,8 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
 #    p0 <- ggplot2::ggplot(dat, ggplot2::aes(x=ggplot2::.data[[x]], 
 #                      y=ggplot2::.data[[y]], group=ggplot2::.data[[group]], 
 #                      color=ggplot2::.data[[group]]))
-    p0 <- ggplot2::ggplot(dat, ggplot2::aes(x=x, y=y, group=group))
+    p0 <- ggplot2::ggplot(dat, ggplot2::aes(x=x, y=y, group=group, 
+                                            color=group))
   }
   p1 <- (p0 + ggplot2::geom_path())  
   if(logy){
@@ -136,8 +137,8 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
     if(missing(legend.position)){
 #      gps <- table(dat[, group])
       gps <- table(dat[, "group"])
-      if(length(gps)<11) {
-        p2 <- (p1 + ggplot2::theme(legend.position=c(.1, .5)))
+      if(length(gps)<10) {
+        p2 <- (p1 + ggplot2::theme(legend.position=c(.15, .5)))
       } else p2 <- p1 
     } else {
       p2 <- (p1 + ggplot2::theme(legend.position=legend.position))
@@ -214,8 +215,15 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
 ##
   p3 <- (p2 + ggplot2::theme(axis.title.x=
                     ggplot2::element_blank()))
+  if(scaley == 1){
+    y_ <- y 
+  } else {
+    y_ <- paste(y, scaley, sep=' / ')
+  }
+  p4 <- (p3 + ggplot2::labs(y=y_))
+#  + ggplot2::theme(axis.title = ggplot2::element_text(size = Size['text'])))
 ##
 ## 8. Done
 ##
-  p3
+  p4
 }

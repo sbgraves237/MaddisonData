@@ -46,7 +46,7 @@ Let's plot.
 ## Plot
 
 ```{r plotMad}
-library(MaddisonData)
+#library(MaddisonData)
 
 Leaders10d <- subset(MaddisonData, ISO %in% names(Leaders10))
 plotLeaders1 <- MaddisonData::ggplotPath(y='gdppc', group='ISO', 

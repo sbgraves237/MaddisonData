@@ -126,8 +126,9 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
   if(!missing(group)){
     if(missing(legend.position)){
       gps <- table(dat[, group])
-      if(length(gps)<11)
+      if(length(gps)<11) {
         p2 <- (p1 + ggplot2::theme(legend.position=c(.1, .5)))
+      } else p2 <- p1 
     } else {
       p2 <- (p1 + ggplot2::theme(legend.position=legend.posiiton))
     }

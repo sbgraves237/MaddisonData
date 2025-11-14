@@ -13,7 +13,7 @@
 #'
 #' @format ## `MaddisonSources`
 #' A named list of [`tibble::tibble`]s, one for each country, named with the 
-#' ISO country codes. Each tibble has one row for each source for the indicated 
+#' ISO country codes. Each `tibble` has one row for each source for the indicated 
 #' ISO and two columns: 
 #' \describe{
 #'   \item{years}{

@@ -29,11 +29,33 @@ being \code{ISO} and \code{year} and \code{y} being the name of another column.}
 \item{x}{time variable. Default = \code{year}.}
 }
 \value{
-an \code{\link{data.frame}} with columns \verb{paste0(x, 'Begin)},
-\code{paste0(x, 'End')}, \code{paste0(y, '0')}, \code{paste0(y, '1')}, and \code{{{group}}}
-(defaults: \code{yearBegin}, \code{yearEnd}, \code{gdppc0}, \code{gdppc1}, and \code{ISO}), plus
-\code{dy0 = paste0(x, 'End') - paste0(x, 'Begin')} and
-\verb{dy1 = c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA)  (defaults:  }dy0 = yearEnd- yearBegin\code{and }dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)
+an \code{\link{data.frame}} with columns
+
+\itemize{
+\item \verb{paste0(x, 'Begin)},
+\item \code{paste0(x, 'End')},
+\item \code{paste0(y, '0')},
+\item \code{paste0(y, '1')}, and
+\item \code{{{group}}}
+}
+
+(defaults:
+\itemize{
+\item \code{yearBegin},
+\item \code{yearEnd},
+\item \code{gdppc0},
+\item \code{gdppc1}, and
+\item \code{ISO}, plus
+\item \code{dy0 = paste0(x, 'End') - paste0(x, 'Begin')} and
+\item {
+\code{dy1 = c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA)}
+(defaults:
+\code{dy0 = yearEnd- yearBegin} and
+`dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)
+)
+}
+}
+
 with an attribute \code{LeaderByYear} = a \code{data.frame} with columns, \code{{{x}}},
 \code{paste0('max', y)}, and \code{{{group}}} (defaults: \code{year}, \code{maxgdppc}, \code{ISO}).
 }

@@ -23,7 +23,7 @@ Acemoglu and Robinson (2012) say that the Industrial Revolution began in England
 
 The [`MaddisonData`](https://github.com/sbgraves237/MaddisonData) package for R includes a [`ggplotPath`](https://github.com/sbgraves237/MaddisonData/blob/main/man/ggplotPath.Rd) function that makes it easy to plot [Maddison project data](https://www.rug.nl/ggdc/historicaldevelopment/maddison/?lang=en) for any country or group of countries plus a  [`getMaddisonSources`](https://github.com/sbgraves237/MaddisonData/blob/main/man/getMaddisonSources.Rd) function that makes it easy to get the citations required for publication of such a plot. We illustrate that here applied to England / Great Britain / the United Kingdom, whose 3-letter ISO code is `GBR`. We select that, because it suggests that the [Industrial Revolution](https://en.wikipedia.org/wiki/Industrial_Revolution) began in England close to 1649, when the English chopped the head off their [King Charles I](https://en.wikipedia.org/wiki/Charles_I_of_England) for abuse of power, 40 years earlier than the English Bill of Rights, which Acemoglu and Robinson (2012) claim started the Industrial Revolution 
 
-## World leader in GDPpc by year
+## World leader in `GDPpc` by year
 
 Let's compute the world leader in `gdppc` for each year in MaddisonData. 
 
@@ -105,7 +105,7 @@ NLD_GBR_USA + ggplot2::xlim(1601, 2022)
 ```
 
 
-The first two observations in these data are for 1000 and 1252. The two biggest events in that period are the Norman Conquest and the Magna Carta. Dates are conveniently given in the Wikipiedia article on ["Timeline of English history"](https://en.wikipedia.org/wiki/Timeline_of_English_history). 
+The first two observations in these data are for 1000 and 1252. The two biggest events in that period are the Norman Conquest and the `Magna Carta`. Dates are conveniently given in the Wikipedia article on ["Timeline of English history"](https://en.wikipedia.org/wiki/Timeline_of_English_history). 
 
 ```{r UKevents1, eval=FALSE}
 UKevents1 <- matrix(c(
@@ -221,8 +221,8 @@ Before we publish a plot like this we want to annotate it with major events, esp
 
 Acemoglu and Robinson (2012) *Why Nations Fail* (Crown) 
 
-Broadberry, S.N., B. Campbell, A. Klein, M. Overton and B. van Leeuwen (2015), British Economic Growth 1270-1870 (Cambridge: Cambridge University Press) for England 1252-1700 and for Great Britain 1700-1870. 
+Broadberry, S.N., B. Campbell, A. Klein, M. Overton and B. van Leeuwen (2015), *British Economic Growth 1270-1870* (Cambridge: Cambridge University Press) for England 1252-1700 and for Great Britain 1700-1870. 
 
 Conference Board: Total Economy Database (TED) for GDP pc since 2008 and population since 1990. 
 
-Scheidel, W. and Friesen, S. J., ‘The size of the economy and the distribution of income in the Roman Empire’, Journal of Roman Studies, 99 (2009, pp. 61–91) for the population at year 1. 
+Scheidel, W. and Friesen, S. J., 'The size of the economy and the distribution of income in the Roman Empire', Journal of Roman Studies, 99 (2009, pp. 61–91) for the population at year 1. 

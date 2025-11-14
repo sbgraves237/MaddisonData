@@ -16,8 +16,8 @@
 #'      dollars at purchasing power parity.
 #'   }
 #'   \item{pop}{Population, mid-year (thousands)}
-#'   \item{lnGDPpc}{log(gdppc)}
-#'   \item{lnPop}{log(pop)}
+#'   \item{lnGDPpc}{`log(gdppc)`}
+#'   \item{lnPop}{`log(pop)`}
 #' }
 #' 
 #' @export

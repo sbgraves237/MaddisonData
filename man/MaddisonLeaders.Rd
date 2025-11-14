@@ -51,7 +51,7 @@ an \code{\link{data.frame}} with columns
 \code{dy1 = c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA)}
 (defaults:
 \code{dy0 = yearEnd- yearBegin} and
-`dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)
+\code{dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)}
 )
 }
 }

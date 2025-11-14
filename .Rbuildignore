@@ -1,3 +1,5 @@
+NEWS.md
+inst/extdata
 ^\.github$
 ^.*\.Rproj$
 ^\.Rproj\.user$
@@ -7,3 +9,4 @@ MaddisonData.rdb
 MaddisonSources.rdb
 MaddisonYears.rdb
 MaddisonCountries.rdb
+^cran-comments\.md$

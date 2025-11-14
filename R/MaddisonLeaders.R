@@ -36,7 +36,7 @@
 #'   `dy1 = c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA)` 
 #'     (defaults: 
 #'     `dy0 = yearEnd- yearBegin` and 
-#'     `dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)
+#'     `dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)`
 #'     ) 
 #'   }
 #' }

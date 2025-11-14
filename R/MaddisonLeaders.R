@@ -14,14 +14,33 @@
 #' being `ISO` and `year` and `y` being the name of another column. 
 #' @param x time variable. Default = `year`. 
 #' 
-#' @returns an [`data.frame`] with columns `paste0(x, 'Begin)`, 
-#' `paste0(x, 'End')`, `paste0(y, '0')`, `paste0(y, '1')`, and `{{group}}`  
-#' (defaults: `yearBegin`, `yearEnd`, `gdppc0`, `gdppc1`, and `ISO`), plus 
-#' `dy0 = paste0(x, 'End') - paste0(x, 'Begin')` and 
-#' `dy1 = c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA) 
+#' @returns an [`data.frame`] with columns 
+#' 
+#' \itemize{ 
+#' \item `paste0(x, 'Begin)`, 
+#' \item `paste0(x, 'End')`, 
+#' \item `paste0(y, '0')`, 
+#' \item `paste0(y, '1')`, and 
+#' \item `{{group}}`  
+#' }
+#' 
 #' (defaults: 
-#' `dy0 = yearEnd- yearBegin` and 
-#' `dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA) 
+#' \itemize{
+#' \item `yearBegin`, 
+#' \item `yearEnd`, 
+#' \item `gdppc0`, 
+#' \item `gdppc1`, and 
+#' \item `ISO`, plus 
+#' \item `dy0 = paste0(x, 'End') - paste0(x, 'Begin')` and 
+#' \item {
+#'   `dy1 = c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA)` 
+#'     (defaults: 
+#'     `dy0 = yearEnd- yearBegin` and 
+#'     `dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)
+#'     ) 
+#'   }
+#' }
+#' 
 #' with an attribute `LeaderByYear` = a `data.frame` with columns, `{{x}}`, 
 #' `paste0('max', y)`, and `{{group}}` (defaults: `year`, `maxgdppc`, `ISO`). 
 #' 

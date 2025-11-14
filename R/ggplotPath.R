@@ -1,4 +1,4 @@
-#' ggplot paths 
+#' `ggplot` paths 
 #'
 #' `ggplotPath` plots `y` vs. `x` (typically `year`) with a separate line for 
 #' each group with options for legend placement, vertical lines and labels.  
@@ -14,7 +14,7 @@
 #' `group`. 
 #' @param scaley factor to divide y by for plotting. Default = 1, but for data 
 #' in monetary terms, e.g., for `MaddisonData`, `y = 'gdppc'` is Gross domestic 
-#' product (GDP) per capita in 2011 dollars at puchasing power parity (PPP), 
+#' product (GDP) per capita in 2011 dollars at purchasing power parity (PPP), 
 #' for which we typically want `scaley` = 1000. 
 #' @param logy logical: if `TRUE`, y axis is on a log scale; default = `TRUE`.`
 #' @param legend.position argument passed to [`theme`]. Default depends on 

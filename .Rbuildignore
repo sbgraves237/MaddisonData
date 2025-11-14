@@ -1,4 +1,4 @@
-NEWS.md
+^NEWS.md$
 inst/extdata
 ^\.github$
 ^.*\.Rproj$

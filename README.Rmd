@@ -16,23 +16,23 @@ knitr::opts_chunk$set(
 # MaddisonData
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/sbgraves237/MaddisonData/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sbgraves237/MaddisonData/actions/workflows/R-CMD-check.yaml)
+[![`R-CMD-check`](https://github.com/sbgraves237/MaddisonData/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sbgraves237/MaddisonData/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 Make it easier for humans to access data from the Maddison Data Project in R. 
-Later releases may include vignettes, etc., documenting analses using the 
+Later releases may include vignettes, etc., documenting analyses using the 
 [`KFAS`] (Kalman filtering and smoothing, aka state space) techniques with 
 these data.  
 
-Objectives: Mke it relatively easy in R to do the following: 
+Objectives: Make it relatively easy in R to do the following: 
 
-1. Find the countries with the highest gdppc for each year for which data are 
+1. Find the countries with the highest `gdppc` for each year for which data are 
 available. 
 
-2. Refine "1" by deleting companies with high gdppc based on something narroe 
+2. Refine "1" by deleting companies with high `gdppc` based on something narrow 
 like a commodity, e.g., oil. 
 
-3. Plot the data available on gdppc and / or pop for a selection of countries, 
+3. Plot the data available on `gdppc` and / or pop for a selection of countries, 
 e.g., world leaders. 
 
 LATER: 
@@ -44,8 +44,8 @@ in the Maddison project data.
 backwards) `gdppc` and `pop` for each country for all years that appear 
 anywhere in the Maddison project data. 
 
-6. Identify the world leader in `gdppc` for each year, refining "1" using KFAS 
-interpolation. 
+6. Identify the world leader in `gdppc` for each year, refining "1" using 
+`KFAS` interpolation. 
 
 7. Identify the world technology leader for each year by evaluating the 
 `gdppc` leader for each year and replacing any whose leadership was narrow 

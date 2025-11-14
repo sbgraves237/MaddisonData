@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggplotPath.R
 \name{ggplotPath}
 \alias{ggplotPath}
-\title{ggplot paths}
+\title{\code{ggplot} paths}
 \usage{
 ggplotPath(
   x = "year",
@@ -32,7 +32,7 @@ missing or \code{length(unique(data[, group]))} = 1.}
 
 \item{scaley}{factor to divide y by for plotting. Default = 1, but for data
 in monetary terms, e.g., for \code{MaddisonData}, \code{y = 'gdppc'} is Gross domestic
-product (GDP) per capita in 2011 dollars at puchasing power parity (PPP),
+product (GDP) per capita in 2011 dollars at purchasing power parity (PPP),
 for which we typically want \code{scaley} = 1000.}
 
 \item{logy}{logical: if \code{TRUE}, y axis is on a log scale; default = \code{TRUE}.`}

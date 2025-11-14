@@ -104,7 +104,6 @@ NLD_GBR_USA + ggplot2::xlim(1301, 2022)
 NLD_GBR_USA + ggplot2::xlim(1601, 2022)
 ```
 
-
 The first two observations in these data are for 1000 and 1252. The two biggest events in that period are the Norman Conquest and the `Magna Carta`. Dates are conveniently given in the Wikipedia article on ["Timeline of English history"](https://en.wikipedia.org/wiki/Timeline_of_English_history). 
 
 ```{r UKevents1, eval=FALSE}
@@ -223,6 +222,6 @@ Acemoglu and Robinson (2012) *Why Nations Fail* (Crown)
 
 Broadberry, S.N., B. Campbell, A. Klein, M. Overton and B. van Leeuwen (2015), *British Economic Growth 1270-1870* (Cambridge: Cambridge University Press) for England 1252-1700 and for Great Britain 1700-1870. 
 
-Conference Board: Total Economy Database (TED) for GDP pc since 2008 and population since 1990. 
+Conference Board: Total Economy Database (TED) for GDP `pc` since 2008 and population since 1990. 
 
 Scheidel, W. and Friesen, S. J., 'The size of the economy and the distribution of income in the Roman Empire', Journal of Roman Studies, 99 (2009, pp. 61–91) for the population at year 1. 

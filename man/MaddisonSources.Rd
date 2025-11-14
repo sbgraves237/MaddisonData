@@ -8,9 +8,9 @@
 \format{
 \subsection{\code{MaddisonSources}}{
 
-A named list of \link[tibble:tibble]{tibble::tibble}s, one for each country, named with the ISO country
-codes. Each tibble has one row for each source for the indicated ISO and
-two columns:
+A named list of \code{\link[tibble:tibble]{tibble::tibble}}s, one for each country, named with the
+ISO country codes. Each tibble has one row for each source for the indicated
+ISO and two columns:
 \describe{
 \item{years}{
 character variable of year(s) for this source starting with year 1 CE.
@@ -20,7 +20,7 @@ described.
 }
 }
 In addition, \code{MaddisonSources} has an attribute \code{since2008}, which says,
-"gdppc since 2008: Total Economy Database (TED) from the Conference Board
+"\code{gdppc} since 2008: Total Economy Database (TED) from the Conference Board
 for all countries included in TED and UN national accounts statistics for
 all others."
 }

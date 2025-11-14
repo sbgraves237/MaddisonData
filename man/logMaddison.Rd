@@ -20,8 +20,8 @@ Gross domestic product per capita adjusted for inflation to 2011
 dollars at purchasing power parity.
 }
 \item{pop}{Population, mid-year (thousands)}
-\item{lnGDPpc}{log(gdppc)}
-\item{lnPop}{log(pop)}
+\item{lnGDPpc}{\code{log(gdppc)}}
+\item{lnPop}{\code{log(pop)}}
 }
 }
 \description{

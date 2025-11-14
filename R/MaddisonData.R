@@ -13,7 +13,7 @@
 #'   \item{ISO}{3-letter ISO country code}
 #'   \item{year}{numeric year starting with year 1 CE}
 #'   \item{gdppc}{Gross domestic product (GDP) per capita in 2011 dollars at 
-#'                puchasing power parity (PPP)}
+#'                purchasing power parity (PPP)}
 #'   \item{pop}{Population, mid-year (thousands)}
 #' }
 #' @examples

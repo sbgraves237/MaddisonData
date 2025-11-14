@@ -20,8 +20,7 @@ in the working directory. Otherwise search in \code{system.file(package)}.}
 \item{nparents}{integer indicate the number of parents of the working
 directory in which to search; default = 1.}
 
-\item{subdirs}{= c('extdata',
-paste('inst','extdata', sep=.Platform$file.sep))}
+\item{subdirs}{= \code{c('extdata',   paste('inst','extdata', sep=.Platform$file.sep))}}
 }
 \value{
 a character vector with an attribute \code{searched} giving the full

@@ -29,8 +29,8 @@
 #' in the working directory. Otherwise search in `system.file(package)`. 
 #' @param nparents integer indicate the number of parents of the working 
 #' directory in which to search; default = 1. 
-#' @param subdirs = c('extdata',  
-#'                     paste('inst','extdata', sep=.Platform$file.sep))
+#' @param subdirs = `c('extdata',  
+#'                     paste('inst','extdata', sep=.Platform$file.sep))`
 #' @returns a character vector with an attribute `searched` giving the full 
 #' paths of all directories searched for `target`. 
 #' @export

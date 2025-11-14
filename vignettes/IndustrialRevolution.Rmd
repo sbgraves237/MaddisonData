@@ -137,7 +137,7 @@ GBR <- subset(MaddisonData, (ISO == 'GBR') & (1347<year) & (year<1451))
 head(GBRpop@data)
 ```
 
-The first three years for which the Maddison project has data on population are 1, 1000, and 1500. The Wikipedia article on the [Black Death](https://en.wikipedia.org/wiki/Black_Death) quotes [Geoffrey the Baker](Geoffrey the Baker) as having written in 1350, "The seventh year after it began, it came to England ... . [It] so wasted the people that scarce the tenth person of any sort was left alive." Clearly, no such population crash appears in these data. 
+The first three years for which the Maddison project has data on population are 1, 1000, and 1500. The Wikipedia article on the [Black Death](https://en.wikipedia.org/wiki/Black_Death) quotes [Geoffrey the Baker](https://en.wikipedia.org/wiki/Geoffrey_the_Baker) as having written in 1350, "The seventh year after it began, it came to England ... . [It] so wasted the people that scarce the tenth person of any sort was left alive." Clearly, no such population crash appears in these data. 
 
 ```{r 1300_1700, eval=FALSE}
 GBRgdppc + ggplot2::coord_cartesian(xlim=c(1300, 1700), ylim=c(0.98, 2.7)) 

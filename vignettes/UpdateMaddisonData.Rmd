@@ -1,5 +1,5 @@
 ---
-title: "UpdateMaddisonData"
+title: "Update Maddison Data"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{UpdateMaddisonData}
@@ -78,7 +78,7 @@ table(nchCode <- nchar(ctryCds))
 
 Good: All 3-letter codes. 
 
-Let's concatonate `country` after `countrycode` then check to see if there are any `ctryCds` with multiple `country` names. 
+Let's concatenate `country` after `countrycode` then check to see if there are any `ctryCds` with multiple `country` names. 
 
 ```{r cdCtry, eval=foundData}
 cdCtry <- sort(with(MaddisonData0, unique(
@@ -157,7 +157,7 @@ getwd()
 
 ```
 
-## MaddisonSources
+## `MaddisonSources`
 
 The first and last rows in `MaddisonSources0` give general info for GDP and population for all countries since 2008 and 1990, respectively. 
 
@@ -216,3 +216,7 @@ save(MaddisonSources, file='MaddisonSources.rdb',
 save(MaddisonYears, file='MaddisonYears.rdb', 
        compress=TRUE)  
 ```
+
+## Bibliography
+
+Bolt and Van Zanden (2024), "Maddison style estimates of the evolution of the world economy: A new 2023 update", Journal of Economic Surveys, 1–41. 

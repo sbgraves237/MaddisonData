@@ -1,13 +1,11 @@
 Package: MaddisonData
 Title: Maddison Project Data
 Version: 1.0.0
-Date: 2025-10-17
+Date: 2025-11-13
 Authors@R: 
     person("Spencer", "Graves", , "spencer.graves@effectivedefense.org", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0005-5387-729X"))
-Description: Maddison project data in *.rda format with functions and
-    vignettes to illustrate how to use KFAS and other tools to model
-    Maddison data.
+Description: Package to make it easier to use Maddison project data. 
 License: MIT + file LICENSE
 URL: https://github.com/sbgraves237/MaddisonData
 BugReports: https://github.com/sbgraves237/MaddisonData/issues

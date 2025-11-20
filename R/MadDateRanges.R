@@ -37,9 +37,9 @@ MadDateRanges <- function(dateRanges){
     nR <- length(Rngsi)
     for(iR in 1:nR){
       if(length(Rngsi[[iR]])>2){
-        cat('ERROR: source ', i, ' in\n')
-        print(dateRanges)
-        stop('gives a range with more than 2 years')
+        erMsg <- paste('ERROR: source ', i, ' gives a range with more than 2', 
+            ' years. dateRanges = ', paste(dateRanges, collapse = '; ') )
+        stop(erMsg)
       }
       yrs <- rep(as.integer(Rngsi[[iR]]), length=2)
       dtRngs <- rbind(dtRngs, 

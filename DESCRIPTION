@@ -1,17 +1,17 @@
 Package: MaddisonData
 Title: Maddison Project Data
-Version: 1.0.1
-Date: 2025-11-19
+Version: 1.0.2
+Date: 2025-11-20
 Authors@R: 
     person("Spencer", "Graves", , "spencer.graves@effectivedefense.org", 
            role = c("aut", "cre"),
            comment = c(ORCID = "0009-0005-5387-729X"))
 Description: Relatively easy access is provided to Maddison project data, which 
       collates all the credible data on population and GDP for 169 countries, 
-      with some dating back to the year 1. `MaddisonLeaders` makes it easy to 
+      with some dating back to the year 1. 'MaddisonLeaders' makes it easy to 
       find the leaders for each year, allowing users to delete countries like 
       OPEC with narrow economies to focus on the technology leaders. 
-      `ggplotPath` makes it easy to plot data for only selected countries or 
+      'ggplotPath' makes it easy to plot data for only selected countries or 
       years. 
 License: MIT + file LICENSE
 URL: https://github.com/sbgraves237/MaddisonData

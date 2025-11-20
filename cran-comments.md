@@ -2,9 +2,6 @@
 
 0 errors | 0 warnings | 0 notes
 
-EXCEPT: 
-"Found the following (possibly) invalid URLs" to real Wikipedia articles.
-
 * This is release 1.0.2 to CRAN replacing ticks with single quotes in 
 DESCRIPTION. (Please excuse: I had single quote, but devtools::spell_check() 
 complained about a variable name, and so I tried ticks instead. That change

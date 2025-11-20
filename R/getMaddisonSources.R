@@ -12,7 +12,7 @@
 #' b) If subsets of the full dataset that include less than a dozen (12) 
 #' countries are used for statistical analysis or any other purposes
 #' 
-#' When neither a) or b) apply, then the MPD as a whole can be cited.
+#' When neither a) or b) apply, then the MDP as a whole can be cited.
 #' 
 #' `getMaddisonSources` returns a [`data.frame`] of relevant sources for a 
 #' particular application. 
@@ -35,9 +35,11 @@
 #' 
 #' @returns a [`tibble::tibble`] with 3 columns:
 #' \describe{
-#'   \item{ISO}{3-letter ISO code for country}
-#'   \item{years}{character vector of datas for `source`}
-#'   \item{source}{charcter vector of sources}
+#'   \item{ISO}{3-letter ISO code for country.}
+#'   \item{years}{
+#'    character vector of years or year ranges for which `source` applies. 
+#'   }
+#'   \item{source}{character vector of sources.}
 #' }
 #' 
 #' in the format of [`MaddisonSources`].  

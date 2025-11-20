@@ -10,3 +10,4 @@ MaddisonSources.rdb
 MaddisonYears.rdb
 MaddisonCountries.rdb
 ^cran-comments\.md$
+^CRAN-SUBMISSION$

@@ -21,10 +21,10 @@
 #' `nGps <- length(unique(data[, group]`: If `nGps` = 1, there is no legend. If 
 #' `nGps > 10`, `legend.position = 'right'`. In between, `legend.position` = 
 #' c(.15, .5) = center left. For alternatives, see [`ggplot2::theme`]. 
-#' @param vlines = locations on the `x` axis for vertical lines using 
-#' `ggplot2::geom_vline(aes(xintercept = .data[[x]]), data=vlines, ...)` with 
-#' `color='grey', lty='dotted'` unless `color` or `colour` and / or `lty` are 
-#' available as `attr(x, ...)`.  
+#' @param vlines numeric vector of locations on the `x` axis for vertical lines 
+#' using `ggplot2::geom_vline(aes(xintercept = .data[[x]]), data=vlines, ...)` 
+#' with `color='grey', lty='dotted'` unless `color` or `colour` and / or `lty` 
+#' are available as `attr(x, ...)`.  
 #' @param labels = [`data.frame`] with columns `x, y, label, srt, col`, where 
 #' `x`, `y`, and `srt` are numeric, `label` is character, and `col` are 
 #' acceptable values for `color` in `with(labels, 
@@ -37,7 +37,7 @@
 #'
 #' @examples
 #' str(GBR_USA <- subset(MaddisonData::MaddisonData, ISO %in% c('GBR', 'USA')))
-#' GBR_USA1 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000)
+#' GBR_USA1 <- MaddisonData::ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000)
 #' 
 #' GBR_USA1+ggplot2::coord_cartesian(xlim=c(1500, 1850)) # for only 1500-1850 
 #' GBR_USA1+ggplot2::coord_cartesian(xlim=c(1600, 1700), ylim=c(7, 17)) 

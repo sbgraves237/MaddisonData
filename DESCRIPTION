@@ -1,7 +1,7 @@
 Package: MaddisonData
 Title: Maddison Project Data
-Version: 1.0.2
-Date: 2025-11-20
+Version: 1.0.3
+Date: 2025-11-25
 Authors@R: 
     person("Spencer", "Graves", , "spencer.graves@effectivedefense.org", 
            role = c("aut", "cre"),

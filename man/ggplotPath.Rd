@@ -42,10 +42,10 @@ for which we typically want \code{scaley} = 1000.}
 \code{nGps > 10}, \code{legend.position = 'right'}. In between, \code{legend.position} =
 c(.15, .5) = center left. For alternatives, see \code{\link[ggplot2:theme]{ggplot2::theme}}.}
 
-\item{vlines}{= locations on the \code{x} axis for vertical lines using
-\code{ggplot2::geom_vline(aes(xintercept = .data[[x]]), data=vlines, ...)} with
-\verb{color='grey', lty='dotted'} unless \code{color} or \code{colour} and / or \code{lty} are
-available as \code{attr(x, ...)}.}
+\item{vlines}{numeric vector of locations on the \code{x} axis for vertical lines
+using \code{ggplot2::geom_vline(aes(xintercept = .data[[x]]), data=vlines, ...)}
+with \verb{color='grey', lty='dotted'} unless \code{color} or \code{colour} and / or \code{lty}
+are available as \code{attr(x, ...)}.}
 
 \item{labels}{= \code{\link{data.frame}} with columns \verb{x, y, label, srt, col}, where
 \code{x}, \code{y}, and \code{srt} are numeric, \code{label} is character, and \code{col} are
@@ -61,7 +61,7 @@ each group with options for legend placement, vertical lines and labels.
 }
 \examples{
 str(GBR_USA <- subset(MaddisonData::MaddisonData, ISO \%in\% c('GBR', 'USA')))
-GBR_USA1 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000)
+GBR_USA1 <- MaddisonData::ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000)
 
 GBR_USA1+ggplot2::coord_cartesian(xlim=c(1500, 1850)) # for only 1500-1850 
 GBR_USA1+ggplot2::coord_cartesian(xlim=c(1600, 1700), ylim=c(7, 17)) 

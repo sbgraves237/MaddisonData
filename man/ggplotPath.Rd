@@ -43,7 +43,7 @@ for which we typically want \code{scaley} = 1000.}
 c(.15, .5) = center left. For alternatives, see \code{\link[ggplot2:theme]{ggplot2::theme}}.}
 
 \item{vlines}{numeric vector of locations on the \code{x} axis for vertical lines
-using \code{ggplot2::geom_vline(aes(xintercept = .data[[x]]), data=vlines, ...)}
+using \code{ggplot2::geom_vline(xintercept = vlines, ...)}
 with \verb{color='grey', lty='dotted'} unless \code{color} or \code{colour} and / or \code{lty}
 are available as \code{attr(x, ...)}.}
 
@@ -67,7 +67,7 @@ GBR_USA1+ggplot2::coord_cartesian(xlim=c(1500, 1850)) # for only 1500-1850
 GBR_USA1+ggplot2::coord_cartesian(xlim=c(1600, 1700), ylim=c(7, 17)) 
 
 # label the lines
-ISOll <- data.frame(x=c(1500, 1750), y=c(1.4, .7), label=c('GBR', 'USA') )
+ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), label=c('GBR', 'USA') )
 (GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
                         labels=ISOll) ) 
 # vlines 

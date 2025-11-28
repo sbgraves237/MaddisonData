@@ -22,7 +22,7 @@
 #' `nGps > 10`, `legend.position = 'right'`. In between, `legend.position` = 
 #' c(.15, .5) = center left. For alternatives, see [`ggplot2::theme`]. 
 #' @param vlines numeric vector of locations on the `x` axis for vertical lines 
-#' using `ggplot2::geom_vline(aes(xintercept = .data[[x]]), data=vlines, ...)` 
+#' using `ggplot2::geom_vline(xintercept = vlines, ...)` 
 #' with `color='grey', lty='dotted'` unless `color` or `colour` and / or `lty` 
 #' are available as `attr(x, ...)`.  
 #' @param labels = [`data.frame`] with columns `x, y, label, srt, col`, where 
@@ -43,7 +43,7 @@
 #' GBR_USA1+ggplot2::coord_cartesian(xlim=c(1600, 1700), ylim=c(7, 17)) 
 #' 
 #' # label the lines
-#' ISOll <- data.frame(x=c(1500, 1750), y=c(1.4, .7), label=c('GBR', 'USA') )
+#' ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), label=c('GBR', 'USA') )
 #' (GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
 #'                         labels=ISOll) ) 
 #' # vlines 
@@ -148,32 +148,32 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
 ## 6. vlines
 ##  
   if(!missing(vlines)){
+    p2 <- p2 +
+      ggplot2::theme(
+        panel.background = ggplot2::element_rect(fill='transparent'), #transparent panel bg
+        plot.background = ggplot2::element_rect(fill='transparent', color=NA), #transparent plot bg
+        panel.grid.major = ggplot2::element_blank(), #remove major gridlines
+        panel.grid.minor = ggplot2::element_blank(), #remove minor gridlines
+        legend.background = ggplot2::element_rect(fill='transparent'), #transparent legend bg
+        legend.box.background = ggplot2::element_rect(fill='transparent') #transparent legend panel
+      )
     col <- attr(vlines, 'color')
     if(is.null(col)) col <- attr(vlines, 'colour')
     lty <- attr(vlines, 'lty')
     if(is.null(col)){
       if(is.null(lty)){
-        for(v in vlines){ 
-          p2 <- (p2 + ggplot2::geom_vline(
-                    ggplot2::aes(xintercept = v)))
-        }
+        p2 <- (p2 + ggplot2::geom_vline(xintercept = vlines, 
+                        col='grey', lty='dotted'))
       } else {
-        for(v in vlines){ 
-          p2 <- (p2 + ggplot2::geom_vline(
-                    ggplot2::aes(xintercept = v, lty=lty)))
-        }
+        p2 <- (p2 + ggplot2::geom_vline(xintercept = v, 
+                        col='grey', lty=lty))
       }
     } else {
       if(is.null(lty)){
-        for(v in vlines){ 
-          p2 <- (p2 + ggplot2::geom_vline(
-                ggplot2::aes(xintercept = v, color=col)))
-        }
+        p2 <- (p2 + ggplot2::geom_vline(xintercept = v, 
+                        color=col, lty='dotted'))
       } else {
-        for(v in vlines){ 
-          p2 <- (p2 + ggplot2::geom_vline(
-                ggplot2::aes(xintercept = v, lty=lty, color=col)))
-        }
+        p2 <- (p2 + ggplot2::geom_vline(xintercept = v, lty=lty, color=col))
       }
     }
   } 

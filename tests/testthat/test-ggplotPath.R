@@ -10,7 +10,7 @@ test_that("ggplotPath", {
   expect_true(inherits(GBR_USA1, 'ggplot'))
 
 # label the lines
-  ISOll <- data.frame(x=c(1500, 1750), y=c(1.4, .7), 
+  ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), 
                       label=c('GBR', 'USA') )
   GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
                    labels=ISOll)  

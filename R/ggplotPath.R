@@ -1,7 +1,8 @@
 #' `ggplot` paths 
 #'
 #' `ggplotPath` plots `y` vs. `x` (typically `year`) with a separate line for 
-#' each group with options for legend placement, vertical lines and labels.  
+#' each group with options for legend placement, horizontal and vertical lines 
+#' and labels.  
 #' 
 #' @param x name of column in `data` to pass as `x` in 
 #' `aes(x=.data[[x]], ...)`; default = `year`.
@@ -61,7 +62,7 @@
 #' Hlines <- c(1,3, 10, 30)
 #' Vlines = c(1849, 1929, 1933, 1939, 1945)
 #' (GBR_USA3 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
-#'        legend.position = NULL, hlines=Hlines, vlines=Vlines, labels=ISOll)  
+#'        legend.position = NULL, hlines=Hlines, vlines=Vlines, labels=ISOll))  
 #' 
 #' @keywords plot
 ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, 

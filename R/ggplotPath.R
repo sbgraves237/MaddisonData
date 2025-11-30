@@ -25,10 +25,14 @@
 #' using `ggplot2::geom_vline(xintercept = vlines, ...)` 
 #' with `color='grey', lty='dotted'` unless `color` or `colour` and / or `lty` 
 #' are available as `attr(x, ...)`.  
-#' @param labels = [`data.frame`] with columns `x, y, label, srt, col`, where 
-#' `x`, `y`, and `srt` are numeric, `label` is character, and `col` are 
-#' acceptable values for `color` in `with(labels, 
-#' annotate('text', x=x, y=y, label = label, srt=srt, color=col))`. 
+#' @param labels = [`data.frame`] with columns `x, y, label`, and optionally 
+#' `srt, col, size`, where `x`, `y`, `srt`, and `size` are are numeric, 
+#' `label` is character, and `col` are acceptable values for `color` in 
+#' `with(labels, annotate('text', x=x, y=y, label = label, srt=srt, 
+#' color=col, size=size))`. Defaults for `srt`, `col`, and `size`  are 0, 
+#' 'black', and 4, respectively. 
+#' @param fontsize for legend and axes labels in 
+#' theme(text=element_text(size=fontsize)); default = 10. 
 #' 
 #' @returns an object of class [`ggplot2::ggplot`], which can be subsequently 
 #' edited, and whose [`print`] method produces the desired plot. 
@@ -43,18 +47,17 @@
 #' GBR_USA1+ggplot2::coord_cartesian(xlim=c(1600, 1700), ylim=c(7, 17)) 
 #' 
 #' # label the lines
-#' ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), label=c('GBR', 'USA') )
-#' (GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
-#'                         labels=ISOll) ) 
+#' ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), label=c('GBR', 'USA'), col=c('red', 'green'),  srt=c(0, 90), size=c(2, 9) )
+#' (GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, labels=ISOll) ) 
+#'                         
 #' # vlines 
-#' 
 #' Vlines = c(1849, 1929, 1933, 1939, 1945)
 #' (GBR_USA3 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
 #'                 vlines=Vlines, labels=ISOll) ) 
 #' 
 #' @keywords plot
 ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, 
-                       legend.position, vlines, labels){
+                       legend.position, vlines, labels, fontsize=10){
 ##
 ## 1. check x and data 
 ## 
@@ -165,15 +168,16 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
         p2 <- (p2 + ggplot2::geom_vline(xintercept = vlines, 
                         col='grey', lty='dotted'))
       } else {
-        p2 <- (p2 + ggplot2::geom_vline(xintercept = v, 
+        p2 <- (p2 + ggplot2::geom_vline(xintercept = vlines, 
                         col='grey', lty=lty))
       }
     } else {
       if(is.null(lty)){
-        p2 <- (p2 + ggplot2::geom_vline(xintercept = v, 
+        p2 <- (p2 + ggplot2::geom_vline(xintercept = vlines, 
                         color=col, lty='dotted'))
       } else {
-        p2 <- (p2 + ggplot2::geom_vline(xintercept = v, lty=lty, color=col))
+        p2 <- (p2 + ggplot2::geom_vline(xintercept = vlines, 
+                        lty=lty, color=col))
       }
     }
   } 
@@ -203,11 +207,14 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
     if(!('col' %in% names(labels))){
       labels$col <- 'black' 
     }
+    if(!('size' %in% names(labels))){
+      labels$size <- 4
+    }
     nLbls <- nrow(labels)
     for(i in seq(length=nLbls)){
       p2 <- (p2 + ggplot2::annotate("text", x=labels$x[i], y=labels$y[i], 
                         label=labels$label[i], colour=labels$col[i], 
-                        srt=labels$srt[i]))
+                        srt=labels$srt[i], size=labels$size[i]))
     }
   }
 ##
@@ -221,9 +228,12 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
     y_ <- paste(y, scaley, sep=' / ')
   }
   p4 <- (p3 + ggplot2::labs(y=y_))
-#  + ggplot2::theme(axis.title = ggplot2::element_text(size = Size['text'])))
+## 
+## 8. axis 
 ##
-## 8. Done
+  p5 <- p4 + ggplot2::theme(text=ggplot2::element_text(size=fontsize))
 ##
-  p4
+## 9. Done
+##
+  p5
 }

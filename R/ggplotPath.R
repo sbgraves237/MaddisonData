@@ -17,10 +17,15 @@
 #' product (GDP) per capita in 2011 dollars at purchasing power parity (PPP), 
 #' for which we typically want `scaley` = 1000. 
 #' @param logy logical: if `TRUE`, y axis is on a log scale; default = `TRUE`.`
-#' @param legend.position argument passed to [`theme`]. Default depends on 
+#' @param legend.position argument passed to [`theme`]. If `!missing(labels)`, 
+#' default is no legend. Otherwise, default depends on 
 #' `nGps <- length(unique(data[, group]`: If `nGps` = 1, there is no legend. If 
 #' `nGps > 10`, `legend.position = 'right'`. In between, `legend.position` = 
 #' c(.15, .5) = center left. For alternatives, see [`ggplot2::theme`]. 
+#' @param hlines numeric vector of locations on the `y` axis for horizontal 
+#' lines using `ggplot2::geom_hline(yintercept = hlines, ...)` 
+#' with `color='grey', lty='dotted'` unless `color` or `colour` and / or `lty` 
+#' are available as `attr(x, ...)`.  
 #' @param vlines numeric vector of locations on the `x` axis for vertical lines 
 #' using `ggplot2::geom_vline(xintercept = vlines, ...)` 
 #' with `color='grey', lty='dotted'` unless `color` or `colour` and / or `lty` 
@@ -48,18 +53,19 @@
 #' 
 #' # label the lines
 #' ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), label=c('GBR', 'USA'), 
-#'                     col=c('red', 'green'),  srt=c(0, 90), size=c(2, 9) )
-#' (GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
-#'                     labels=ISOll) ) 
+#'               srt=c(0, 30), col=c('red', 'green'), size=c(2, 9))
+#' GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+#'                     labels=ISOll, fontsize = 20)  
 #'                         
-#' # vlines 
+#' # h, vlines, manual legend only 
+#' Hlines <- c(1,3, 10, 30)
 #' Vlines = c(1849, 1929, 1933, 1939, 1945)
 #' (GBR_USA3 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
-#'                 vlines=Vlines, labels=ISOll) ) 
+#'        legend.position = NULL, hlines=Hlines, vlines=Vlines, labels=ISOll)  
 #' 
 #' @keywords plot
 ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, 
-                       legend.position, vlines, labels, fontsize=10){
+                       legend.position, hlines, vlines, labels, fontsize=10){
 ##
 ## 1. check x and data 
 ## 
@@ -138,19 +144,59 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
 ##
 ## 5. legend.position
 ##  
-  if(!missing(group)){
-    if(missing(legend.position)){
-#      gps <- table(dat[, group])
-      gps <- table(dat[, "group"])
-      if(length(gps)<10) {
-        p2 <- (p1 + ggplot2::theme(legend.position=c(.15, .5)))
-      } else p2 <- p1 
-    } else {
+  if(!missing(labels)){
+    if(!missing(legend.position)){
       p2 <- (p1 + ggplot2::theme(legend.position=legend.position))
-    }
-  } else p2 <- p1 
+    } else p2 <- p1
+  } else {
+    if(!missing(group)){
+      if(missing(legend.position)){
+#       gps <- table(dat[, group])
+        gps <- table(dat[, "group"])
+        if(length(gps)<10) {
+          p2 <- (p1 + ggplot2::theme(legend.position=c(.15, .5)))
+        } else p2 <- p1 
+      } else {
+        p2 <- (p1 + ggplot2::theme(legend.position=legend.position))
+      }
+    } else p2 <- p1 
+  }
 ##
-## 6. vlines
+## 6. hlines
+##  
+  if(!missing(hlines)){
+    p2 <- p2 +
+      ggplot2::theme(
+        panel.background = ggplot2::element_rect(fill='transparent'), #transparent panel bg
+        plot.background = ggplot2::element_rect(fill='transparent', color=NA), #transparent plot bg
+        panel.grid.major = ggplot2::element_blank(), #remove major gridlines
+        panel.grid.minor = ggplot2::element_blank(), #remove minor gridlines
+        legend.background = ggplot2::element_rect(fill='transparent'), #transparent legend bg
+        legend.box.background = ggplot2::element_rect(fill='transparent') #transparent legend panel
+      )
+    hcol <- attr(hlines, 'color')
+    if(is.null(hcol)) hcol <- attr(hlines, 'colour')
+    hlty <- attr(hlines, 'lty')
+    if(is.null(hcol)){
+      if(is.null(hlty)){
+        p2 <- (p2 + ggplot2::geom_hline(yintercept = hlines, 
+                        col='grey', lty='dotted'))
+      } else {
+        p2 <- (p2 + ggplot2::geom_hline(yintercept = hlines, 
+                        col='grey', lty=hlty))
+      }
+    } else {
+      if(is.null(hlty)){
+        p2 <- (p2 + ggplot2::geom_hline(yintercept = hlines, 
+                        color=hcol, lty='dotted'))
+      } else {
+        p2 <- (p2 + ggplot2::geom_hline(yintercept = hlines, 
+                        lty=hlty, color=hcol))
+      }
+    }
+  } 
+##
+## 7. vlines
 ##  
   if(!missing(vlines)){
     p2 <- p2 +
@@ -168,23 +214,23 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
     if(is.null(col)){
       if(is.null(lty)){
         p2 <- (p2 + ggplot2::geom_vline(xintercept = vlines, 
-                        col='grey', lty='dotted'))
+                                        col='grey', lty='dotted'))
       } else {
         p2 <- (p2 + ggplot2::geom_vline(xintercept = vlines, 
-                        col='grey', lty=lty))
+                                        col='grey', lty=lty))
       }
     } else {
       if(is.null(lty)){
         p2 <- (p2 + ggplot2::geom_vline(xintercept = vlines, 
-                        color=col, lty='dotted'))
+                                        color=col, lty='dotted'))
       } else {
         p2 <- (p2 + ggplot2::geom_vline(xintercept = vlines, 
-                        lty=lty, color=col))
+                                        lty=lty, color=col))
       }
     }
   } 
 ##
-## 7. labels
+## 8. labels
 ##  
   if(!missing(labels)){
     if(!inherits(labels, 'data.frame')){
@@ -220,7 +266,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
     }
   }
 ##
-## 8. axis text and titles 
+## 9. axis text and titles 
 ##
   p3 <- (p2 + ggplot2::theme(axis.title.x=
                     ggplot2::element_blank()))
@@ -231,11 +277,11 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
   }
   p4 <- (p3 + ggplot2::labs(y=y_))
 ## 
-## 8. axis 
+## 10. axis font size 
 ##
   p5 <- p4 + ggplot2::theme(text=ggplot2::element_text(size=fontsize))
 ##
-## 9. Done
+## 11. Done
 ##
   p5
 }

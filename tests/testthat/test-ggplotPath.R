@@ -20,6 +20,7 @@ test_that("ggplotPath", {
   Hlines <- c(1,3, 10, 30)
   Vlines <- c(1649, 1929, 1933, 1945)
   GBR_USA3 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+                  ylab='GDP per capita (2011 PPP K$)', 
                   legend.position = NULL, hlines=Hlines, vlines=Vlines, 
                   labels=ISOll)  
   expect_true(inherits(GBR_USA3, 'ggplot'))

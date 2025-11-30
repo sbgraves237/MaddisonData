@@ -18,6 +18,8 @@
 #' product (GDP) per capita in 2011 dollars at purchasing power parity (PPP), 
 #' for which we typically want `scaley` = 1000. 
 #' @param logy logical: if `TRUE`, y axis is on a log scale; default = `TRUE`.`
+#' @param ylab y axis label. Default = 
+#' `if(scaley==1) y else paste(y, '/', scaley)`
 #' @param legend.position argument passed to [`theme`]. If `!missing(labels)`, 
 #' default is no legend. Otherwise, default depends on 
 #' `nGps <- length(unique(data[, group]`: If `nGps` = 1, there is no legend. If 
@@ -62,10 +64,11 @@
 #' Hlines <- c(1,3, 10, 30)
 #' Vlines = c(1849, 1929, 1933, 1939, 1945)
 #' (GBR_USA3 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+#'        ylab='GDP per capita (2011 PPP K$)', 
 #'        legend.position = NULL, hlines=Hlines, vlines=Vlines, labels=ISOll))  
 #' 
 #' @keywords plot
-ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, 
+ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab, 
                        legend.position, hlines, vlines, labels, fontsize=10){
 ##
 ## 1. check x and data 
@@ -271,12 +274,16 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE,
 ##
   p3 <- (p2 + ggplot2::theme(axis.title.x=
                     ggplot2::element_blank()))
-  if(scaley == 1){
-    y_ <- y 
+  if(!missing(ylab)){
+    p4 <- (p3 + ggplot2::labs(y=ylab))
   } else {
-    y_ <- paste(y, scaley, sep=' / ')
+    if(scaley == 1){
+      y_ <- y 
+    } else {
+      y_ <- paste(y, scaley, sep=' / ')
+    }
+    p4 <- (p3 + ggplot2::labs(y=y_))
   }
-  p4 <- (p3 + ggplot2::labs(y=y_))
 ## 
 ## 10. axis font size 
 ##

@@ -12,6 +12,7 @@ ggplotPath(
   scaley = 1,
   logy = TRUE,
   legend.position,
+  hlines,
   vlines,
   labels,
   fontsize = 10
@@ -38,10 +39,16 @@ for which we typically want \code{scaley} = 1000.}
 
 \item{logy}{logical: if \code{TRUE}, y axis is on a log scale; default = \code{TRUE}.`}
 
-\item{legend.position}{argument passed to \code{\link[ggplot2:theme]{ggplot2::theme}}. Default depends on
+\item{legend.position}{argument passed to \code{\link[ggplot2:theme]{ggplot2::theme}}. If \code{!missing(labels)},
+default is no legend. Otherwise, default depends on
 \verb{nGps <- length(unique(data[, group]}: If \code{nGps} = 1, there is no legend. If
 \code{nGps > 10}, \code{legend.position = 'right'}. In between, \code{legend.position} =
 c(.15, .5) = center left. For alternatives, see \code{\link[ggplot2:theme]{ggplot2::theme}}.}
+
+\item{hlines}{numeric vector of locations on the \code{y} axis for horizontal
+lines using \code{ggplot2::geom_hline(yintercept = hlines, ...)}
+with \verb{color='grey', lty='dotted'} unless \code{color} or \code{colour} and / or \code{lty}
+are available as \code{attr(x, ...)}.}
 
 \item{vlines}{numeric vector of locations on the \code{x} axis for vertical lines
 using \code{ggplot2::geom_vline(xintercept = vlines, ...)}
@@ -63,7 +70,8 @@ edited, and whose \code{\link{print}} method produces the desired plot.
 }
 \description{
 \code{ggplotPath} plots \code{y} vs. \code{x} (typically \code{year}) with a separate line for
-each group with options for legend placement, vertical lines and labels.
+each group with options for legend placement, horizontal and vertical lines
+and labels.
 }
 \examples{
 str(GBR_USA <- subset(MaddisonData::MaddisonData, ISO \%in\% c('GBR', 'USA')))
@@ -74,14 +82,15 @@ GBR_USA1+ggplot2::coord_cartesian(xlim=c(1600, 1700), ylim=c(7, 17))
 
 # label the lines
 ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), label=c('GBR', 'USA'), 
-                    col=c('red', 'green'),  srt=c(0, 90), size=c(2, 9) )
-(GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
-                    labels=ISOll) ) 
+              srt=c(0, 30), col=c('red', 'green'), size=c(2, 9))
+GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+                    labels=ISOll, fontsize = 20)  
                         
-# vlines 
+# h, vlines, manual legend only 
+Hlines <- c(1,3, 10, 30)
 Vlines = c(1849, 1929, 1933, 1939, 1945)
 (GBR_USA3 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
-                vlines=Vlines, labels=ISOll) ) 
+       legend.position = NULL, hlines=Hlines, vlines=Vlines, labels=ISOll))  
 
 }
 \keyword{plot}

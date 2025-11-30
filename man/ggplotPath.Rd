@@ -11,6 +11,7 @@ ggplotPath(
   data,
   scaley = 1,
   logy = TRUE,
+  ylab,
   legend.position,
   hlines,
   vlines,
@@ -38,6 +39,9 @@ product (GDP) per capita in 2011 dollars at purchasing power parity (PPP),
 for which we typically want \code{scaley} = 1000.}
 
 \item{logy}{logical: if \code{TRUE}, y axis is on a log scale; default = \code{TRUE}.`}
+
+\item{ylab}{y axis label. Default =
+\code{if(scaley==1) y else paste(y, '/', scaley)}}
 
 \item{legend.position}{argument passed to \code{\link[ggplot2:theme]{ggplot2::theme}}. If \code{!missing(labels)},
 default is no legend. Otherwise, default depends on
@@ -90,6 +94,7 @@ GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000,
 Hlines <- c(1,3, 10, 30)
 Vlines = c(1849, 1929, 1933, 1939, 1945)
 (GBR_USA3 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+       ylab='GDP per capita (2011 PPP K$)', 
        legend.position = NULL, hlines=Hlines, vlines=Vlines, labels=ISOll))  
 
 }

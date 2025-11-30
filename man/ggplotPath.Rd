@@ -13,7 +13,8 @@ ggplotPath(
   logy = TRUE,
   legend.position,
   vlines,
-  labels
+  labels,
+  fontsize = 10
 )
 }
 \arguments{
@@ -47,9 +48,14 @@ using \code{ggplot2::geom_vline(xintercept = vlines, ...)}
 with \verb{color='grey', lty='dotted'} unless \code{color} or \code{colour} and / or \code{lty}
 are available as \code{attr(x, ...)}.}
 
-\item{labels}{= \code{\link{data.frame}} with columns \verb{x, y, label, srt, col}, where
-\code{x}, \code{y}, and \code{srt} are numeric, \code{label} is character, and \code{col} are
-acceptable values for \code{color} in \code{with(labels,  annotate('text', x=x, y=y, label = label, srt=srt, color=col))}.}
+\item{labels}{= \code{\link{data.frame}} with columns \verb{x, y, label}, and optionally
+\verb{srt, col, size}, where \code{x}, \code{y}, \code{srt}, and \code{size} are are numeric,
+\code{label} is character, and \code{col} are acceptable values for \code{color} in
+\code{with(labels, annotate('text', x=x, y=y, label = label, srt=srt,  color=col, size=size))}. Defaults for \code{srt}, \code{col}, and \code{size}  are 0,
+'black', and 4, respectively.}
+
+\item{fontsize}{for legend and axes labels in
+theme(text=element_text(size=fontsize)); default = 10.}
 }
 \value{
 an object of class \code{\link[ggplot2:ggplot]{ggplot2::ggplot}}, which can be subsequently
@@ -67,11 +73,12 @@ GBR_USA1+ggplot2::coord_cartesian(xlim=c(1500, 1850)) # for only 1500-1850
 GBR_USA1+ggplot2::coord_cartesian(xlim=c(1600, 1700), ylim=c(7, 17)) 
 
 # label the lines
-ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), label=c('GBR', 'USA') )
+ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), label=c('GBR', 'USA'), 
+                    col=c('red', 'green'),  srt=c(0, 90), size=c(2, 9) )
 (GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
-                        labels=ISOll) ) 
+                    labels=ISOll) ) 
+                        
 # vlines 
-
 Vlines = c(1849, 1929, 1933, 1939, 1945)
 (GBR_USA3 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
                 vlines=Vlines, labels=ISOll) ) 

@@ -47,8 +47,10 @@
 #' GBR_USA1+ggplot2::coord_cartesian(xlim=c(1600, 1700), ylim=c(7, 17)) 
 #' 
 #' # label the lines
-#' ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), label=c('GBR', 'USA'), col=c('red', 'green'),  srt=c(0, 90), size=c(2, 9) )
-#' (GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, labels=ISOll) ) 
+#' ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), label=c('GBR', 'USA'), 
+#'                     col=c('red', 'green'),  srt=c(0, 90), size=c(2, 9) )
+#' (GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+#'                     labels=ISOll) ) 
 #'                         
 #' # vlines 
 #' Vlines = c(1849, 1929, 1933, 1939, 1945)

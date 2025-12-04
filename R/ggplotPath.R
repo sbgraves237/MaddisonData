@@ -151,7 +151,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
   if(!missing(labels)){
     if(!missing(legend.position)){
       p2 <- (p1 + ggplot2::theme(legend.position=legend.position))
-    } else p2 <- p1
+    } else p2 <- p1 + ggplot2::theme(legend.position="none")
   } else {
     if(!missing(group)){
       if(missing(legend.position)){

@@ -168,8 +168,9 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
 ##
 ## 6. hlines
 ##  
+  p3 <- p2
   if(!missing(hlines)){
-    p2 <- p2 +
+    p3 <- p3 +
       ggplot2::theme(
         panel.background = ggplot2::element_rect(fill='transparent'), #transparent panel bg
         plot.background = ggplot2::element_rect(fill='transparent', color=NA), #transparent plot bg
@@ -181,20 +182,23 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
     hcol <- attr(hlines, 'color')
     if(is.null(hcol)) hcol <- attr(hlines, 'colour')
     hlty <- attr(hlines, 'lty')
+    if(!inherits(hlines, 'numeric')){
+      stop('class(hlines) = ', class(hlines), '; must be numeric')
+    }
     if(is.null(hcol)){
       if(is.null(hlty)){
-        p2 <- (p2 + ggplot2::geom_hline(yintercept = hlines, 
+        p3 <- (p3 + ggplot2::geom_hline(yintercept = hlines, 
                         col='grey', lty='dotted'))
       } else {
-        p2 <- (p2 + ggplot2::geom_hline(yintercept = hlines, 
+        p3 <- (p3 + ggplot2::geom_hline(yintercept = hlines, 
                         col='grey', lty=hlty))
       }
     } else {
       if(is.null(hlty)){
-        p2 <- (p2 + ggplot2::geom_hline(yintercept = hlines, 
+        p3 <- (p3 + ggplot2::geom_hline(yintercept = hlines, 
                         color=hcol, lty='dotted'))
       } else {
-        p2 <- (p2 + ggplot2::geom_hline(yintercept = hlines, 
+        p3 <- (p3 + ggplot2::geom_hline(yintercept = hlines, 
                         lty=hlty, color=hcol))
       }
     }
@@ -202,8 +206,9 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
 ##
 ## 7. vlines
 ##  
+  p4 <- p3
   if(!missing(vlines)){
-    p2 <- p2 +
+    p4 <- p4 +
       ggplot2::theme(
         panel.background = ggplot2::element_rect(fill='transparent'), #transparent panel bg
         plot.background = ggplot2::element_rect(fill='transparent', color=NA), #transparent plot bg
@@ -215,20 +220,23 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
     col <- attr(vlines, 'color')
     if(is.null(col)) col <- attr(vlines, 'colour')
     lty <- attr(vlines, 'lty')
+    if(!inherits(vlines, 'numeric')){
+      stop('class(vlines) = ', class(vlines), '; must be numeric')
+    }
     if(is.null(col)){
       if(is.null(lty)){
-        p2 <- (p2 + ggplot2::geom_vline(xintercept = vlines, 
+        p4 <- (p4 + ggplot2::geom_vline(xintercept = vlines, 
                                         col='grey', lty='dotted'))
       } else {
-        p2 <- (p2 + ggplot2::geom_vline(xintercept = vlines, 
+        p4 <- (p4 + ggplot2::geom_vline(xintercept = vlines, 
                                         col='grey', lty=lty))
       }
     } else {
       if(is.null(lty)){
-        p2 <- (p2 + ggplot2::geom_vline(xintercept = vlines, 
+        p4 <- (p4 + ggplot2::geom_vline(xintercept = vlines, 
                                         color=col, lty='dotted'))
       } else {
-        p2 <- (p2 + ggplot2::geom_vline(xintercept = vlines, 
+        p4 <- (p4 + ggplot2::geom_vline(xintercept = vlines, 
                                         lty=lty, color=col))
       }
     }
@@ -236,6 +244,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
 ##
 ## 8. labels
 ##  
+  p5 <- p4
   if(!missing(labels)){
     if(!inherits(labels, 'data.frame')){
       stop('class(labels) must include "data.frame"; is ', 
@@ -264,7 +273,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
     }
     nLbls <- nrow(labels)
     for(i in seq(length=nLbls)){
-      p2 <- (p2 + ggplot2::annotate("text", x=labels$x[i], y=labels$y[i], 
+      p5 <- (p5 + ggplot2::annotate("text", x=labels$x[i], y=labels$y[i], 
                         label=labels$label[i], colour=labels$col[i], 
                         srt=labels$srt[i], size=labels$size[i]))
     }
@@ -272,24 +281,24 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
 ##
 ## 9. axis text and titles 
 ##
-  p3 <- (p2 + ggplot2::theme(axis.title.x=
+  p6 <- (p5 + ggplot2::theme(axis.title.x=
                     ggplot2::element_blank()))
   if(!missing(ylab)){
-    p4 <- (p3 + ggplot2::labs(y=ylab))
+    p7 <- (p6 + ggplot2::labs(y=ylab))
   } else {
     if(scaley == 1){
       y_ <- y 
     } else {
       y_ <- paste(y, scaley, sep=' / ')
     }
-    p4 <- (p3 + ggplot2::labs(y=y_))
+    p7 <- (p6 + ggplot2::labs(y=y_))
   }
 ## 
 ## 10. axis font size 
 ##
-  p5 <- p4 + ggplot2::theme(text=ggplot2::element_text(size=fontsize))
+  p8 <- p7 + ggplot2::theme(text=ggplot2::element_text(size=fontsize))
 ##
 ## 11. Done
 ##
-  p5
+  p8
 }

@@ -28,5 +28,5 @@ yr <- function(x){
   x2 <- x1
   lubridate::year(x2) <- Yr+1
   daysInYr <- (x2-x1)
-  Yr + (yd/as.numeric(daysInYr))
+  Yr_ <- Yr + ((yd-1)/as.numeric(daysInYr))
 }

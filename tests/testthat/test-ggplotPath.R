@@ -14,7 +14,7 @@ test_that("ggplotPath", {
                       label=c('GBR', 'USA'), srt=c(0, 30),
                       col=c('red', 'green'), size=c(2, 9))
   GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
-                   labels=ISOll, fontsize = 20)  
+                   labels=ISOll, fontsize = 20, color=c('red', 'green'))  
   expect_true(inherits(GBR_USA2, 'ggplot'))
 # vlines 
   Hlines <- c(1,3, 10, 30)

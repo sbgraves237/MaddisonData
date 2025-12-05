@@ -16,7 +16,8 @@ ggplotPath(
   hlines,
   vlines,
   labels,
-  fontsize = 10
+  fontsize = 10,
+  color
 )
 }
 \arguments{
@@ -67,6 +68,10 @@ are available as \code{attr(x, ...)}.}
 
 \item{fontsize}{for legend and axes labels in
 theme(text=element_text(size=fontsize)); default = 10.}
+
+\item{color}{for lines to pass to \code{scale_color_manual(values = color)} if
+present. If present, \code{length(color)} should equal
+\code{length(unique(data[, group]))}.}
 }
 \value{
 an object of class \code{\link[ggplot2:ggplot]{ggplot2::ggplot}}, which can be subsequently

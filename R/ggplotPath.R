@@ -41,6 +41,9 @@
 #' 'black', and 4, respectively. 
 #' @param fontsize for legend and axes labels in 
 #' theme(text=element_text(size=fontsize)); default = 10. 
+#' @param color for lines to pass to `scale_color_manual(values = color)` if 
+#' present. If present, `length(color)` should equal 
+#' `length(unique(data[, group]))`.
 #' 
 #' @returns an object of class [`ggplot2::ggplot`], which can be subsequently 
 #' edited, and whose [`print`] method produces the desired plot. 
@@ -69,7 +72,8 @@
 #' 
 #' @keywords plot
 ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab, 
-                       legend.position, hlines, vlines, labels, fontsize=10){
+                       legend.position, hlines, vlines, labels, fontsize=10,
+                       color){
 ##
 ## 1. check x and data 
 ## 
@@ -140,6 +144,17 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
 #                      color=ggplot2::.data[[group]]))
     p0 <- ggplot2::ggplot(dat, ggplot2::aes(x=x, y=y, group=group, 
                                             color=group))
+    if(!missing(color)){
+      ncol <- length(color)
+      ngps <- length(unique(dat[, 'group', drop=TRUE]))
+      if(ncol != ngps){
+        col0 <- paste0('length(color) = ', ncol, 
+                       '; length(unique(data[, group])) = ', ngps, 
+                       ': These numbers should be equal.')
+        stop(col0)
+      }
+      p0 <- (p0 + ggplot2::scale_color_manual(values = color))
+    }
   }
   p1 <- (p0 + ggplot2::geom_path())  
   if(logy){

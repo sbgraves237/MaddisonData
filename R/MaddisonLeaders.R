@@ -31,11 +31,11 @@
 #' \item `gdppc0`, 
 #' \item `gdppc1`, and 
 #' \item `ISO`, plus 
-#' \item `dy0 = paste0(x, 'End') - paste0(x, 'Begin')` and 
+#' \item `dy0 = paste0(x, 'End') - paste0(x, 'Begin') + 1` and 
 #' \item {
 #'   `dy1 = c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA)` 
 #'     (defaults: 
-#'     `dy0 = yearEnd- yearBegin` and 
+#'     `dy0 = yearEnd - yearBegin +1` and 
 #'     `dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)`
 #'     ) 
 #'   }

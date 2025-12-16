@@ -46,11 +46,11 @@ an \code{\link{data.frame}} with columns
 \item \code{gdppc0},
 \item \code{gdppc1}, and
 \item \code{ISO}, plus
-\item \code{dy0 = paste0(x, 'End') - paste0(x, 'Begin')} and
+\item \code{dy0 = paste0(x, 'End') - paste0(x, 'Begin') + 1} and
 \item {
 \code{dy1 = c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA)}
 (defaults:
-\code{dy0 = yearEnd- yearBegin} and
+\code{dy0 = yearEnd - yearBegin +1} and
 \code{dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)}
 )
 }

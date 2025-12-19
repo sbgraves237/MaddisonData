@@ -4,11 +4,13 @@
 \alias{yr}
 \title{year with fraction`}
 \usage{
-yr(x)
+yr(x, ...)
 }
 \arguments{
 \item{x}{quantity that can be converted to a \code{Date} object using
 \code{as.Date(x)}.}
+
+\item{\dots}{arguments passed to \code{\link[lubridate:ymd]{lubridate::ymd()}}.}
 }
 \value{
 a number (numeric vector).
@@ -25,5 +27,8 @@ J2yr <- yr(Jan2_24_25)
 J2y <- yr(as.POSIXct(Jan2_24_25))
 all.equal(J2yr, J2y)
 
+}
+\seealso{
+\code{\link[lubridate:decimal_date]{lubridate::decimal_date()}}, \code{\link[lubridate:ymd]{lubridate::ymd()}}
 }
 \keyword{manip}

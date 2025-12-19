@@ -7,6 +7,7 @@
 #' 
 #' @param x quantity that can be converted to a `Date` object using 
 #' `as.Date(x)`. 
+#' @param \dots arguments passed to [lubridate::ymd()].
 #' 
 #' @returns a number (numeric vector). 
 #' 
@@ -18,15 +19,6 @@
 #' J2y <- yr(as.POSIXct(Jan2_24_25))
 #' all.equal(J2yr, J2y)
 #' 
+#' @seealso [lubridate::decimal_date()], [lubridate::ymd()]
 #' @keywords manip
-yr <- function(x){
-  # date as year and fraction. 
-  X <- as.Date(x)
-  Yr <- lubridate::year(X) # year 
-  yd <- lubridate::yday(X) # days since last year 
-  x1 <- (X-yd+1)
-  x2 <- x1
-  lubridate::year(x2) <- Yr+1
-  daysInYr <- (x2-x1)
-  Yr_ <- Yr + ((yd-1)/as.numeric(daysInYr))
-}
+yr <- function(x, ...)lubridate::decimal_date(lubridate::ymd(x, ...))

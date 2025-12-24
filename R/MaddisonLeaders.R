@@ -1,4 +1,4 @@
-#' Plot selected countries
+#' Identify leading countries
 #'
 #' `MaddisonLeaders` computes the countries with the highest `gdppc` for each 
 #' `year`.  

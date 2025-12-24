@@ -8,5 +8,7 @@ bibentry(
   number   = "",
   pages    = "",
   doi      = "",
+  url="https://cran.r-project.org/web/packages/MaddisonData/MaddisonData.pdf", 
+  note="MaddisonData package for R"
 )
 

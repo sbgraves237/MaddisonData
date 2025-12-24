@@ -2,7 +2,7 @@
 % Please edit documentation in R/MaddisonLeaders.R
 \name{MaddisonLeaders}
 \alias{MaddisonLeaders}
-\title{Plot selected countries}
+\title{Identify leading countries}
 \usage{
 MaddisonLeaders(
   except = character(0),

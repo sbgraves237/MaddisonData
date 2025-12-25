@@ -1,6 +1,6 @@
 test_that("MaddisonLeaders", {
   Leaders0 <- MaddisonLeaders() # max GDPpc for each year. 
-  expect_in('data.frame', class(Leaders0))
+  expect_in('MaddisonLeaders', class(Leaders0))
   expect_equal(colnames(Leaders0), c(
     'yearBegin', 'yearEnd', 'gdppc0', 'gdppc1', 'ISO', 'dy0','dy1'))
   L0NA <- sapply(Leaders0, function(x)sum(is.na(x)))
@@ -19,7 +19,7 @@ test_that("MaddisonLeaders", {
 # Presumed technology leaders 
 #   without obvious commodity leaders with narrow economies 
   Leaders1 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT')) 
-  expect_in('data.frame', class(Leaders1))
+  expect_in('MaddisonLeaders', class(Leaders1))
   expect_equal(colnames(Leaders1), c(
     'yearBegin', 'yearEnd', 'gdppc0', 'gdppc1', 'ISO', 'dy0', 'dy1'))
   L1NA <- sapply(Leaders1, function(x)sum(is.na(x)))

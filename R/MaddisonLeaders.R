@@ -23,9 +23,13 @@
 #' \item `paste0(y, '0')`, 
 #' \item `paste0(y, '1')`, and 
 #' \item `{{group}}`  
-#' \item `dy0 = paste0(x, 'End') - paste0(x, 'Begin') + 1` and 
+#' \item {`paste0('d', x, '0') = `
+#'      `paste0(x, 'End') - paste0(x, 'Begin') + min(dx)`, where 
+#'      `dx = min(diff(sort(unique(data[, x]))))`
+#' }
 #' \item {
-#'   `dy1 = c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA)` 
+#'   `paste0('d', x, '1') = `
+#'   `c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA)` 
 #'     (defaults: 
 #'     `dy0 = yearEnd - yearBegin +1` and 
 #'     `dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)`
@@ -40,8 +44,8 @@
 #' \item `gdppc0`, 
 #' \item `gdppc1`, and 
 #' \item `ISO`, plus 
-#' \item `dy0 = `yearEnd - yearBegin + 1` and 
-#' \item `dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)` 
+#' \item `dyear0 = `yearEnd - yearBegin + 1` and 
+#' \item `dyear1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)` 
 #' }
 #' 
 #' with an attribute `LeaderByYear` = a `data.frame` with columns, `{{x}}`, 
@@ -55,9 +59,27 @@
 #' # Presumed technology leaders without commodity leaders with narrow 
 #' # economies 
 #' Leaders1 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT')) 
+#' 
 #' # since 1600 
 #' MadDat1600 <- subset(MaddisonData, year>1600)
 #' Leaders1600 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT'), data=MadDat1600)
+#' 
+#' # max pop by region within percentiles of gdppc
+#' noGDP <- is.na(MaddisonData$gdppc)
+#' MadDat <-MaddisonData[!noGDP, ]
+#' gdpPcts <- quantile(MadDat$gdppc, seq(0, 1, .01), na.rm=TRUE)
+#' gdpPct <- unique(as.numeric(gdpPcts[-1]))
+#' gdpPc <-c(gdpPct[-100], tail(gdpPct, 1)*(1+sqrt(.Machine$double.eps)))
+#' gdp100 <- MadDat$gdppc
+#' nObs <- nrow(MadDat)
+#' for(i in 1:nObs){gdp100[i] <- min(gdpPc[MadDat$gdppc[i]<gdpPc])}
+#' MadDat$gdp100 <- gdp100
+#' MadDat$region <- MaddisonCountries[MadDat$ISO, 'region', drop=TRUE]
+#' MadPopRgnGDP<-MaddisonLeaders(y='pop',group='region',data=MadDat,x='gdp100')
+#' 
+#' @param data [`data.frame`] or [`tibble::tibble`] with first two columns 
+#' being `ISO` and `year` and `y` being the name of another column. 
+#' @param x time variable. Default = `year`. 
 #' 
 #' @keywords manip 
 MaddisonLeaders <- function(except=character(0), y='gdppc', group='ISO', 
@@ -67,39 +89,46 @@ MaddisonLeaders <- function(except=character(0), y='gdppc', group='ISO',
 ##   
   yNA <- is.na(data[, y])
   Data <- data[!yNA, ]
-  years <- table(Data[, x])
-  nYrs <- length(years)
-  Leaders <- data.frame(year=as.integer(names(years)), 
-                        maxGDPpc=rep(0L, nYrs), ISO=rep('', nYrs))
-  rownames(Leaders) <- names(years)
-  Yrs <- as.integer(names(years))
-  for(i in 1:nYrs){
-    Dati <- Data[Data[, x]==Yrs[i], ]
+  Xt <- table(Data[, x])
+  X_ <- names(Xt)
+  Xn <- as.numeric(X_)
+  nX <- length(Xn)
+# Xn may not match any in data[, x]
+  nobs <- nrow(Data)
+  X <- rep(NA, nobs)
+  for(i in 1:nobs){
+    dxi <- abs(Xn-Data[i, x, drop=TRUE])
+    X[i] <- Xn[which.min(dxi)]
+  }
+  Leaders <- data.frame(x=Xn, maxY=rep(0, nX), Gp=rep('', nX))
+  rownames(Leaders) <- X_
+  for(i in 1:nX){
+    Dati <- Data[X==Xn[i], ] 
     jmax <- which.max(Dati[, y, drop=TRUE])
-    Leaders[i, 'maxGDPpc'] <- Dati[jmax, y, drop=TRUE]
+    Leaders[i, 'maxY'] <- Dati[jmax, y, drop=TRUE]
 #   find group(s)    
     jma_ <- which(Dati[, y, drop=TRUE]==Dati[jmax, y, drop=TRUE])
-    jma <- paste(sort(Dati[jma_, group, drop=TRUE]), collapse=':')
-    Leaders[i, 'ISO'] <- jma 
+    jma <- paste(sort(Dati[jma_, group, drop=TRUE]), collapse=';')
+    Leaders[i, 'Gp'] <- jma 
   }
 ##
 ## 2. Leaders [named "LeadersSum", because LeaderByYear was named "Leaders"]
 ##
   i <- 1
-  LeaderSum <- data.frame(yearBegin=Leaders[1, 'year'], 
-                          yearEnd =Leaders[1, 'year'], 
-                          gdppc0 = Leaders[1, 'maxGDPpc'], 
-                          gdppc1 = Leaders[1, 'maxGDPpc'], 
-                          ISO = Leaders[1, 'ISO'])
-  for(j in 2:nYrs){
-    if(Leaders[j, 'ISO']==Leaders[j-1, 'ISO']){
-      LeaderSum[i, 'yearEnd'] <- Leaders[j, 'year']
-      LeaderSum[i, 'gdppc1'] <- Leaders[j, 'maxGDPpc']
+  LeaderSum <- data.frame(xBegin=Leaders[1, 'x'], 
+                          xEnd  =Leaders[1, 'x'], 
+                          y0 = Leaders[1, 'maxY'], 
+                          y1 = Leaders[1, 'maxY'], 
+                          Gp = Leaders[1, 'Gp'])
+  for(j in 2:nX){
+    if(Leaders[j, 'Gp']==Leaders[j-1, 'Gp']){
+      LeaderSum[i, 'xEnd'] <- Leaders[j, 'x']
+      LeaderSum[i, 'y1'] <- Leaders[j, 'maxY']
     } else {
       i <- i+1 
-      LeaderSum[i, c('yearBegin', 'yearEnd')] <- Leaders[j, 'year']
-      LeaderSum[i, c('gdppc0', 'gdppc1')] <- Leaders[j, 'maxGDPpc']
-      LeaderSum[i, 'ISO'] <- Leaders[j, 'ISO']
+      LeaderSum[i, c('xBegin', 'xEnd')] <- Leaders[j, 'x']
+      LeaderSum[i, c('y0', 'y1')] <- Leaders[j, 'maxY']
+      LeaderSum[i, 'Gp'] <- Leaders[j, 'Gp']
     }
   }
 ##
@@ -107,11 +136,12 @@ MaddisonLeaders <- function(except=character(0), y='gdppc', group='ISO',
 ##
   names(Leaders) <- c(x, paste0('max', y), group)
 #
-  LeaderSum$dy0 <- with(LeaderSum, yearEnd- yearBegin+1)
-  LeaderSum$dy1 <- with(LeaderSum, c(tail(yearBegin, -1) - 
-                                     head(yearEnd, -1), NA)) 
-  names(LeaderSum)[1:5] <- c(paste0(x, c('Begin', 'End')), paste0(y, 0:1), 
-                             group) 
+  dx0 <- min(diff(Xn))
+  LeaderSum$dx0 <- with(LeaderSum, xEnd-xBegin+dx0)
+  LeaderSum$dx1 <- with(LeaderSum, c(tail(xBegin, -1) - 
+                                     head(xEnd, -1), NA)) 
+  names(LeaderSum) <- c(paste0(x, c('Begin', 'End')), paste0(y, 0:1), 
+                             group, paste0('d', x, 0:1)) 
   attr(LeaderSum, 'LeaderByYear') <- Leaders
   class(LeaderSum) <- c('MaddisonLeaders', 'data.frame')
   LeaderSum

@@ -2,6 +2,9 @@ test_that("getMaddisonSources", {
   MDPall <- getMaddisonSources() # all 
   MDPonly <- getMaddisonSources(plot=FALSE) # only MDP 
   GBR <- getMaddisonSources('GBR') # GBR 
+# Display all
+  as.data.frame(GBR)
+# Only MDP   
   MDPonly12 <- getMaddisonSources(
     names(MaddisonData::MaddisonSources)[1:12], FALSE)#only MDP 
   GBR_USAsince1500 <- getMaddisonSources(data.frame(ISO=c('GBR', 'USA'), 

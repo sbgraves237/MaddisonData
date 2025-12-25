@@ -4,10 +4,14 @@
 \alias{summary.MaddisonLeaders}
 \title{Summary method for an object of class \code{MaddisonLeaders}}
 \usage{
-\method{summary}{MaddisonLeaders}(object, ...)
+\method{summary}{MaddisonLeaders}(object, sortBy = "ISO", decreasing = FALSE, ...)
 }
 \arguments{
 \item{object}{= object of class \code{MaddisonLeaders}.}
+
+\item{sortBy}{= column of output used for sorting; default = \code{ISO}}
+
+\item{decreasing}{default = \code{FALSE}}
 
 \item{...}{= optional arguments for \code{summary} (not used)}
 }

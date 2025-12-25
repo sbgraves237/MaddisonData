@@ -38,9 +38,13 @@ columns
 \item \code{paste0(y, '0')},
 \item \code{paste0(y, '1')}, and
 \item \code{{{group}}}
-\item \code{dy0 = paste0(x, 'End') - paste0(x, 'Begin') + 1} and
+\item {\verb{paste0('d', x, '0') = }
+\code{paste0(x, 'End') - paste0(x, 'Begin') + min(dx)}, where
+\code{dx = min(diff(sort(unique(data[, x]))))}
+}
 \item {
-\code{dy1 = c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA)}
+\verb{paste0('d', x, '1') = }
+\code{c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA)}
 (defaults:
 \code{dy0 = yearEnd - yearBegin +1} and
 \code{dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)}
@@ -55,7 +59,7 @@ columns
 \item \code{gdppc0},
 \item \code{gdppc1}, and
 \item \code{ISO}, plus
-\item \verb{dy0 = }yearEnd - yearBegin + 1\verb{and  \\item}dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)`
+\item \verb{dyear0 = }yearEnd - yearBegin + 1\verb{and  \\item}dyear1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)`
 }
 
 with an attribute \code{LeaderByYear} = a \code{data.frame} with columns, \code{{{x}}},
@@ -71,9 +75,23 @@ Leaders0 <- MaddisonLeaders() # max GDPpc for each year.
 # Presumed technology leaders without commodity leaders with narrow 
 # economies 
 Leaders1 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT')) 
+
 # since 1600 
 MadDat1600 <- subset(MaddisonData, year>1600)
 Leaders1600 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT'), data=MadDat1600)
+
+# max pop by region within percentiles of gdppc
+noGDP <- is.na(MaddisonData$gdppc)
+MadDat <-MaddisonData[!noGDP, ]
+gdpPcts <- quantile(MadDat$gdppc, seq(0, 1, .01), na.rm=TRUE)
+gdpPct <- unique(as.numeric(gdpPcts[-1]))
+gdpPc <-c(gdpPct[-100], tail(gdpPct, 1)*(1+sqrt(.Machine$double.eps)))
+gdp100 <- MadDat$gdppc
+nObs <- nrow(MadDat)
+for(i in 1:nObs){gdp100[i] <- min(gdpPc[MadDat$gdppc[i]<gdpPc])}
+MadDat$gdp100 <- gdp100
+MadDat$region <- MaddisonCountries[MadDat$ISO, 'region', drop=TRUE]
+MadPopRgnGDP<-MaddisonLeaders(y='pop',group='region',data=MadDat,x='gdp100')
 
 }
 \keyword{manip}

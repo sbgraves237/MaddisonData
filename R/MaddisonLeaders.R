@@ -65,27 +65,22 @@ MaddisonLeaders <- function(except=character(0), y='gdppc', group='ISO',
 ##
 ## 1. compute LeaderByYear [named "Leaders" for historical reasons]
 ##   
-  years <- table(data[, x])
+  yNA <- is.na(data[, y])
+  Data <- data[!yNA, ]
+  years <- table(Data[, x])
   nYrs <- length(years)
   Leaders <- data.frame(year=as.integer(names(years)), 
                         maxGDPpc=rep(0L, nYrs), ISO=rep('', nYrs))
   rownames(Leaders) <- names(years)
-  ctries <- with(MaddisonData::MaddisonCountries, ISO[!(ISO %in% except)])
-  nCtries <- length(ctries)
-  for(i in 1:nCtries){
-    seli0 <- which(data[, group] == ctries[i])
-    dati <- data[seli0, ]
-    yrsi <- as.character(dati[, x, drop=TRUE])
-#   are there ties?     
-    seleq <- which(Leaders[yrsi, 'maxGDPpc']==dati[, y])
-    if(length(seleq)>0){
-      Leaders[yrsi, 3][seleq] <- 
-        paste0(Leaders[yrsi, 3][seleq], ":", dati[seleq, group])
-    }
-    seli <- which(Leaders[yrsi, 'maxGDPpc'] < dati$gdppc)
-    if(length(seli)>0){
-      Leaders[yrsi, 2:3][seli, ] <- dati[seli, c(3, 1)]
-    }
+  Yrs <- as.integer(names(years))
+  for(i in 1:nYrs){
+    Dati <- Data[Data[, x]==Yrs[i], ]
+    jmax <- which.max(Dati[, y, drop=TRUE])
+    Leaders[i, 'maxGDPpc'] <- Dati[jmax, y, drop=TRUE]
+#   find group(s)    
+    jma_ <- which(Dati[, y, drop=TRUE]==Dati[jmax, y, drop=TRUE])
+    jma <- paste(sort(Dati[jma_, group, drop=TRUE]), collapse=':')
+    Leaders[i, 'ISO'] <- jma 
   }
 ##
 ## 2. Leaders [named "LeadersSum", because LeaderByYear was named "Leaders"]

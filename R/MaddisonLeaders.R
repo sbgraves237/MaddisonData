@@ -112,7 +112,7 @@ MaddisonLeaders <- function(except=character(0), y='gdppc', group='ISO',
 ##
   names(Leaders) <- c(x, paste0('max', y), group)
 #
-  LeaderSum$dy0 <- with(LeaderSum, yearEnd- yearBegin)
+  LeaderSum$dy0 <- with(LeaderSum, yearEnd- yearBegin+1)
   LeaderSum$dy1 <- with(LeaderSum, c(tail(yearBegin, -1) - 
                                      head(yearEnd, -1), NA)) 
   names(LeaderSum)[1:5] <- c(paste0(x, c('Begin', 'End')), paste0(y, 0:1), 

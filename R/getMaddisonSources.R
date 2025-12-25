@@ -48,6 +48,8 @@
 #'
 #' @examples
 #' getMaddisonSources() # all 
+#' as.data.frame(GBR) # display all; default = tibble
+#' 
 #' getMaddisonSources(plot=FALSE) # only MDP 
 #' getMaddisonSources('GBR') # GBR 
 #' getMaddisonSources(names(MaddisonSources)[1:12], FALSE) # only MDP 

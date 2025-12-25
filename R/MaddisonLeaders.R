@@ -14,7 +14,8 @@
 #' being `ISO` and `year` and `y` being the name of another column. 
 #' @param x time variable. Default = `year`. 
 #' 
-#' @returns an [`data.frame`] with columns 
+#' @returns an object of class `c('MaddisonLeaders', 'data.frame')`, with 
+#' columns 
 #' 
 #' \itemize{ 
 #' \item `paste0(x, 'Begin)`, 
@@ -22,6 +23,14 @@
 #' \item `paste0(y, '0')`, 
 #' \item `paste0(y, '1')`, and 
 #' \item `{{group}}`  
+#' \item `dy0 = paste0(x, 'End') - paste0(x, 'Begin') + 1` and 
+#' \item {
+#'   `dy1 = c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA)` 
+#'     (defaults: 
+#'     `dy0 = yearEnd - yearBegin +1` and 
+#'     `dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)`
+#'     ) 
+#'   }
 #' }
 #' 
 #' (defaults: 
@@ -31,14 +40,8 @@
 #' \item `gdppc0`, 
 #' \item `gdppc1`, and 
 #' \item `ISO`, plus 
-#' \item `dy0 = paste0(x, 'End') - paste0(x, 'Begin') + 1` and 
-#' \item {
-#'   `dy1 = c(tail(paste0(x, 'Begin'), -1) - head(paste0(x, 'End'), -1), NA)` 
-#'     (defaults: 
-#'     `dy0 = yearEnd - yearBegin +1` and 
-#'     `dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)`
-#'     ) 
-#'   }
+#' \item `dy0 = `yearEnd - yearBegin + 1` and 
+#' \item `dy1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)` 
 #' }
 #' 
 #' with an attribute `LeaderByYear` = a `data.frame` with columns, `{{x}}`, 
@@ -115,5 +118,6 @@ MaddisonLeaders <- function(except=character(0), y='gdppc', group='ISO',
   names(LeaderSum)[1:5] <- c(paste0(x, c('Begin', 'End')), paste0(y, 0:1), 
                              group) 
   attr(LeaderSum, 'LeaderByYear') <- Leaders
+  class(LeaderSum) <- c('MaddisonLeaders', 'data.frame')
   LeaderSum
 }

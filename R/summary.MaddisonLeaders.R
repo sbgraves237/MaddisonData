@@ -47,7 +47,7 @@ summary.MaddisonLeaders <- function(data, ...){
          paste(names(data), collapse=', '))
   }
   if(nB>1){
-    msg('yBegin found multiple times in names(data) = ', 
+    stop('yBegin found multiple times in names(data) = ', 
         paste(names(data), collapse=', '))
   }
   names(sumLdrs)[2] <- names(data)[iB]
@@ -59,7 +59,7 @@ summary.MaddisonLeaders <- function(data, ...){
          paste(names(data), collapse=', '))
   }
   if(nE>1){
-    msg('yEnd found multiple times in names(data) = ', 
+    stop('yEnd found multiple times in names(data) = ', 
         paste(names(data), collapse=', '))
   }
   names(sumLdrs)[3] <- names(data)[iE]

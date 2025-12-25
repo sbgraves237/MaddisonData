@@ -4,6 +4,8 @@
 #' `paste0(x, 'Begin)`, `paste0(x, 'End')`, `n`, and `p`. 
 #' 
 #' @param object = object of class `MaddisonLeaders`. 
+#' @param sortBy = column of output used for sorting; default = `ISO`
+#' @param decreasing default = `FALSE`
 #' @param ... = optional arguments for `summary` (not used)
 #' 
 #' @returns a [`data.frame`] with columns 
@@ -32,7 +34,8 @@
 #' summary(Leaders0) 
 #' 
 #' @keywords manip 
-summary.MaddisonLeaders <- function(object, ...){
+summary.MaddisonLeaders <- function(object, sortBy='ISO', decreasing=FALSE, 
+                                    ...){
 ##
 ## 1. ISOs
 ##   
@@ -79,5 +82,16 @@ summary.MaddisonLeaders <- function(object, ...){
 ##
 ## 3. Done
 ##
-  sumLdrs
+  iO <- grep(sortBy, names(sumLdrs))
+  nO <- length(iO)
+  if(nO<1){
+    stop('sortBy = ', sortBy, ' not found in names(object) = ', 
+         paste(names(object), collapse=', '))
+  }
+  if(nO>1){
+    stop('sortBy = ', sortBy, ' found multiple times in names(object) = ', 
+         paste(names(object), collapse=', '))
+  }
+  O <- order(sumLdrs[, iO], decreasing=decreasing)
+  sumLdrs[O, ]
 }

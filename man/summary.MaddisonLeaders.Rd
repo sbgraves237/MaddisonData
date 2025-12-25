@@ -4,27 +4,29 @@
 \alias{summary.MaddisonLeaders}
 \title{Summary method for an object of class \code{MaddisonLeaders}}
 \usage{
-\method{summary}{MaddisonLeaders}(data, ...)
+\method{summary}{MaddisonLeaders}(object, ...)
 }
 \arguments{
-\item{data}{= object of class \code{MaddisonLeaders}.}
+\item{object}{= object of class \code{MaddisonLeaders}.}
+
+\item{...}{= optional arguments for \code{summary} (not used)}
 }
 \value{
 a \code{\link{data.frame}} with columns
 
 \itemize{
-\item \code{ISO} = One row for each level of \code{ISO} in \code{unique(data[, 'ISO'])}
-\item \verb{paste0(x, 'Begin)} = earliest \code{data[, paste0(x, 'Begin')]} for \code{ISO}
-\item \code{paste0(x, 'End')}, last \code{data[, paste0(x, 'End')]} for \code{ISO}
+\item \code{ISO} = One row for each level of \code{ISO} in \code{unique(object[, 'ISO'])}
+\item \verb{paste0(x, 'Begin)} = earliest \code{object[, paste0(x, 'Begin')]} for \code{ISO}
+\item \code{paste0(x, 'End')}, last \code{object[, paste0(x, 'End')]} for \code{ISO}
 \item \code{n} = sum of \verb{(paste0(x, 'End')} - \code{paste0(x, 'Begin') + 1} for \code{ISO}.
 \item \code{p} = \code{n/(paste0(x, 'End') - paste0(x, 'Begin') + 1)}.
 })
 
 (defaults:
 \itemize{
-\item \code{ISO} = One row for each level of \code{ISO} in \code{unique(data[, 'ISO'])}
-\item \code{yearBegin} = earliest \verb{data[, 'yearBegin')]} for \code{ISO}
-\item \code{yearEnd} = last \verb{data[, 'yearEnd')]} for \code{ISO}
+\item \code{ISO} = One row for each level of \code{ISO} in \code{unique(object[, 'ISO'])}
+\item \code{yearBegin} = earliest \verb{object[, 'yearBegin')]} for \code{ISO}
+\item \code{yearEnd} = last \verb{object[, 'yearEnd')]} for \code{ISO}
 \item \code{n} = sum of \code{('yearEnd' - 'yearBegin' + 1)} for \code{ISO}.
 \item \code{p} = \code{n/(yearEnd - yearBegin + 1)}.
 }

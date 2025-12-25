@@ -48,10 +48,10 @@
 #'
 #' @examples
 #' getMaddisonSources() # all 
+#' getMaddisonSources(plot=FALSE) # only MDP 
+#' GBR <- getMaddisonSources('GBR') # GBR 
 #' as.data.frame(GBR) # display all; default = tibble
 #' 
-#' getMaddisonSources(plot=FALSE) # only MDP 
-#' getMaddisonSources('GBR') # GBR 
 #' getMaddisonSources(names(MaddisonSources)[1:12], FALSE) # only MDP 
 #' getMaddisonSources(data.frame(ISO=c('GBR', 'USA'), 
 #'              yearBegin=rep(1500, 2)) ) #GBR, USA since 1500 

@@ -156,7 +156,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
 #                      y=ggplot2::.data[[y]], group=ggplot2::.data[[group]], 
 #                      color=ggplot2::.data[[group]]))
     p0 <- ggplot2::ggplot(dat, ggplot2::aes(x=x, y=y, group=group, 
-                                            color=group))
+                                    color=group, linetype=group))
     if(!missing(color)){
       ncol <- length(color)
       if(ncol != ngps){
@@ -170,12 +170,15 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
     if(missing(linetype))linetype <- rep(1:6, length=ngps)
     p0 <- (p0 + ggplot2::scale_linetype_manual(values=linetype))
   }
+##
+## 5. plot the lines
+##  
   p1 <- (p0 + ggplot2::geom_path())  
   if(logy){
     p1 <- (p1 + ggplot2::scale_y_log10())
   }
 ##
-## 5. legend.position
+## 6. legend.position
 ##  
   if(!missing(labels)){
     if(!missing(legend.position)){
@@ -195,7 +198,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
     } else p2 <- p1 
   }
 ##
-## 6. hlines
+## 7. hlines
 ##  
   p3 <- p2
   if(!missing(hlines)){
@@ -233,7 +236,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
     }
   } 
 ##
-## 7. vlines
+## 8. vlines
 ##  
   p4 <- p3
   if(!missing(vlines)){
@@ -271,7 +274,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
     }
   } 
 ##
-## 8. labels
+## 9. labels
 ##  
   p5 <- p4
   if(!missing(labels)){
@@ -308,7 +311,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
     }
   }
 ##
-## 9. axis text and titles 
+## 10. axis text and titles 
 ##
   p6 <- (p5 + ggplot2::theme(axis.title.x=
                     ggplot2::element_blank()))
@@ -323,11 +326,11 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
     p7 <- (p6 + ggplot2::labs(y=y_))
   }
 ## 
-## 10. axis font size 
+## 11. axis font size 
 ##
   p8 <- p7 + ggplot2::theme(text=ggplot2::element_text(size=fontsize))
 ##
-## 11. Done
+## 12. Done
 ##
   p8
 }

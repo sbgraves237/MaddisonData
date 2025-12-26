@@ -17,7 +17,8 @@ ggplotPath(
   vlines,
   labels,
   fontsize = 10,
-  color
+  color,
+  linetype
 )
 }
 \arguments{
@@ -72,6 +73,17 @@ theme(text=element_text(size=fontsize)); default = 10.}
 \item{color}{for lines to pass to \code{scale_color_manual(values = color)} if
 present. If present, \code{length(color)} should equal
 \code{length(unique(data[, group]))}.}
+
+\item{linetype}{optional vector. Default \verb{if(missing(group))} 1 else
+\verb{rep(1:6, length=length(unique(data[, group]))}.
+Else either
+\itemize{
+\item an integer (0-6), a name (0 = blank, 1 = solid, 2 = dashed,
+3 = dotted, 4 = dotdash, 5 = longdash, 6 = twodash), or
+\item a mapping to a discrete variable, or
+\item a string of an even number (up to eight) of hexadecimal digits
+which give the lengths in consecutive positions in the string.
+}}
 }
 \value{
 an object of class \code{\link[ggplot2:ggplot]{ggplot2::ggplot}}, which can be subsequently

@@ -44,6 +44,17 @@
 #' @param color for lines to pass to `scale_color_manual(values = color)` if 
 #' present. If present, `length(color)` should equal 
 #' `length(unique(data[, group]))`.
+#' @param linetype 
+#'    optional vector. Default `if(missing(group))` 1 else 
+#'    `rep(1:6, length=length(unique(data[, group]))`. 
+#'    Else either 
+#'    \itemize{ 
+#'      \item an integer (0-6), a name (0 = blank, 1 = solid, 2 = dashed, 
+#'          3 = dotted, 4 = dotdash, 5 = longdash, 6 = twodash), or 
+#'      \item a mapping to a discrete variable, or 
+#'      \item a string of an even number (up to eight) of hexadecimal digits 
+#'          which give the lengths in consecutive positions in the string.
+#'    }     
 #' 
 #' @returns an object of class [`ggplot2::ggplot`], which can be subsequently 
 #' edited, and whose [`print`] method produces the desired plot. 
@@ -73,7 +84,7 @@
 #' @keywords plot
 ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab, 
                        legend.position, hlines, vlines, labels, fontsize=10,
-                       color){
+                       color, linetype){
 ##
 ## 1. check x and data 
 ## 
@@ -125,6 +136,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
 #                                            Y=ggplot2::.data[[y]]))
     names(dat)[c(X, Y)] <- c('x', 'y')
     p0 <- ggplot2::ggplot(dat, ggplot2::aes(x, y))
+    if(missing(linetype))linetype <- 1
   } else{
     Gp <- which(names(dat) == group)
     if(length(Gp) < 1){
@@ -138,6 +150,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
 #    if(localTrace){
 #      cat('found group = ', group, ': x = ', x, '; y = ', y, '\n')
 #    }
+    ngps <- length(unique(dat[, group, drop=TRUE]))
     names(dat)[c(X, Y, Gp)] <- c('x', 'y', 'group')
 #    p0 <- ggplot2::ggplot(dat, ggplot2::aes(x=ggplot2::.data[[x]], 
 #                      y=ggplot2::.data[[y]], group=ggplot2::.data[[group]], 
@@ -146,7 +159,6 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
                                             color=group))
     if(!missing(color)){
       ncol <- length(color)
-      ngps <- length(unique(dat[, 'group', drop=TRUE]))
       if(ncol != ngps){
         col0 <- paste0('length(color) = ', ncol, 
                        '; length(unique(data[, group])) = ', ngps, 
@@ -155,6 +167,8 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
       }
       p0 <- (p0 + ggplot2::scale_color_manual(values = color))
     }
+    if(missing(linetype))linetype <- rep(1:6, length=ngps)
+    p0 <- (p0 + ggplot2::scale_linetype_manual(values=linetype))
   }
   p1 <- (p0 + ggplot2::geom_path())  
   if(logy){

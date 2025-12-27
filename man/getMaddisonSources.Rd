@@ -32,7 +32,7 @@ default is \code{MaddisonSources}.}
 \code{MaddisonYears}.}
 }
 \value{
-a \code{\link[tibble:tibble]{tibble::tibble}} with 3 columns:
+a \code{\link{data.frame}} with 3 columns:
 \describe{
 \item{ISO}{3-letter ISO code for country.}
 \item{years}{
@@ -64,7 +64,6 @@ particular application.
 getMaddisonSources() # all 
 getMaddisonSources(plot=FALSE) # only MDP 
 GBR <- getMaddisonSources('GBR') # GBR 
-as.data.frame(GBR) # display all; default = tibble
 
 getMaddisonSources(names(MaddisonSources)[1:12], FALSE) # only MDP 
 getMaddisonSources(data.frame(ISO=c('GBR', 'USA'), 

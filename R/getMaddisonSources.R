@@ -33,7 +33,7 @@
 #' @param years `data.frame` in the format of [`MaddisonYears`]; default is 
 #' `MaddisonYears`. 
 #' 
-#' @returns a [`tibble::tibble`] with 3 columns:
+#' @returns a [`data.frame`] with 3 columns:
 #' \describe{
 #'   \item{ISO}{3-letter ISO code for country.}
 #'   \item{years}{
@@ -50,7 +50,6 @@
 #' getMaddisonSources() # all 
 #' getMaddisonSources(plot=FALSE) # only MDP 
 #' GBR <- getMaddisonSources('GBR') # GBR 
-#' as.data.frame(GBR) # display all; default = tibble
 #' 
 #' getMaddisonSources(names(MaddisonSources)[1:12], FALSE) # only MDP 
 #' getMaddisonSources(data.frame(ISO=c('GBR', 'USA'), 
@@ -66,12 +65,12 @@ getMaddisonSources <- function(ISO=NULL, plot=TRUE,
   ISO0 <- FALSE 
   if(is.null(ISO))ISO0 <- TRUE
   if(NROW(ISO)<1)ISO0 <- TRUE    
-  if((!plot) && (ISO0 || NROW(ISO)>11)){
-    MDPonly_ <- tibble::tibble(ISO='', years='1, .., 2022', 
-      source=paste('Bolt and Van Zanden (2024)', 
+  ISOsrc <- data.frame(ISO='', years='1, .., 2022', 
+    source=paste('Bolt and Van Zanden (2024)', 
         '"Maddison style estimates of the evolution of the world economy:',
         'A new 2023 update", Journal of Economic Surveys, 1-41') )
-    return(MDPonly_)
+  if((!plot) && (ISO0 || NROW(ISO)>11)){
+    return(ISOsrc)
   } else {
 ## 
 ## 2. Get ISOsources
@@ -80,9 +79,9 @@ getMaddisonSources <- function(ISO=NULL, plot=TRUE,
     if(NCOL(ISO)>1){
       ISO1 <- ISO[, 1, drop=TRUE]
     } else ISO1 <- ISO
-    ISOsrc <- tibble::tibble(ISO=character(0), 
-                             year=character(0), 
-                             source=character(0))
+#    ISOsrc <- tibble::tibble(ISO=character(0), 
+#                             year=character(0), 
+#                             source=character(0))
     for(iso in ISO1){
       isoSrc <- sources[[iso]]
       if(NCOL(ISO)>1){
@@ -105,14 +104,16 @@ getMaddisonSources <- function(ISO=NULL, plot=TRUE,
 ## 
 ## 3. Add boilerplate
 ##    
-    MDP1 <- tibble::tibble(ISO=character(2), 
-              years=c('2008-', '1990-'), 
-              source=c(paste('GDP pc:    Total Economy Database (TED) of the',
-                  'Conference Board for all countries included in TED.', 
-                  'Otherwise UN national accounts statistics'), 
-                paste('population:Total Economy Database (TED) of the', 
-                  'Conference Board for all countries included in TED.', 
-                  'Otherwise UN national accounts statistics') ) )
+    MDP1 <- data.frame(ISO=character(2), 
+        years=c('2008-', '1990-'), 
+        source=c(paste('GDP pc(2008-): Total Economy Database (TED) of the',
+            'Conference Board for all countries included in TED', 
+            '[https://www.conference-board.org/topics/total-economy-database].',
+            'Otherwise UN national accounts statistics'), 
+          paste('population(1990-):Total Economy Database (TED) of the', 
+            'Conference Board for all countries included in TED', 
+            '[https://www.conference-board.org/topics/total-economy-database].',
+            'Otherwise UN national accounts statistics') ) )
     srcOut <- rbind(MDP1, ISOsrc)    
     return(srcOut)
   }

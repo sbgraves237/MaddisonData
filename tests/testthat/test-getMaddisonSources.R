@@ -22,7 +22,7 @@ test_that("getMaddisonSources", {
           'Conference Board for all countries included in TED', 
           '[https://www.conference-board.org/topics/total-economy-database].',
           'Otherwise UN national accounts statistics'), 
-        paste('Bolt and Van Zanden (2024) "Maddison style estimates', 
+        paste('Jutta Bolt and Jan Luiten Van Zanden (2024) "Maddison style estimates', 
               'of the evolution of the world economy: A new 2023 update",', 
               'Journal of Economic Surveys, 1-41')
              ) )
@@ -35,7 +35,7 @@ test_that("getMaddisonSources", {
   expect_equal(MDPall, MDPall_)
 # MDPonly   
   MDPonly_ <- data.frame(ISO='', years='1, .., 2022', 
-    source=paste('Bolt and Van Zanden (2024)', 
+    source=paste('Jutta Bolt and Jan Luiten Van Zanden (2024)', 
       '"Maddison style estimates of the evolution of the world economy:', 
       'A new 2023 update", Journal of Economic Surveys, 1-41') )
   expect_equal(MDPonly, MDPonly_)

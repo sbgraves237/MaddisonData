@@ -13,16 +13,19 @@ test_that("ggplotPath", {
   ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), 
                       label=c('GBR', 'USA'), srt=c(0, 30),
                       col=c('red', 'green'), size=c(2, 9))
-  GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+    GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
                    labels=ISOll, fontsize = 20, color=c('red', 'green'))  
   expect_true(inherits(GBR_USA2, 'ggplot'))
 # vlines 
   Hlines <- c(1,3, 10, 30)
   Vlines <- c(1649, 1929, 1933, 1945)
+  ISOl3 <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), 
+                      label=c('GBR', 'USA'), srt=c(0, 30),
+                      col=c('red', 'green'))
   GBR_USA3 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
                   ylab='GDP per capita (2011 PPP K$)', 
                   legend.position = NULL, hlines=Hlines, vlines=Vlines, 
-                  labels=ISOll)  
+                  labels=ISOl3, col=c('red', 'green'))  
   expect_true(inherits(GBR_USA3, 'ggplot'))
 #      #  
 #  expect_in('ggplot', class(GBR_USA))

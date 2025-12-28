@@ -66,7 +66,7 @@ getMaddisonSources <- function(ISO=NULL, plot=TRUE,
   if(is.null(ISO))ISO0 <- TRUE
   if(NROW(ISO)<1)ISO0 <- TRUE    
   ISOsrc <- data.frame(ISO='', years='1, .., 2022', 
-    source=paste('Bolt and Van Zanden (2024)', 
+    source=paste('Jutta Bolt and Jan Luiten Van Zanden (2024)', 
         '"Maddison style estimates of the evolution of the world economy:',
         'A new 2023 update", Journal of Economic Surveys, 1-41') )
   if((!plot) && (ISO0 || NROW(ISO)>11)){

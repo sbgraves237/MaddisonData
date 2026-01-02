@@ -5,7 +5,8 @@
 #' \href{https://en.wikipedia.org/wiki/Maddison_Project}{Maddison project} 
 #' collates historical economic statistics from many sources. 
 #' `MaddisonCountries` is a [`data.frame`] of all (`countrycode`, `country`, 
-#' `region`) combinations in those data. 
+#' `region`) combinations in those data. This object provides easy access to 
+#' the 2023 version of the Maddison project data downloaded 2025-08-28. 
 #'
 #' @format ## `MaddisonData`
 #' A data frame with 4 columns: 

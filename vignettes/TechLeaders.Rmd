@@ -1,0 +1,132 @@
+---
+title: "Technology leaders"
+author: "Spencer Graves"
+date: "`r Sys.Date()`"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{TechLeaders}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Intro
+
+This vignette documents now to identify the countries with max `gdppc` for each year, extract from that the major technology leaders, and plot them with annotations. 
+
+## MaddisonLeaders 
+
+```{r MadLdrs}
+library(MaddisonData)
+MadLdrs <- MaddisonLeaders()
+(MadLdrsSum <- summary(MadLdrs, 'yearBegin'))
+```
+
+The Netherlands led the world in `gdppc` for 97 percent of the years between 1349 and 1807. Other major technology leaders since then have been England / Great Britain / the United Kingdom (`GBR`) and `USA` -- and maybe others like Singapore. Let's redo this starting from 1349 and excluding petrosates Qatar (`QAT`), Kuwait (`KWT`), and United Arab Emirates (`ARE`), plus Norway (`NOR`), which owes a substantial portion of their wealth to democratic management of North Sea oil. 
+
+```{r MadLdrs1349}
+MadDat1349 <- subset(MaddisonData, (year > 1348) & 
+                       !(ISO %in% c('QAT', 'KWT', 'ARE', 'NOR') ))
+MadLdrs1349 <- MaddisonLeaders(data=MadDat1349)
+(MadLdrsSum1349 <- summary(MadLdrs1349, 'yearBegin'))
+```
+
+Singapore (`SGP`) has replaced Norway as the current leader, according to the Maddison project data. The Wikipedia article on ["List of countries by GDP (PPP) per capita"](https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(PPP)_per_capita) notes that data from the US [Central Intelligence Agency](https://en.wikipedia.org/wiki/Central_Intelligence_Agency) report `gdppc` number for Monaco (`MCO`) and Liechtenstein (`LIE`) higher than Singapore and Norway. However, they are tiny countries with populations roughly 40,000 each without broad-based economies and are not included in `MaddisonData`. Luxenbourg (`LUX`) has a population under a million. Let's redo this analysis witout `LUX`.  
+
+
+```{r MadLdrs1349a}
+MadDat1349a <- subset(MaddisonData, (year > 1348) & 
+                       !(ISO %in% c('QAT', 'KWT', 'ARE', 'NOR', 'LUX') ))
+MadLdrs1349a <- MaddisonLeaders(data=MadDat1349a)
+(MadLdrsSum1349a <- summary(MadLdrs1349a, 'yearBegin'))
+```
+
+The Netherlands (`NLD`) was the leader for 97 percent of the years between 1349 and 1807, according to `MaddisonData`. Then England / Great Britain / the United Kingdom (`GBR`) led for 74 percent of the years between 1808 and 1898. Then `USA` led for 84 percent of the years between 1882 and 1990 with Australia (`AUS`), New Zealand (`NZL`) and Switzerland (`CHE`) leading for the remaining 16 percent of those years. Luxembourg (`LUX`) led between 1991 and 2008, then Switzerland (`CHE`) led for 2009, then  Singapore (`SGP`) between 2008 and 2022. 
+
+For simpicity, we focus on `NLD`, `GBR`, `USA`, and `SGP`. A few other countries (`AUS`, `NZL`, `CHE`, and `LUX`) led for so few years in this period that including them in this plot would likely add more complexity than informtion and make it harder to understand the big picture. 
+
+```{r NLD_SGP}
+NLD_SGP <- subset(MadDat1349, ISO %in% c('NLD', 'GBR', 'USA', 'SGP'))
+(NLD_SGP0 <- ggplotPath(y='gdppc', group='ISO', data=NLD_SGP, scaley=1000))
+```
+
+The line for the Netherlands shows a dramatic decline between 1807 and 1808. Before speculating further, let's check the data sources used by `MaddisonData`: 
+
+```{r NLDrefs}
+NLDrefs <- getMaddisonSources('NLD')
+```
+
+The prior to 1808 these data are for [Holland](https://en.wikipedia.org/wiki/Holland) [Van Zanden and van Leeuwen (2012)]. The more recent data are for the [Netherlands](https://en.wikipedia.org/wiki/Netherlands) [Smits et al. (2000)], of which Holland is only a part. That transition was during the [Napoleonic wars](https://en.wikipedia.org/wiki/Napoleonic_Wars), and the Netherlands became part of France for part of those times. 
+
+We want to annotate this plot in multiple ways: 
+- Annotate the `NLD` line as "Holland" (at `ggppc` = roughly $5K in 1600) and "Netherlands" (at `gdppc` = roughly $4K in 1900).
+- 'English Civil War', 1642-1652, during which [King Charles I](https://en.wikipedia.org/wiki/Charles_I_of_England) was decapitated (in 1649), after which `gdppc` for `GBR` began to increase; we could see that more clearly in a separate plot zooming in on that particular time.  
+- `WW1` (1914-1918). 
+- The presidency of [Herbert Hoover](https://en.wikipedia.org/wiki/Herbert_Hoover) (1929-1933).
+- The presidency of [Franklin Roosevelt](https://en.wikipedia.org/wiki/Franklin_D._Roosevelt) (1933-1945). 
+- `WW2` (1939-1945).
+
+```{r NLD_SGP1}
+x0 <- yr(c('1642-01-04', '1812-06-18', '1861-04-12', '1914-07-28', 
+           '1929-03-04', '1933-03-04', '1939-09-01')) 
+x1 <- yr(c('1651-09-03', '1815-02-17', '1865-05-26', '1918-11-11', 
+           '1933-03-04', '1945-04-12', '1945-09-02'))
+Vlines <- sort(unique(c(x0, x1)))
+attr(Vlines, 'color') <- c(rep('grey', 8), 'red', 'green4', 'grey', 
+                           'green4', 'grey')
+Hlines = c(1, 3, 5, 10, 30, 50)
+Lbls <- data.frame(x=c(1500, 1600, 1740, 1870, (x0+x1)/2, 1985), 
+                   y=c(1.35,  5.7, 1.65,  3.5, 13, rep(15, 3), 36, 21, 64, 8), 
+    label=c('UK', 'Holland', 'US', 'Netherlands', 'English civil war', 
+            'War of 1812', 'American Civil War', 'WW1', 'Hoover', 'FDR', 
+            'WW2', 'Singapore'), 
+    srt=c(0, 0, 40, 50, rep(90, 7), 87), 
+    col=c('red', 'orange', 'blue', 'orange', 'red', rep('grey', 3), 'red',
+          'green4', 'grey', 'darkolivegreen4') )
+
+(NLD_SGP1 <- ggplotPath(y='gdppc', group='ISO', data=NLD_SGP, scaley=1000, 
+                        ylab='GDP per capita (2011 K$ PPP)', 
+                        hlines=Hlines, vlines=Vlines, labels=Lbls, 
+                        fontsize=20, 
+                        color=c('red', 'orange', 'darkolivegreen4', 'blue'), 
+                        linetype=c(1:2, 1, 1)))
+```
+
+Save.
+
+```{r NLD_SGP1s, eval=FALSE}
+svg('NLD_SGP.svg')
+NLD_SGP1 
+dev.off()
+```
+
+This figure needs to acknowledge Bolt and Van Janden (2024) for the Maddison Data generally, Van Zanden, J. L. and van Leeuwen, B. (2012) for the data on Holland 1348–1807 and the Netherlands 1808-1913, Smits et al (2000) for the data on the Netherlands 1800-1913, Broadberry et al. (2015) for the data on England 1252–1700 and on Great Britain until 1870, and Sugimoto (2011) for Singapore to 2007. 
+
+```{r NLDrefs2}
+(GBRrefs <- getMaddisonSources('GBR'))
+(USArefs <- getMaddisonSources('USA'))
+(SGPrefs <- getMaddisonSources('SGP'))
+```
+
+## Bibliography 
+
+Jutta Bolt and Jan Luiten Van Zanden (2024) "Maddison style estimates of the evolution of the world economy: A new 2023 update", Journal of Economic Surveys, 1-41
+
+Broadberry, S.N., B. Campbell, A. Klein, M. Overton and B. van Leeuwen (2015), British Economic Growth 1270-1870 Cambridge: Cambridge University Press.
+
+Susan B. Carter, S. S. Gartner, M. R. Haineset (2006) Historical Statistics of the United States: Earliest Time to the Present (Cambridge University Press)-->{{cite Q|Q137660377}} 
+
+John J. McCusker (2006) ‘Colonial Statistics’, Carter et al. (2006, V-671). 
+
+W. Scheidel and S. J. Friesen (2009) ‘The size of the economy and the distribution of income in the Roman Empire’, Journal of Roman Studies, 99, pp. 61–91. 
+
+J.P. Smits, E. Horlings and J.L. van Zanden (2000) The Measurement of Gross National Product and its Components 1800-1913 (Groningen Growth and Development Centre Monograph series no 5).
+
+I. Sugimoto (2011), Economic growth of Singapore in the twentieth century: historical GDP estimates and empirical investigations, Economic Growth Centre Research Monograph ser., 2, http://www.worldscibooks.com/economics/7858.html (accessed on 30 Jan. 2013).
+
+R. Sutch (2006). National Income and Product. Carter et al. (2006, III-23-25).
+
+J. L. Van Zanden  and B. van Leeuwen (2012), ‘Persistent but not consistent: the growth of national income in Holland 1347–1807’, Explorations in Economic History, 49 (2012), pp. 119–30.

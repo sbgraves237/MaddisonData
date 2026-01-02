@@ -28,7 +28,8 @@ The
 \href{https://en.wikipedia.org/wiki/Maddison_Project}{Maddison project}
 collates historical economic statistics from many sources.
 \code{MaddisonCountries} is a \code{\link{data.frame}} of all (\code{countrycode}, \code{country},
-\code{region}) combinations in those data.
+\code{region}) combinations in those data. This object provides easy access to
+the 2023 version of the Maddison project data downloaded 2025-08-28.
 }
 \examples{
 # Get the countrycode for a country

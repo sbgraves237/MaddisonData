@@ -69,7 +69,7 @@ For simplicity, we focus on `NLD`, `GBR`, `USA`, and `SGP`. A few other countrie
 ```{r NLD_SGP}
 NLD_SGP <- subset(MadDat1349, ISO %in% c('NLD', 'GBR', 'USA', 'SGP'))
 NLD_SGPsum <- MaddisonLeaders(data=NLD_SGP)
-summary(NLD_SGPsum)
+summary(NLD_SGPsum, 'yearBegin')
 (NLD_SGP0 <- ggplotPath(y='gdppc', group='ISO', data=NLD_SGP, scaley=1000))
 ```
 

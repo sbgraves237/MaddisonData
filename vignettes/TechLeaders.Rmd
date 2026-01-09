@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This vignette documents now to identify the countries with max `gdppc` for each year, extract from that the major technology leaders, and plot them with annotations. 
 
-## MaddisonLeaders 
+## `MaddisonLeaders` 
 
 ```{r MadLdrs}
 library(MaddisonData)
@@ -25,7 +25,7 @@ MadLdrs <- MaddisonLeaders()
 (MadLdrsSum <- summary(MadLdrs, 'yearBegin'))
 ```
 
-The Netherlands led the world in `gdppc` for 97 percent of the years between 1349 and 1807. Other major technology leaders since then have been England / Great Britain / the United Kingdom (`GBR`) and `USA` -- and maybe others like Singapore. Let's redo this starting from 1349 and excluding petrosates Qatar (`QAT`), Kuwait (`KWT`), and United Arab Emirates (`ARE`), plus Norway (`NOR`), which owes a substantial portion of their wealth to democratic management of North Sea oil. 
+The Netherlands led the world in `gdppc` for 97 percent of the years between 1349 and 1807. Other major technology leaders since then have been England / Great Britain / the United Kingdom (`GBR`) and `USA` -- and maybe others like Singapore. Let's redo this starting from 1349 and excluding petrostates Qatar (`QAT`), Kuwait (`KWT`), and United Arab Emirates (`ARE`), plus Norway (`NOR`), which owes a substantial portion of their wealth to democratic management of North Sea oil. 
 
 ```{r MadLdrs1349}
 MadDat1349 <- subset(MaddisonData, (year > 1348) & 
@@ -34,7 +34,7 @@ MadLdrs1349 <- MaddisonLeaders(data=MadDat1349)
 (MadLdrsSum1349 <- summary(MadLdrs1349, 'yearBegin'))
 ```
 
-Singapore (`SGP`) has replaced Norway as the current leader, according to the Maddison project data. The Wikipedia article on ["List of countries by GDP (PPP) per capita"](https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(PPP)_per_capita) notes that data from the US [Central Intelligence Agency](https://en.wikipedia.org/wiki/Central_Intelligence_Agency) report `gdppc` number for Monaco (`MCO`) and Liechtenstein (`LIE`) higher than Singapore and Norway. However, they are tiny countries with populations roughly 40,000 each without broad-based economies and are not included in `MaddisonData`. Luxenbourg (`LUX`) has a population under a million. Let's redo this analysis without `LUX`.
+Singapore (`SGP`) has replaced Norway as the current leader, according to the Maddison project data. The Wikipedia article on ["List of countries by GDP (PPP) per capita"](https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(PPP)_per_capita) notes that data from the US [Central Intelligence Agency](https://en.wikipedia.org/wiki/Central_Intelligence_Agency) report `gdppc` number for Monaco (`MCO`) and Liechtenstein (`LIE`) higher than Singapore and Norway. However, they are tiny countries with populations roughly 40,000 each without broad-based economies and are not included in `MaddisonData`. Luxembourg (`LUX`) has a population under a million. Let's redo this analysis without `LUX`.
 
 First, however, lets check on the early years for which data on Holland are available. 
 
@@ -81,7 +81,7 @@ NLDrefs <- getMaddisonSources('NLD')
 
 The prior to 1808 these data are for [Holland](https://en.wikipedia.org/wiki/Holland) [Van Zanden and van Leeuwen (2012)]. The more recent data are for the [Netherlands](https://en.wikipedia.org/wiki/Netherlands) [Smits et al. (2000)], of which Holland is only a part. That transition was during the [Napoleonic wars](https://en.wikipedia.org/wiki/Napoleonic_Wars), and the Netherlands became part of France for part of those times. 
 
-We want multiple annotationso on this plot: 
+We want multiple annotations on this plot: 
 - The `NLD` line as "Holland" (at `ggppc` = roughly $5K in 1600) and "Netherlands" (at `gdppc` = roughly $4K in 1900).
 - 'English Civil War', 1642-1652, during which [King Charles I](https://en.wikipedia.org/wiki/Charles_I_of_England) was decapitated (in 1649), after which `gdppc` for `GBR` began to increase; we could see that more clearly in a separate plot zooming in on that particular time.  
 - Queen Ann (1702-1714), who reigned over substantial turbulence in `gdppc` and was followed by slower but still impressive growth on `gdppc` relative to the economic stagnation before Charles I lost his head. 
@@ -141,11 +141,11 @@ This figure needs to acknowledge Bolt and Van Janden (2024) for the Maddison Dat
 
 ## Bibliography 
 
-Daron Acemoğlu; Simon Johnson (2023). Power and Progress: Our Thousand-Year Struggle Over Technology and Prosperity (in en). PublicAffairs. Wikidata Q125292212. ISBN 978-1-5417-0253-0.
+Daron Acemoğlu; Simon Johnson (2023). Power and Progress: Our Thousand-Year Struggle Over Technology and Prosperity. PublicAffairs. Wikidata Q125292212. ISBN 978-1-5417-0253-0.
 
-Jutta Bolt; Jan Luiten van Zanden (2024). "Maddison style estimates of the evolution of the world economy: A new 2023 update". Journal of Economic Surveys: 1-41. doi:10.1111/JOES.12618. Wikidata Q126723821. ISSN 0950-0804.
+Jutta Bolt; Jan Luiten van Zanden (2024). "Maddison style estimates of the evolution of the world economy: A new 2023 update". Journal of Economic Surveys: 1-41. doi:10.1111/ .12618. Wikidata Q126723821. ISSN 0950-0804.
 
-Stephen Broadberry; Bruce M. S. Campbell; Alexander Klein; Mark Overton; Bas van Leeuwen (2015). British Economic Growth, 1270–1870 (in en). doi:10.1017/CBO9781107707603. Wikidata Q57945943. ISBN 978-1-107-70760-3.
+Stephen Broadberry; Bruce M. S. Campbell; Alexander Klein; Mark Overton; Bas van Leeuwen (2015). British Economic Growth, 1270–1870. `doi:10.1017/CBO9781107707603`. Wikidata Q57945943. ISBN 978-1-107-70760-3.
 
 Susan B. Carter; S. S. Gartner; M. R. Haineset (2006), Historical statistics of the United States : earliest times to the present, Wikidata Q137660377
 

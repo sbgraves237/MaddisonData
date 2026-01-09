@@ -1,5 +1,5 @@
 ---
-title: "Technology leaders"
+title: "Identifying MaddisonData leaders"
 author: "Spencer Graves"
 date: "`r Sys.Date()`"
 output: html_document
@@ -141,20 +141,26 @@ This figure needs to acknowledge Bolt and Van Janden (2024) for the Maddison Dat
 
 ## Bibliography 
 
-Jutta Bolt and Jan Luiten Van Zanden (2024) "Maddison style estimates of the evolution of the world economy: A new 2023 update", Journal of Economic Surveys, 1-41
+Daron Acemoğlu; Simon Johnson (2023). Power and Progress: Our Thousand-Year Struggle Over Technology and Prosperity (in en). PublicAffairs. Wikidata Q125292212. ISBN 978-1-5417-0253-0.
 
-Broadberry, S.N., B. Campbell, A. Klein, M. Overton and B. van Leeuwen (2015), British Economic Growth 1270-1870 Cambridge: Cambridge University Press.
+Jutta Bolt; Jan Luiten van Zanden (2024). "Maddison style estimates of the evolution of the world economy: A new 2023 update". Journal of Economic Surveys: 1-41. doi:10.1111/JOES.12618. Wikidata Q126723821. ISSN 0950-0804.
 
-Susan B. Carter, S. S. Gartner, M. R. Haineset (2006) Historical Statistics of the United States: Earliest Time to the Present (Cambridge University Press)-->{{cite Q|Q137660377}} 
+Stephen Broadberry; Bruce M. S. Campbell; Alexander Klein; Mark Overton; Bas van Leeuwen (2015). British Economic Growth, 1270–1870 (in en). doi:10.1017/CBO9781107707603. Wikidata Q57945943. ISBN 978-1-107-70760-3.
 
-John J. McCusker (2006) ‘Colonial Statistics’, Carter et al. (2006, V-671). 
+Susan B. Carter; S. S. Gartner; M. R. Haineset (2006), Historical statistics of the United States : earliest times to the present, Wikidata Q137660377
 
-W. Scheidel and S. J. Friesen (2009) ‘The size of the economy and the distribution of income in the Roman Empire’, Journal of Roman Studies, 99, pp. 61–91. 
+Spencer Graves (24 November 2025), MaddisonData: Maddison Project Data, Wikidata Q137660514
 
-J.P. Smits, E. Horlings and J.L. van Zanden (2000) The Measurement of Gross National Product and its Components 1800-1913 (Groningen Growth and Development Centre Monograph series no 5).
+John J. McCusker (2006). "Colonial Statistics". Historical statistics of the United States : earliest times to the present V: 671. Wikidata Q137669937.
 
-I. Sugimoto (2011), Economic growth of Singapore in the twentieth century: historical GDP estimates and empirical investigations, Economic Growth Centre Research Monograph ser., 2, http://www.worldscibooks.com/economics/7858.html (accessed on 30 Jan. 2013).
+Reece Peck (2016). "Usurping the usable past: How Fox News remembered the Great Depression during the Great Recession". Journalism. Wikidata Q135527962. ISSN 1464-8849.
 
-R. Sutch (2006). National Income and Product. Carter et al. (2006, III-23-25).
+Walter Scheidel; Steven J. Friesen (November 2009). "The Size of the Economy and the Distribution of Income in the Roman Empire". The Journal of Roman Studies 99: 61. doi:10.3815/007543509789745223. Wikidata Q55878109. ISSN 0075-4358.
 
-J. L. Van Zanden  and B. van Leeuwen (2012), ‘Persistent but not consistent: the growth of national income in Holland 1347–1807’, Explorations in Economic History, 49 (2012), pp. 119–30.
+Jan-Pieter Smits; Edwin Horlings; Jan Luiten van Zanden (2000), Dutch GDP and its Components 1800-1913 (PDF), Wikidata Q137669960
+
+Ichiro Sugimoto (2011), Economic growth of Singapore in the twentieth century: historical GDP estimates and empirical investigations (PDF), Wikidata Q137669987
+
+R. Sutch (2006). "National Income and Product". Historical statistics of the United States : earliest times to the present III: 23-25. Wikidata Q137670038.
+
+Jan Luiten van Zanden; Bas van Leeuwen (2012). "Persistent but not consistent: the growth of national income in Holland 1347–1807". Explorations in Economic History 49 (2): 119-130. Wikidata Q137670058. ISSN 0014-4983.

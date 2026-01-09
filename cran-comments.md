@@ -1,6 +1,6 @@
 ## R CMD check results
 
-* This is release 1.0.3 to CRAN.
+* This is release 1.1.0 to CRAN.
 
 0 errors | 0 warnings | 0 notes
 On local computer including with "--as-cran" and 5 standard GitHub actions. 

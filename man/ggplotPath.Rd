@@ -79,7 +79,7 @@ present. If present, \code{length(color)} should equal
 Else either
 \itemize{
 \item an integer (0-6), a name (0 = blank, 1 = solid, 2 = dashed,
-3 = dotted, 4 = dotdash, 5 = longdash, 6 = twodash), or
+3 = dotted, 4 = \code{dotdash}, 5 = \code{longdash}, 6 = \code{twodash}), or
 \item a mapping to a discrete variable, or
 \item a string of an even number (up to eight) of hexadecimal digits
 which give the lengths in consecutive positions in the string.

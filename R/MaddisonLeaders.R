@@ -44,7 +44,7 @@
 #' \item `gdppc0`, 
 #' \item `gdppc1`, and 
 #' \item `ISO`, plus 
-#' \item `dyear0 = `yearEnd - yearBegin + 1` and 
+#' \item `dyear0 = yearEnd - yearBegin + 1` and 
 #' \item `dyear1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)` 
 #' }
 #' 

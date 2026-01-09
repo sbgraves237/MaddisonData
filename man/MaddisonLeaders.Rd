@@ -59,7 +59,8 @@ columns
 \item \code{gdppc0},
 \item \code{gdppc1}, and
 \item \code{ISO}, plus
-\item \verb{dyear0 = }yearEnd - yearBegin + 1\verb{and  \\item}dyear1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)`
+\item \code{dyear0 = yearEnd - yearBegin + 1} and
+\item \code{dyear1 = c(tail(yearBegin, -1) - head(yearEnd, -1), NA)}
 }
 
 with an attribute \code{LeaderByYear} = a \code{data.frame} with columns, \code{{{x}}},

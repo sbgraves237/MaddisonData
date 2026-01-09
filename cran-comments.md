@@ -1,12 +1,13 @@
 ## R CMD check results
 
+* This is release 1.0.3 to CRAN.
+
 0 errors | 0 warnings | 0 notes
+On local computer including with "--as-cran" and 5 standard GitHub actions. 
 
-* This is release 1.0.2 to CRAN replacing ticks with single quotes in 
-DESCRIPTION. (Please excuse: I had single quote, but devtools::spell_check() 
-complained about a variable name, and so I tried ticks instead. That change
-did not change the result with devtools::spell_check(), but it still passed 
-all other checks, so I left it.
+devtools::check_win_devel() flagged several "(possibly) invalid URLs", e.g.: 
+URL: https://en.wikipedia.org/wiki/Maddison_Project"
 
-Checked fine on 5 standard GitHub Actions plus check_win_devel and locally with 
-"R CMD check --as-cran". 
+They were all Wikipedia, which I suspect probably has code that identifies bots 
+and refuses to respond. 
+urlchecker::url_check() locally said "All URLs are correct!"

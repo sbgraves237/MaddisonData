@@ -27,13 +27,41 @@ these data.
 Objectives: Make it relatively easy in R to do the following: 
 
 1. Find the countries with the highest `gdppc` for each year for which data are 
-available. 
+available using `MaddisonLeaders()`. 
 
 2. Refine "1" by deleting companies with high `gdppc` based on something narrow 
-like a commodity, e.g., oil. 
+like a commodity, e.g., oil, since 1600: 
+
+```{r MadDat1600}
+library(MaddisonData)
+MadDat1600 <- subset(MaddisonData, year>1600)
+Leaders1600 <- MaddisonLeaders(c('ARE', 'KWT', 'QAT'), data=MadDat1600)
+summary(Leaders1600)
+```
 
 3. Plot the data available on `gdppc` and / or pop for a selection of countries, 
 e.g., world leaders. 
+
+```{r ggplotPath}
+str(GBR_USA <- subset(MaddisonData::MaddisonData, ISO %in% c('GBR', 'USA')))
+GBR_USA1 <- MaddisonData::ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000)
+
+GBR_USA1+ggplot2::coord_cartesian(xlim=c(1500, 1850)) # for only 1500-1850 
+GBR_USA1+ggplot2::coord_cartesian(xlim=c(1600, 1700), ylim=c(7, 17)) 
+
+# label the lines
+ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), label=c('GBR', 'USA'), 
+              srt=c(0, 30), col=c('red', 'green'), size=c(2, 9))
+GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+                    labels=ISOll, fontsize = 20)  
+                        
+# h, vlines, manual legend only 
+Hlines <- c(1,3, 10, 30)
+Vlines = c(1849, 1929, 1933, 1939, 1945)
+(GBR_USA3 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+       ylab='GDP per capita (2011 PPP K$)', 
+       legend.position = NULL, hlines=Hlines, vlines=Vlines, labels=ISOll))  
+```
 
 LATER: 
 

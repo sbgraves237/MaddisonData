@@ -1,0 +1,228 @@
+---
+title: "Kalman smoothing MaddisonData"
+author: "Spencer Graves"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(RefManageR)
+library(MaddisonData)
+bibFile <- path_package2("MaddisonData.bib", 
+                         subdirs='vignettes')
+bib <- ReadBib(bibFile, check = FALSE)
+BibOptions(check.entries = FALSE, style = "markdown", 
+           cite.style = "authoryear", bib.style = "numeric")
+```
+
+## Abstract
+
+We use the [KFAS (Kalman Filtering and Smoothing)](https://github.com/helske/KFAS) R Package for Exponential Family State Space Models to obtain separate estimates of GDP per capita and growth rate for each country in `MaddisonData`. This approach supports alternative models of economic growth including the impact of changes in heads of state, wars, and human rights including media policies. The methodology can be easily adapted to model population growth and changes on other variables. 
+
+## Basic setup 
+
+It is common to work with log(dollars) rather than dollars directly.  This is obvious to many who work with finance but foreign to many others.  For the latter group, it's worth noting that a $500 drop in annual income would have been catastrophic in 1790, representing almost half the average income at the time.  However a similar $500 drop around 2015 would be hardly noticeable, being just under 1 percent of the 2015 average income.  Moreover, a small change in logarithms can be interpreted as percentage, since log(1+x) is approximately x when x is small (using [natural logarithms](https://en.wikipedia.org/wiki/Natural_logarithm)).  
+
+The models used here are all state space models, which we discuss in general here, giving specific examples later.  State space modeling is also known as Kalman (Kalman filtering, Kalman smoothing), and dynamic (linear) modeling.  For present purposes, we use the [KFAS](https://rweb.crmda.ku.edu/cran/web/packages/KFAS/KFAS.pdf) package described by `r AutoCite(bib, "Helske17")`, though other R packages provide some support for this class of models.  
+
+The theory behind these models can be described in terms of a 3-step Bayesian updating cycle to add new observations to a probability distribution summarizing the available knowledge about the state of the system under study `r AutoCite(bib, "Graves07")`:
+
+  1.  Receive and store new data.  
+  
+  2.  Create a prior distribution for the new data by modifying the posterior computed after the last observation to allow for possible changes in state in the time between the last and current observations. The "migration variance" is assumed to be proportional to the time since the last observation. That's important with irregularly sampled series like GDP per capita and population for some countries. Also, the rate of growth in GDP per capita may change substantially due to events like a change in head of state, as between [Charles I](https://en.wikipedia.org/wiki/Charles_I_of_England) and [English Council of State](https://en.wikipedia.org/wiki/English_Council_of_State) that succeeded Charles I in 1649 or between [Calvin Coolidge](https://en.wikipedia.org/wiki/Calvin_Coolidge), [Herbert Hoover](https://en.wikipedia.org/wiki/Herbert_Hoover), [Franklin Roosevelt](https://en.wikipedia.org/wiki/Franklin_D._Roosevelt) and [Harry Truman](https://en.wikipedia.org/wiki/Harry_S._Truman) in the US between 1929 and 1945. 
+  
+  3.  Combine the new data with the prior to produce a posterior distribution of the state.  
+  
+In the present discussion, the system under study can be GDP per capita (at purchasing power parity adjusted for inflation) and / or population at one or multiple countries. We summarize this system in a vector of one or more numbers that represent the state or condition of the system at a particular point in time.  (The term "state" in "state space" refers to this type of representation.)
+
+The first model of this type discussed here considers univariate observations $y_t$ = log(real GDP per capita) on a hidden univariate state $\alpha_t$, which represents the portion of the annual number that persists.  The differences between the observations and predictions based on the hidden state are assumed to be uncorrelated across time $t$;  any serial correlation in $y_t$ is assumed to be due to the hidden state, $\alpha_t$.  
+
+With univariate observations on a univariate state, the result is almost a traditional [exponentially weighted moving average (EWMA)](https://en.wikipedia.org/wiki/Exponential_smoothing), except that the weight on the last observation is adjusted with each observation consistent with the Bayesian sequential updating cycle outlined above. With annual observations with no recent missing values, this weight converges to an asymptote determined by the ratio of the migration and observation error variances `r AutoCite(bib, "Graves02")`. 
+
+In the more general [Kalman filtering](https://en.wikipedia.org/wiki/Kalman_filter) terminology, the weight on the last observation (or the weight on the deviation of that observation from prediction) is called the Kalman gain.  Bayesian sequential updating produces a varying Kalman gain, though in many applications the Kalman gain converges to a constant.  Before fitting any model, we first describe the general [KFAS](https://rweb.crmda.ku.edu/cran/web/packages/KFAS/KFAS.pdf) model and show how the Bayesian EWMA described above is a special case.  This formulation allows the system to vary over time supporting asynchronous observations on different variables at irregular points in time.  
+
+The next generalization beyond an EWMA is [double exponential smoothing](https://en.wikipedia.org/wiki/Exponential_smoothing#Double_exponential_smoothing):  It has a two-dimensional state vector with the first dimension being the level and the second being the rate of growth.  
+
+## 1.  The simplest Kalman Filter:  an Exponentially Weighted Moving Average (EWMA)
+
+Consider a univariate noisy measurement, $y_t$, of a univariate state, $\alpha_t$:
+
+$$y_t = \alpha_t + \epsilon_t$$
+
+where the state, $\alpha_t$, follows a random walk:  
+
+$$\alpha_{t+1} = \alpha_t + \eta_t.$$
+
+In this model, we assume that observation error, $\epsilon_t$, and the random migration, $\eta_t$, are normally distributed with mean 0 and variance, $H$ and $Q_t$, respectively, and the initial state $\alpha_1$ is normal with mean $a_1$ and variance $P_1$.  We sometimes write $a_1$ and $P_1$ as $a_{1|0}$ and $P_{1|0}$ to make it clear that these are the prior mean and variance of $\alpha_1$ before $y_1$ is available (using the conditional subscript notation, following, e.g., `r Citet(bib, "Harvey")`).  We may also use $a_{t|t}$ and $P_{t|t}$ to denote the posterior mean and variance given $D_t = \{y_t, y_{t-1}, ...\}$.  The prior distribution for $\alpha_t$ given $D_{t-1}$ and the posterior for $\alpha_t$ given $D_t$ will be computed recursively. (See `r Citet(bib, "DurbinKoopman2")` for more detail on this model.)
+
+These equations are called the measurement and state transition equations, respectively.  
+
+We will estimate $H$ and $Q$ to maximize the likelihood.  We will also estimate the series $\alpha_t$ conditional on these estimates $H$, $Q$, $a_1$ and $P_1$.  
+
+With this notation, we can provide more details in discussing the 3-step Bayesian sequential updating process outlined above: 
+
+  1.  A new observation, $y_t$, arrives.  
+  
+  2.  The prior distribution $f(\alpha_t | D_{t-1})$ is computed from the previous posterior $f(\alpha_{t-1} | D_{t-1})$, where $D_{t-1}$ is all the information available prior to the arrival of $y_t$;  for $t$ = 0, this is already assumed as $\alpha_1 \tilde\ N(a_{1|0}, P_{1|0})$.  Otherwise, we have by recursion that the posterior for $(\alpha_{t-1} | D_{t-1})$ is $N(a_{t-1|t-1}, P_{t-1|t-1})$.  From this using a linear state transition equation, we get that the next prior $(\alpha_t | D_{t-1})$ is $N(a_{t|t-1}, P_{t|t-1})$.  In particular, the state transition equation above gives us $a_{t|t-1} = a_{t-1|t-1}$ and $P_{t|t-1} = P_{t-1|t-1} + Q.$  (The double subscripts help clarify the math, which can be confusing otherwise.)  
+
+  3.  Bayes' theorem is then used to update this prior to incorporate the information in the new observation.  This converts $f(\alpha_t | D_{t-1})$ into $f(\alpha_t | D_t)$.    
+  
+The distribution of the state vector $\alpha_t$ is governed by certain hyperparameters, suppressed in the notation $f(\alpha_t | D_t)$.  These hyperparameters are estimated by maximum likelihood. 
+
+## KFAS package for Kalman Filtering and Smoothing
+
+State space modeling with the [KFAS](https://rweb.crmda.ku.edu/cran/web/packages/KFAS/KFAS.pdf) package assumes the following generalization of the above measurement and state transition equations:  
+
+$$y_t = Z_t \alpha_t + \epsilon_t$$
+
+$$\alpha_{t+1} = T_t \alpha_t + R_t \eta_t.$$
+
+where $\epsilon_t \tilde\ N(0, H_t)$, $\eta_t \tilde\ N(0, Q_t)$ and $\alpha_1 \tilde\ N(a_1, P_1)$, independent of each other.  In this, $y_t$ is a $p$-vector (where $p$ may actually vary with $t$), $\alpha_t$ is $m$-dimensional, and $\eta_t$ has dimension $k$.  (See `r Citet(bib, "DurbinKoopman")` for more detail on this model.)   
+
+We initially assume that $y_t$ is `log(realGDPperCapita)` for a single country. Generalizations could assume that $y_t$ could include `log(pop)` for that country or even for multiple countries. 
+
+The dimensionality of $\alpha_t$ for different models, but the first component will always be the level.  Thus, with a univariate $y_t$, $Z_t$ will be a row vector with 1 in the first position and 0 elsewhere. This will force $Q_t$, $T_t$, and $P_1$ to change between models.  In addition, some models have diffuse initialization for the state vector.  These are specified by a model component $P_{1,\infty}$;  see `r Citet(bib, "KFASarticle")` or [SSmodel](http://rpackages.ianhowson.com/cran/KFAS/man/logLik.SSModel.html).  And the different models require estimating different parameters.  
+
+## 1a.  Estimate the Bayesian EWMA 
+
+[KFAS](https://rweb.crmda.ku.edu/cran/web/packages/KFAS/KFAS.pdf) modeling begins with a [formula](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/formula.html) that is converted to an "SSModel" object using the [SSModel](http://rpackages.ianhowson.com/cran/KFAS/man/SSModel.html) function.  This is passed to [fitSSM](http://rpackages.ianhowson.com/cran/KFAS/man/fitSSM.html) to estimate unknown parameters to maximize [logLik.SSModel](http://rpackages.ianhowson.com/cran/KFAS/man/logLik.SSModel.html).  Confidence and prediction intervals can be obtained using [predict.SSModel](http://rpackages.ianhowson.com/cran/KFAS/man/predict.SSModel.html).  Function [KFS](http://rpackages.ianhowson.com/cran/KFAS/man/KFS.html) will produce filtered and smoothed estimates of the state vector in components "a" and "alphahat", respectively, of an object of class "KFS":
+
+<center> 
+[formula](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/formula.html) -> [SSModel](http://rpackages.ianhowson.com/cran/KFAS/man/SSModel.html) -> [fitSSM](http://rpackages.ianhowson.com/cran/KFAS/man/fitSSM.html) -> [KFS](http://rpackages.ianhowson.com/cran/KFAS/man/KFS.html)  
+</center>
+
+Let's write a suitable formula for our Bayesian EWMA:
+
+```{r KFAS0}
+suppressMessages(library(KFAS)) # cite Helske (2017)
+EWMA1fmla <- (log(gdppc)~
+  SSMtrend(1,Q=array(NA, c(1, 1, length(gdppc))),
+           a1=log(gdppc[1]),ynames='lnGDPperCap'))
+```
+
+We use this to create an SSModel as follows:  
+
+```{r GBR0}
+library(MaddisonData)
+selMadd <- subset(MaddisonData, (ISO=='GBR') & !is.na(gdppc))
+EWMA1mdl <-SSModel(EWMA1fmla, selMadd, H=matrix(NA) )
+is.SSModel(EWMA1mdl) # TRUE
+```
+
+This model has 2 unknowns, the NA's in EWMA1fmla and SSModel: 
+
+  * Q = the state migration variance  
+  
+  * H = observation error variance.  
+
+The default behavior of [`fitSSM`](http://rpackages.ianhowson.com/cran/KFAS/man/fitSSM.html) is to estimate the logarithms of these two variance. `fitSSM` requires us to provide starting values for log(Q) and log(H), in that order:  
+
+```{r GBR2}
+EWMA1updateFn2 <- function(pars, model){
+# 2-parameters = variances of [1] 1-year migration and [2]observation.
+  dYr. <- diff(selMadd$year)
+  dYr <- c(5*max(dYr.), dYr.)
+  Q <- array(dYr*exp(pars[1]), dim=c(1, 1, length(dYr)))
+  model$Q <- Q
+  model$H[1,1,1] <- exp(pars[2]) # observation variance 
+  model
+}
+# check 
+EWMA1mdl2 <- EWMA1updateFn2(rep(0, 2), EWMA1mdl)
+is.SSModel(EWMA1mdl2)
+```
+
+Now fit. 
+
+```{r GBR2f}
+#fit_drivers <- fitSSM(model_drivers, inits = rep(-1, 6),
+#                      updatefn = ownupdatefn, method = "BFGS")
+EWMA1fit2 <- fitSSM(EWMA1mdl, inits=c(lnQ=0, lnH=0), 
+                   updatefn = EWMA1updateFn2)
+```
+
+`EWMA1fit$optim.out$convergence` = `r EWMA1fit$optim.out$convergence`: Per [help(optim)](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/optim), "0 indicates successful completion", i.e. convergence. 
+
+Let's compute the log likelihood and then force `lnQ == lnH` and see how much that increases `logLik`. 
+
+```{r GBR1}
+(EWMA1logLik2 <- logLik(EWMA1fit2$model))
+
+EWMA1updateFn1 <- function(pars, model){
+# 1 parameter = variances of both 1-year migration and observation.
+  dYr. <- diff(selMadd$year)
+  dYr <- c(5*max(dYr.), dYr.)
+  v1 <- exp(pars[1])
+  Q <- array(dYr*v1, dim=c(1, 1, length(dYr)))
+  model$Q <- Q
+  model$H[1,1,1] <- v1 # observation variance 
+  model
+}
+# check 
+EWMA1mdl1 <- EWMA1updateFn1(rep(0, 2), EWMA1mdl)
+is.SSModel(EWMA1mdl1)
+```
+
+Now fit. 
+
+```{r GBR1f}
+EWMA1fit1 <- fitSSM(EWMA1mdl, inits=c(lnQ_H=0), 
+                   updatefn = EWMA1updateFn1)
+(EWMA1logLik1 <- logLik(EWMA1fit1$model))
+EWMA1logLik2
+```
+
+Wow: A substantially better fit. We should redo the 2-d fit with better starting values. 
+
+```{r GBR2f2}
+EWMA1inits2 <- rep(EWMA1fit$optim.out$par, 2)
+names(EWMA1inits2) <- c('lnQ', 'lnH')
+EWMA1fit2a <- fitSSM(EWMA1mdl, inits=EWMA1inits2, 
+                   updatefn = EWMA1updateFn2)
+EWMA1fit2a$optim.out$convergence
+(EWMA1logLik2a <-logLik(EWMA1fit2a$model))
+EWMA1logLik2
+EWMA1logLik1
+(EWMA1chisq2 <- 2*(EWMA1logLik2a-EWMA1logLik1))
+```
+
+Conclusions: 
+
+1. The one-year migration variance is not significantly different from the observation variance. 
+
+2. We can select the ratio between the two over some reasonable range to give the best image in smoothing the series. 
+
+3. However, let's first consider a double EWMA with a two-dimensional state of `(level, growthRate)` or `(level, slope)`. 
+
+## 2.  Estimate a double EWMA, i.e., with a 2-parameter state for level and slope
+
+```{r EWMA2f}
+nobs <- length(selMadd$gdppc)
+Q2 <- array(0, c(2, 2, nobs) )
+Q2[1,1,] <- NA
+Q2[2,2,] <- NA
+EWMA2components <- c('level', 'slope')
+dimnames(Q2) <- list(EWMA2components, EWMA2components, 
+                     selMadd$year)
+Q2[,,1:2]
+Q2[,,nobs-(1:0)]
+
+a1_2 <- with(selMadd, log(c(gdppc[1], gdppc[2]/gdppc[1])))
+EWMA2f <- (log(gdppc)~
+  SSMtrend(2,Q=Q2, a1=a1_2,ynames='lnGDPperCap'))
+```
+
+```{r EWMA2m, eval=FALSE}
+EWMA2m <-SSModel(EWMA2f, selMadd, H=matrix(NA) )
+# Error in SSMtrend(degree = 2, Q = Q2, a1 = a1_2, ynames = 
+# "lnGDPperCap",  : 
+#   Q must be a list of length degree, which contains (p x p) matrices,
+#   (p x p x 1), or (p x p x n) arrays, where p is the number of
+#   series. 
+```
+
+## References
+```{r results = "asis", echo = FALSE}
+PrintBibliography(bib)
+```

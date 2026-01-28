@@ -45,7 +45,9 @@
 path_package2 <- function(target, package=NULL, nparents=1, 
     subdirs = c('extdata', 
         paste('inst','extdata', sep=.Platform$file.sep))){
-  s1 <- if(is.null(package)) getwd() else system.file(package)
+  s1 <- if(is.null(package)){
+    getwd()
+    } else system.file(package)
   searched <- character(0)
 # Define a function to search subdirs  
   Search <- function(Dir=s1){

@@ -42,7 +42,7 @@ With univariate observations on a univariate state, the result is almost a tradi
 
 In the more general [Kalman filtering](https://en.wikipedia.org/wiki/Kalman_filter) terminology, the weight on the last observation (or the weight on the deviation of that observation from prediction) is called the Kalman gain.  Bayesian sequential updating produces a varying Kalman gain, though in many applications the Kalman gain converges to a constant.  Before fitting any model, we first describe the general [KFAS](https://rweb.crmda.ku.edu/cran/web/packages/KFAS/KFAS.pdf) model and show how the Bayesian EWMA described above is a special case.  This formulation allows the system to vary over time supporting asynchronous observations on different variables at irregular points in time.  
 
-The next generalization beyond an EWMA is [double exponential smoothing](https://en.wikipedia.org/wiki/Exponential_smoothing#Double_exponential_smoothing):  It has a two-dimensional state vector with the first dimension being the level and the second being the rate of growth.  
+The next generalization beyond an EWMA is has a two-dimensional state vector with the first dimension being the level and the second being the rate of growth.  
 
 ## 1.  The simplest Kalman Filter:  an Exponentially Weighted Moving Average (EWMA)
 
@@ -70,7 +70,7 @@ With this notation, we can provide more details in discussing the 3-step Bayesia
   
 The distribution of the state vector $\alpha_t$ is governed by certain hyperparameters, suppressed in the notation $f(\alpha_t | D_t)$.  These hyperparameters are estimated by maximum likelihood. 
 
-## KFAS package for Kalman Filtering and Smoothing
+## 1a. KFAS package for Kalman Filtering and Smoothing
 
 State space modeling with the [KFAS](https://rweb.crmda.ku.edu/cran/web/packages/KFAS/KFAS.pdf) package assumes the following generalization of the above measurement and state transition equations:  
 
@@ -84,7 +84,7 @@ We initially assume that $y_t$ is `log(realGDPperCapita)` for a single country. 
 
 The dimensionality of $\alpha_t$ for different models, but the first component will always be the level.  Thus, with a univariate $y_t$, $Z_t$ will be a row vector with 1 in the first position and 0 elsewhere. This will force $Q_t$, $T_t$, and $P_1$ to change between models.  In addition, some models have diffuse initialization for the state vector.  These are specified by a model component $P_{1,\infty}$;  see `r Citet(bib, "KFASarticle")` or [SSmodel](http://rpackages.ianhowson.com/cran/KFAS/man/logLik.SSModel.html).  And the different models require estimating different parameters.  
 
-## 1a.  Estimate the Bayesian EWMA 
+## 1b.  Estimate the Bayesian EWMA 
 
 [KFAS](https://rweb.crmda.ku.edu/cran/web/packages/KFAS/KFAS.pdf) modeling begins with a [formula](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/formula.html) that is converted to an "SSModel" object using the [SSModel](http://rpackages.ianhowson.com/cran/KFAS/man/SSModel.html) function.  This is passed to [fitSSM](http://rpackages.ianhowson.com/cran/KFAS/man/fitSSM.html) to estimate unknown parameters to maximize [logLik.SSModel](http://rpackages.ianhowson.com/cran/KFAS/man/logLik.SSModel.html).  Confidence and prediction intervals can be obtained using [predict.SSModel](http://rpackages.ianhowson.com/cran/KFAS/man/predict.SSModel.html).  Function [KFS](http://rpackages.ianhowson.com/cran/KFAS/man/KFS.html) will produce filtered and smoothed estimates of the state vector in components "a" and "alphahat", respectively, of an object of class "KFS":
 
@@ -115,40 +115,12 @@ This model has 2 unknowns, the NA's in EWMA1fmla and SSModel:
   * Q = the state migration variance  
   
   * H = observation error variance.  
+  
+The default behavior of [`fitSSM`](http://rpackages.ianhowson.com/cran/KFAS/man/fitSSM.html) is to estimate the logarithms of these two variance. `fitSSM` requires us to provide starting values for log(Q) and log(H), in that order. 
 
-The default behavior of [`fitSSM`](http://rpackages.ianhowson.com/cran/KFAS/man/fitSSM.html) is to estimate the logarithms of these two variance. `fitSSM` requires us to provide starting values for log(Q) and log(H), in that order:  
-
-```{r GBR2}
-EWMA1updateFn2 <- function(pars, model){
-# 2-parameters = variances of [1] 1-year migration and [2]observation.
-  dYr. <- diff(selMadd$year)
-  dYr <- c(5*max(dYr.), dYr.)
-  Q <- array(dYr*exp(pars[1]), dim=c(1, 1, length(dYr)))
-  model$Q <- Q
-  model$H[1,1,1] <- exp(pars[2]) # observation variance 
-  model
-}
-# check 
-EWMA1mdl2 <- EWMA1updateFn2(rep(0, 2), EWMA1mdl)
-is.SSModel(EWMA1mdl2)
-```
-
-Now fit. 
-
-```{r GBR2f}
-#fit_drivers <- fitSSM(model_drivers, inits = rep(-1, 6),
-#                      updatefn = ownupdatefn, method = "BFGS")
-EWMA1fit2 <- fitSSM(EWMA1mdl, inits=c(lnQ=0, lnH=0), 
-                   updatefn = EWMA1updateFn2)
-```
-
-`EWMA1fit$optim.out$convergence` = `r EWMA1fit$optim.out$convergence`: Per [help(optim)](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/optim), "0 indicates successful completion", i.e. convergence. 
-
-Let's compute the log likelihood and then force `lnQ == lnH` and see how much that increases `logLik`. 
+However, these two parameters may not be independently estimable. If so, that could create convergence problems with nonlinear estimation. Therefore, let's first start by forcing the two to be equal. 
 
 ```{r GBR1}
-(EWMA1logLik2 <- logLik(EWMA1fit2$model))
-
 EWMA1updateFn1 <- function(pars, model){
 # 1 parameter = variances of both 1-year migration and observation.
   dYr. <- diff(selMadd$year)
@@ -161,30 +133,83 @@ EWMA1updateFn1 <- function(pars, model){
 }
 # check 
 EWMA1mdl1 <- EWMA1updateFn1(rep(0, 2), EWMA1mdl)
+class(EWMA1mdl1)
 is.SSModel(EWMA1mdl1)
 ```
 
 Now fit. 
 
 ```{r GBR1f}
-EWMA1fit1 <- fitSSM(EWMA1mdl, inits=c(lnQ_H=0), 
+EWMA1fit1 <- fitSSM(EWMA1mdl1, inits=c(lnQ_H=0), 
                    updatefn = EWMA1updateFn1)
-(EWMA1logLik1 <- logLik(EWMA1fit1$model))
-EWMA1logLik2
 ```
 
-Wow: A substantially better fit. We should redo the 2-d fit with better starting values. 
+We get, 'Warning in `optim(par = inits, fn = likfn, model = model, ...)` : one-dimensional optimization by Nelder-Mead is unreliable: use "Brent" or optimize() directly'. 
 
-```{r GBR2f2}
-EWMA1inits2 <- rep(EWMA1fit$optim.out$par, 2)
-names(EWMA1inits2) <- c('lnQ', 'lnH')
-EWMA1fit2a <- fitSSM(EWMA1mdl, inits=EWMA1inits2, 
+`KFS(EWMA1fit1$model)` gave a small "Std. Error" relative to the "Estimate", so it's probably good. However, we'll try "Brent" just in case.
+
+```{r GBR1f}
+EWMA1fit1b <- fitSSM(EWMA1mdl, inits=EWMA1fit1$optim.out$par, 
+                   updatefn = EWMA1updateFn1, method="Brent", 
+                   lower=-70, upper=70)
+logLik(EWMA1fit1$model)
+(EWMA1logLik1 <- logLik(EWMA1fit1b$model))
+EWMA1fit1$optim.out$par
+EWMA1fit1b$optim.out$par
+```
+
+They are nearly identical: `logLik`s are the same, and `par` estimates are quite close. 
+
+What about the plot of the state? 
+
+```{r GBR1kfs}
+EWMA1kfs <- KFS(EWMA1fit1b$model)
+plot(selMadd$year, EWMA1kfs$a[-1], type='l')
+
+plot(selMadd$year[-1], exp(tail(EWMA1kfs$a, -2))/1000, type='l', 
+     las=1, xlab='', ylab='GBR GDPpc (2011 K$ppp)', log='y')
+BlackDeathYrs <- c(1346, 1354)
+abline(v=BlackDeathYrs, col='grey', lty='dotted')
+
+BlackDeath <- data.frame(x=mean(BlackDeathYrs), y=3, 
+                         label='Black Death', srt=90)
+GBR1 <- ggplotPath('year', 'gdppc', data=selMadd, scaley=1000,
+      ylab='GBR GDPpc (2011 K$ppp)', vlines=BlackDeathYrs,
+      labels=BlackDeath)
+GBR1 + ggplot2::coord_cartesian(xlim=range(selMadd$year[-1]))
+```
+
+What happens when we try to get separate estimates of Q and H? 
+
+```{r GBR2}
+EWMA1updateFn2 <- function(pars, model){
+# 2-parameters = variances of [1] 1-year migration and [2]observation.
+  dYr. <- diff(selMadd$year)
+  dYr <- c(5*max(dYr.), dYr.)
+  Q <- array(dYr*exp(pars[1]), dim=c(1, 1, length(dYr)))
+  model$Q <- Q
+  model$H[1,1,1] <- exp(pars[2]) # observation variance 
+  model
+}
+# check 
+class(EWMA1mdl)
+
+EWMA1init2 <- rep(EWMA1fit1b$optim.out$par, 2)
+names(EWMA1init2) <- c('lnQ', 'lnH')
+EWMA1mdl2 <- EWMA1updateFn2(EWMA1init2, EWMA1mdl)
+is.SSModel(EWMA1mdl2)
+```
+
+Now fit. 
+
+```{r GBR2f}
+#fit_drivers <- fitSSM(model_drivers, inits = rep(-1, 6),
+#                      updatefn = ownupdatefn, method = "BFGS")
+EWMA1fit2 <- fitSSM(EWMA1mdl, inits=EWMA1init2, 
                    updatefn = EWMA1updateFn2)
-EWMA1fit2a$optim.out$convergence
-(EWMA1logLik2a <-logLik(EWMA1fit2a$model))
-EWMA1logLik2
-EWMA1logLik1
-(EWMA1chisq2 <- 2*(EWMA1logLik2a-EWMA1logLik1))
+logLik(EWMA1fit2$model)
+logLik(EWMA1fit1b$model)
+(EWMA1chisq2 <- (logLik(EWMA1fit2$model)-logLik(EWMA1fit1b$model)))
 ```
 
 Conclusions: 
@@ -193,33 +218,175 @@ Conclusions:
 
 2. We can select the ratio between the two over some reasonable range to give the best image in smoothing the series. 
 
-3. However, let's first consider a double EWMA with a two-dimensional state of `(level, growthRate)` or `(level, slope)`. 
+3. However, let's first consider modeling the series with a two-dimensional state of `(level, growthRate)` or `(level, slope)`. 
 
-## 2.  Estimate a double EWMA, i.e., with a 2-parameter state for level and slope
+## 2.  Estimate mean and slope 
 
 ```{r EWMA2f}
+EWMA2mdl0 <- function(sigma, n) {
+# y = Z a + e  
+  Z <- matrix(1:0, 1, 2)
+  stateNames <- c('level', 'slope')
+  dimnames(Z) <- list('lnGDPpc', stateNames)
+  
+# a = T a + Q eta  
+  dYr. <- diff(selMadd$year)
+  dYr <- c(5*max(dYr.), dYr.)
+  T2 <- array(1, c(2, 2, n))
+  T2[2,1,] <- 0
+  dYr. <- diff(selMadd$year)
+  dYr <- c(5*max(dYr.), dYr.)
+  T2[1,2,] <- dYr 
+  dimnames(T2) <- list(stateNames, stateNames, selMadd$year)
+  T2_ <- T2[, , n, drop=TRUE]
+
+  R2 <- array(1, c(2, 2, n))
+  R2[2, 1, ] <- 0 
+  R2[1, 2, ] <- dYr 
+  dimnames(R2) <- list(stateNames, paste0(stateNames, 'Eta'))
+  R2_ <- R2[,,n, drop=TRUE]
+  
+  Q2 <- array(0, c(2, 2, nobs) )
+# FOR IRREGULAR TIME SERIES:   
+# chol(Q2[,,i]) = (sqrt(dYr)) sqr(choose(dYr, 2))*sqrt(signma)
+#                 (    0           sqr(dYr)     )
+# so 
+# Q2[,,i] = (         dYr          sqrt(dYr*choose(dYr, 2)))*sigma
+#         = (sqrt(dYr*choose(dYr, 2))       dYr           )  
+# NOTE: choose(1, 2) = 0, so when dYr=1, Q2=diag(2)  
+  Q2[1,1,] <- dYr*sigma^2
+  Q2[2,2,] <- dYr*sigma^2
+  Q2[1,2,] <- sqrt(dYr*choose(dYr, 2))*sigma^2
+  Q2[2,1,] <- sqrt(dYr*choose(dYr, 2))*sigma^2
+  dimnames(Q2) <- list(stateNames, stateNames, selMadd$year)
+  Q2_ <- Q2[,,n, drop=TRUE]
+  a1 <- c(level=log(selMadd$gdppc[1]), 
+          slope=mean(diff(log(selMadd$gdppc[2:30]))))
+#  P1 <- 10  optional
+  SSMc <- SSMcustom(Z=Z, T=T2, R=R2, Q=Q2, a1=a1, n = n, 
+                    state_names = stateNames)
+#  SSMcustom(Z=Z, T=T2_, R=R2_, Q=Q2_, n = n, state_names = stateNames)
+  SSMb <- SSMbespoke(SSMc, n)
+  SSMb
+}
+
 nobs <- length(selMadd$gdppc)
-Q2 <- array(0, c(2, 2, nobs) )
-Q2[1,1,] <- NA
-Q2[2,2,] <- NA
-EWMA2components <- c('level', 'slope')
-dimnames(Q2) <- list(EWMA2components, EWMA2components, 
-                     selMadd$year)
-Q2[,,1:2]
-Q2[,,nobs-(1:0)]
+EWMA2mdl1 <- EWMA2mdl0(exp(EWMA1fit1$optim.out$par), nobs)
+class(EWMA2mdl1)
+EWMA2mdl1_ <- SSMbespoke(EWMA2mdl1, nobs)
+class(EWMA2mdl1_)
 
 a1_2 <- with(selMadd, log(c(gdppc[1], gdppc[2]/gdppc[1])))
-EWMA2f <- (log(gdppc)~
-  SSMtrend(2,Q=Q2, a1=a1_2,ynames='lnGDPperCap'))
+EWMA2f <- (log(gdppc)~ -1 + SSMbespoke(
+             EWMA2mdl0(exp(EWMA1fit1$optim.out$par), nobs) )) 
 ```
 
-```{r EWMA2m, eval=FALSE}
+```{r EWMA2m}
 EWMA2m <-SSModel(EWMA2f, selMadd, H=matrix(NA) )
-# Error in SSMtrend(degree = 2, Q = Q2, a1 = a1_2, ynames = 
-# "lnGDPperCap",  : 
-#   Q must be a list of length degree, which contains (p x p) matrices,
-#   (p x p x 1), or (p x p x n) arrays, where p is the number of
-#   series. 
+class(EWMA2m)
+```
+
+Next: 
+
+```{r EWMA2fit}
+EWMA2updateFn1 <- function(pars, model){
+# 1 parameter = variances of both 1-year migration and observation.
+  nobs <- nrow(selMadd)
+  v1 <- as.numeric(exp(pars[1]))
+  model$H[1,1, 1] <- v1 # observation variance 
+#
+  Q2 <- array(0, c(2, 2, nobs) )
+# chol(Q2[,,i]) = (sqrt(dYr)) sqr(choose(dYr, 2))*sqrt(signma)
+#                 (    0           sqr(dYr)     )
+# so 
+# Q2[,,i] = (         dYr          sqrt(dYr*choose(dYr, 2)))*sigma
+#         = (sqrt(dYr*choose(dYr, 2))       dYr           )  
+# NOTE: choose(1, 2) = 0, so when dYr=1, Q2=diag(2)  
+  dYr. <- diff(selMadd$year)
+  dYr <- c(5*max(dYr.), dYr.)
+  Q2[1,1,] <- dYr*v1
+  Q2[2,2,] <- dYr*v1
+  Q2[1,2,] <- sqrt(dYr*choose(dYr, 2))*v1
+  Q2[2,1,] <- sqrt(dYr*choose(dYr, 2))*v1
+  stateN <- dimnames(model$Z)[[2]]
+  dimnames(Q2) <- list(stateN, stateN, selMadd$year)
+  model$Q <- Q2
+  model
+}
+
+is.SSModel(EWMA2m)
+EWMA2mdl2 <- EWMA2updateFn1(EWMA1fit1$optim.out$par, EWMA2m)
+class(EWMA2mdl2)
+is.SSModel(EWMA2mdl2)
+
+EWMA2fit1 <- fitSSM(EWMA2m, inits=EWMA1fit1$optim.out$par, 
+                   updatefn = EWMA2updateFn1)
+(EWMA2logLik1 <- logLik(EWMA2fit1$model))
+EWMA1logLik1
+```
+
+Problem: `EWMA2logLik1` = `r EWMA2logLik1` is much than `EWMA1logLik1` = `r EWMA1logLik1`: It should be greater, unless I misunderstand the likelihood computation. 
+
+If we only allow `Q[1, 1]` to be nonzero, then `fitSSM(EWMA2m, ...` should be equivalent to `EWMA1fit1`.
+
+```{r EWMA2fit0}
+EWMA2updateFn0 <- function(pars, model){
+# 1 parameter = variances of both 1-year migration and observation.
+  nobs <- nrow(selMadd)
+  v1 <- as.numeric(exp(pars[1]))
+  model$H[1,1, 1] <- v1 # observation variance 
+#
+  Q2 <- array(0, c(2, 2, nobs) )
+# chol(Q2[,,i]) = (sqrt(dYr)) sqr(choose(dYr, 2))*sqrt(signma)
+#                 (    0           sqr(dYr)     )
+# so 
+# Q2[,,i] = (         dYr          sqrt(dYr*choose(dYr, 2)))*sigma
+#         = (sqrt(dYr*choose(dYr, 2))       dYr           )  
+# NOTE: choose(1, 2) = 0, so when dYr=1, Q2=diag(2)  
+  dYr. <- diff(selMadd$year)
+  dYr <- c(5*max(dYr.), dYr.)
+  Q2[1,1,] <- dYr*v1
+#  Q2[2,2,] <- dYr*v1
+#  Q2[1,2,] <- sqrt(dYr*choose(dYr, 2))*v1
+#  Q2[2,1,] <- sqrt(dYr*choose(dYr, 2))*v1
+  stateN <- dimnames(model$Z)[[2]]
+  dimnames(Q2) <- list(stateN, stateN, selMadd$year)
+  model$Q <- Q2
+  model
+}
+
+is.SSModel(EWMA2m)
+EWMA2mdl0 <- EWMA2updateFn0(EWMA1fit1$optim.out$par, EWMA2m)
+class(EWMA2mdl0)
+is.SSModel(EWMA2mdl0)
+
+EWMA2fit0 <- fitSSM(EWMA2m, inits=EWMA1fit1$optim.out$par, 
+                   updatefn = EWMA2updateFn0)
+EWMA2logLik1
+EWMA1logLik1
+(EWMA2logLik0 <- logLik(EWMA2fit0$model))
+```
+
+Interesting: `EWMA2logLik0 > EWMA2logLik1`, which suggests a problem somewhere that I do not understand. 
+
+Let's ignore this for the moment and plot the level and slope from `EWMA2logLik1`. 
+
+```{r EWMA2logLik1plot}
+(EWMA2kfs <- KFS(EWMA2fit1$model))
+(EWMA2kfs0 <- KFS(EWMA2fit0$model))
+
+a_smooth <- tail(EWMA2kfs$a, -2)
+attributes(a_smooth)
+attr(a_smooth, 'tsp') 
+# mts ... 
+tsp(a_smooth) 
+a_sm <- ts(a_smooth, start=selMadd$year[2])
+plot(a_sm, las=1)
+
+EWMA2pred <- predict(EWMA2fit1$model, interval='prediction')
+head(EWMA2pred, 3)
+tail(EWMA2pred, 2)
+
 ```
 
 ## References

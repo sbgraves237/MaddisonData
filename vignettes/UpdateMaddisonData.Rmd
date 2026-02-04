@@ -2,7 +2,7 @@
 title: "Update Maddison Data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{UpdateMaddisonData}
+  %\VignetteIndexEntry{Update Maddison Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

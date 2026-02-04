@@ -3,6 +3,9 @@ title: "Kalman smoothing MaddisonData"
 author: "Spencer Graves"
 date: "`r Sys.Date()`"
 output: html_document
+vignette: >
+  %\VignetteIndexEntry{Kalman smoothing MaddisonData}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r setup, include=FALSE}
@@ -148,7 +151,7 @@ We get, 'Warning in `optim(par = inits, fn = likfn, model = model, ...)` : one-d
 
 `KFS(EWMA1fit1$model)` gave a small "Std. Error" relative to the "Estimate", so it's probably good. However, we'll try "Brent" just in case.
 
-```{r GBR1f}
+```{r GBR1f2}
 EWMA1fit1b <- fitSSM(EWMA1mdl, inits=EWMA1fit1$optim.out$par, 
                    updatefn = EWMA1updateFn1, method="Brent", 
                    lower=-70, upper=70)
@@ -168,15 +171,25 @@ plot(selMadd$year, EWMA1kfs$a[-1], type='l')
 
 plot(selMadd$year[-1], exp(tail(EWMA1kfs$a, -2))/1000, type='l', 
      las=1, xlab='', ylab='GBR GDPpc (2011 K$ppp)', log='y')
-BlackDeathYrs <- c(1346, 1354)
-abline(v=BlackDeathYrs, col='grey', lty='dotted')
+BlackDeathWWYrs <- c(1346, 1354, 1642, 1652, 1702, 1714, 
+                     1914, 1918, 1939, 1945)
+abline(v=BlackDeathWWYrs, col='grey', lty='dotted')
 
-BlackDeath <- data.frame(x=mean(BlackDeathYrs), y=3, 
-                         label='Black Death', srt=90)
+BlackDeathWW <- data.frame(x=c(mean(BlackDeathWWYrs[1:2]),
+                             mean(BlackDeathWWYrs[3:4]), 
+                             mean(BlackDeathWWYrs[5:6]), 
+                             mean(BlackDeathWWYrs[7:8]), 
+                             mean(BlackDeathWWYrs[9:10])), 
+                             y=c(3, 4, 5, 4, 6), 
+                label=c('Black Death', 'English Civil War', 
+                        'Queen Ann', 'WW1', 'WW2'), srt=90)
 GBR1 <- ggplotPath('year', 'gdppc', data=selMadd, scaley=1000,
-      ylab='GBR GDPpc (2011 K$ppp)', vlines=BlackDeathYrs,
-      labels=BlackDeath)
+      ylab='GBR GDPpc (2011 K$ppp)', vlines=BlackDeathWWYrs,
+      labels=BlackDeathWW)
 GBR1 + ggplot2::coord_cartesian(xlim=range(selMadd$year[-1]))
+GBR1 + ggplot2::coord_cartesian(xlim=c(1349, 2023)) 
+GBR1 + ggplot2::coord_cartesian(xlim=c(1910, 1950), 
+                                ylim=c(6, 12))
 ```
 
 What happens when we try to get separate estimates of Q and H? 
@@ -230,8 +243,6 @@ EWMA2mdl0 <- function(sigma, n) {
   dimnames(Z) <- list('lnGDPpc', stateNames)
   
 # a = T a + Q eta  
-  dYr. <- diff(selMadd$year)
-  dYr <- c(5*max(dYr.), dYr.)
   T2 <- array(1, c(2, 2, n))
   T2[2,1,] <- 0
   dYr. <- diff(selMadd$year)
@@ -266,8 +277,9 @@ EWMA2mdl0 <- function(sigma, n) {
   SSMc <- SSMcustom(Z=Z, T=T2, R=R2, Q=Q2, a1=a1, n = n, 
                     state_names = stateNames)
 #  SSMcustom(Z=Z, T=T2_, R=R2_, Q=Q2_, n = n, state_names = stateNames)
-  SSMb <- SSMbespoke(SSMc, n)
-  SSMb
+#  SSMb <- SSMbespoke(SSMc, n)
+#  SSMb
+  SSMc
 }
 
 nobs <- length(selMadd$gdppc)
@@ -382,6 +394,15 @@ attr(a_smooth, 'tsp')
 tsp(a_smooth) 
 a_sm <- ts(a_smooth, start=selMadd$year[2])
 plot(a_sm, las=1)
+
+plot(exp(a_sm[, 1])/1000, las=1, log='y', xlim=c(1910, 1950), 
+     ylim=c(6,13))
+abline(v=BlackDeathWWYrs, lty='dotted', col='grey')
+
+plot(a_sm[, 2], las=1)
+abline(h=0, lty='dotted', col='grey')
+abline(v=BlackDeathWWYrs, lty='dotted', col='grey')
+
 
 EWMA2pred <- predict(EWMA2fit1$model, interval='prediction')
 head(EWMA2pred, 3)

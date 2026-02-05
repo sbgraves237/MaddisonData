@@ -29,4 +29,7 @@ test_that("growthModel", {
   expect_identical(growthMdl1[[9]][,,-(1:2)], growthMdl0[[9]][,,-(1:2)])
   #   
   expect_equal(as.numeric(growthMdl0[[10]]), c(10, 1))
+# test for expected errors
+  expect_error(growthModel(.1, 1:4, 1:4)) #length(a1) != 2
+  expect_error(growthModel(.1, 1:4, 1:4)) #length(Time) != length(y)
 })

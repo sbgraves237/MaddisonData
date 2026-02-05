@@ -13,10 +13,10 @@
 #' missing or `length(unique(data[, group]))` = 1. 
 #' @param data [`data.frame`] or [`tibble::tibble`] with columns `x`, `y`, and 
 #' `group`. 
-#' @param scaley factor to divide y by for plotting. Default = 1, but for data 
+#' @param scaley number to divide y by for plotting. Default = 1, but for data 
 #' in monetary terms, e.g., for `MaddisonData`, `y = 'gdppc'` is Gross domestic 
 #' product (GDP) per capita in 2011 dollars at purchasing power parity (PPP), 
-#' for which we typically want `scaley` = 1000. 
+#' for which we typically want `scaley = 1000`. 
 #' @param logy logical: if `TRUE`, y axis is on a log scale; default = `TRUE`.`
 #' @param ylab y axis label. Default = 
 #' `if(scaley==1) y else paste(y, '/', scaley)`

@@ -236,61 +236,10 @@ Conclusions:
 ## 2.  Estimate mean and slope 
 
 ```{r EWMA2f}
-EWMA2mdl0 <- function(sigma, n) {
-# y = Z a + e  
-  Z <- matrix(1:0, 1, 2)
-  stateNames <- c('level', 'slope')
-  dimnames(Z) <- list('lnGDPpc', stateNames)
-  
-# a = T a + Q eta  
-  T2 <- array(1, c(2, 2, n))
-  T2[2,1,] <- 0
-  dYr. <- diff(selMadd$year)
-  dYr <- c(5*max(dYr.), dYr.)
-  T2[1,2,] <- dYr 
-  dimnames(T2) <- list(stateNames, stateNames, selMadd$year)
-  T2_ <- T2[, , n, drop=TRUE]
-
-  R2 <- array(1, c(2, 2, n))
-  R2[2, 1, ] <- 0 
-  R2[1, 2, ] <- dYr 
-  dimnames(R2) <- list(stateNames, paste0(stateNames, 'Eta'))
-  R2_ <- R2[,,n, drop=TRUE]
-  
-  Q2 <- array(0, c(2, 2, nobs) )
-# FOR IRREGULAR TIME SERIES:   
-# chol(Q2[,,i]) = (sqrt(dYr)) sqr(choose(dYr, 2))*sqrt(signma)
-#                 (    0           sqr(dYr)     )
-# so 
-# Q2[,,i] = (         dYr          sqrt(dYr*choose(dYr, 2)))*sigma
-#         = (sqrt(dYr*choose(dYr, 2))       dYr           )  
-# NOTE: choose(1, 2) = 0, so when dYr=1, Q2=diag(2)  
-  Q2[1,1,] <- dYr*sigma^2
-  Q2[2,2,] <- dYr*sigma^2
-  Q2[1,2,] <- sqrt(dYr*choose(dYr, 2))*sigma^2
-  Q2[2,1,] <- sqrt(dYr*choose(dYr, 2))*sigma^2
-  dimnames(Q2) <- list(stateNames, stateNames, selMadd$year)
-  Q2_ <- Q2[,,n, drop=TRUE]
-  a1 <- c(level=log(selMadd$gdppc[1]), 
-          slope=mean(diff(log(selMadd$gdppc[2:30]))))
-#  P1 <- 10  optional
-  SSMc <- SSMcustom(Z=Z, T=T2, R=R2, Q=Q2, a1=a1, n = n, 
-                    state_names = stateNames)
-#  SSMcustom(Z=Z, T=T2_, R=R2_, Q=Q2_, n = n, state_names = stateNames)
-#  SSMb <- SSMbespoke(SSMc, n)
-#  SSMb
-  SSMc
-}
-
-nobs <- length(selMadd$gdppc)
-EWMA2mdl1 <- EWMA2mdl0(exp(EWMA1fit1$optim.out$par), nobs)
-class(EWMA2mdl1)
-EWMA2mdl1_ <- SSMbespoke(EWMA2mdl1, nobs)
-class(EWMA2mdl1_)
-
-a1_2 <- with(selMadd, log(c(gdppc[1], gdppc[2]/gdppc[1])))
+EWMA2mdl1 <- growthModel(exp(EWMA1fit1$optim.out$par/2), 
+                                       selMadd$gdppc)
 EWMA2f <- (log(gdppc)~ -1 + SSMbespoke(
-             EWMA2mdl0(exp(EWMA1fit1$optim.out$par), nobs) )) 
+             growthModel(exp(EWMA1fit1$optim.out$par/2), selMadd$gdppc) )) 
 ```
 
 ```{r EWMA2m}

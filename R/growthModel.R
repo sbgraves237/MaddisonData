@@ -47,6 +47,11 @@ growthModel <- function(sigma, y, a1, Time,
 ##
   if(missing(a1)){
     a1 <- (if(Log) log(c(y[1], y[2]/y[1])) else c(y[1], y[2]-y[1]))
+  } else {
+    if(length(a1) != 2){
+      cat('head(a1) = ', head(a1), '\n')
+      stop('a1 supplied; must be of length = 2; length(a1) = ', length(a1))
+    }
   }
 ##
 ## 3. Time 
@@ -59,6 +64,13 @@ growthModel <- function(sigma, y, a1, Time,
     }
     Time <- names(y)
     if(is.null(Time)) Time <- 1:length(y)
+  } else {
+    if(length(Time) != length(y)){
+      cat('head(Time) =', head(Time), '\n; head(y) = ', head(y), '\n')
+      lenMsg <- 'length(Time) should equal length(y)'
+      stop(lenMsg, '; length(Time) = ', length(Time), 
+           '; length(y) = ', length(y))
+    }
   }
 ## 
 ## 4. Observation matrix Z in y = Z a + e  

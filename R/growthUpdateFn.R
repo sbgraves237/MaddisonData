@@ -45,7 +45,7 @@ growthUpdateFn <- function(pars, model, Time){
     stop('pars must be numeric; class(pars) = ', 
          paste(class(pars), collapse=', '))
   }
-  Pars <- c(pars, rep(tail(pars, 1), length=3-length(pars)))
+  Pars <- c(pars, rep(utils::tail(pars, 1), length=3-length(pars)))
   v <- exp(Pars)
 ##
 ## 2. n 

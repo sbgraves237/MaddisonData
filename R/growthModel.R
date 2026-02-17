@@ -85,15 +85,15 @@ growthModel <- function(sigma, y, a1, Time,
   nobs <- length(Time)
   T2 <- array(1, c(2, 2, nobs))
   T2[2,1,] <- 0
-  dYr. <- diff(Time)
-  dYr <- c(5*max(dYr.), dYr.)
-  T2[1,2,] <- dYr 
+  dYr <- diff(Time)
+  dY <- c(dYr[1], dYr)
+  T2[1,2,] <- dY 
   dimnames(T2) <- list(stateNames, stateNames, Time)
   T2_ <- T2[, , nobs, drop=TRUE]
 #  
   R2 <- array(1, c(2, 2, nobs))
   R2[2, 1, ] <- 0 
-  R2[1, 2, ] <- dYr 
+  R2[1, 2, ] <- dY 
   dimnames(R2) <- list(stateNames, paste0(stateNames, 'Eta'))
   R2_ <- R2[,,nobs, drop=TRUE]
 ##
@@ -101,16 +101,19 @@ growthModel <- function(sigma, y, a1, Time,
 ##   
   Q2 <- array(0, c(2, 2, nobs) )
   # FOR IRREGULAR TIME SERIES:   
-  # chol(Q2[,,i]) = (sqrt(dYr)) sqr(choose(dYr, 2))*outer(sqrt(Sig), sqrt(Sig))
-  #                 (    0           sqr(dYr)     )
-  # so 
-  # Q2[,,i] = (         dYr          sqrt(dYr*choose(dYr, 2)))*outer(Sig, Sig)
-  #         = (sqrt(dYr*choose(dYr, 2))       dYr           )  
-  # NOTE: choose(1, 2) = 0, so when dYr=1, Q2=diag(2)  
-  Q2[1,1,] <- dYr*Sig[1]^2
-  Q2[2,2,] <- dYr*Sig[2]^2
-  Q2[1,2,] <- sqrt(dYr*choose(dYr, 2))*prod(Sig)
-  Q2[2,1,] <- sqrt(dYr*choose(dYr, 2))*prod(Sig)
+  # Q2 = diag(Sig[1], 0) + sum(i=0:(dY-1), tcrossprod(T^i))*Sig[2]
+  # where T = matrix(c(1, 0, 1, 1), 2) = 0 in lower left and 1 o.w. 
+  # so T^i = matrix(c(1, 0, i, 1), 2) = 0 in lower left, 1 diag ... 
+  # and tcrossprod(T^i) = matrix(c(1+i^2, i, i, 1), 2)
+  # It can be shown by induction that 
+  # sum(i=0:(dY-1), tcrossprod(T^i)) = 
+  # matrix(c(dY*(dY-1)*(2*dY-1)/6, choose(dY, 2), choose(dY, 2), 1), 2)
+# 
+  Q2[1,1,] <- (dY*Sig[1]^2 + (dY*(dY-1)*(2*dY-1)/6)*Sig[2])
+  Q2[2,2,] <- dY*Sig[2]^2
+  Q12 <- choose(dY, 2)*Sig[2]
+  Q2[1,2,] <- Q12
+  Q2[2,1,] <- Q12
   dimnames(Q2) <- list(stateNames, stateNames, Time)
   Q2_ <- Q2[,,nobs, drop=TRUE]
 ##

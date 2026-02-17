@@ -168,28 +168,62 @@ What about the plot of the state?
 ```{r GBR1kfs}
 EWMA1kfs <- KFS(EWMA1fit1b$model)
 plot(selMadd$year, EWMA1kfs$a[-1], type='l')
+```
 
-plot(selMadd$year[-1], exp(tail(EWMA1kfs$a, -2))/1000, type='l', 
-     las=1, xlab='', ylab='GBR GDPpc (2011 K$ppp)', log='y')
-BlackDeathWWYrs <- c(1346, 1354, 1642, 1652, 1702, 1714, 
-                     1914, 1918, 1939, 1945)
-abline(v=BlackDeathWWYrs, col='grey', lty='dotted')
+We need to remove the first observation for the year 1000 as it does not provide enough information to justify the use of the space in the plot. Similarly, we want to identify and label apparent changes including isolated spikes and changes in slope. 
 
-BlackDeathWW <- data.frame(x=c(mean(BlackDeathWWYrs[1:2]),
-                             mean(BlackDeathWWYrs[3:4]), 
-                             mean(BlackDeathWWYrs[5:6]), 
-                             mean(BlackDeathWWYrs[7:8]), 
-                             mean(BlackDeathWWYrs[9:10])), 
-                             y=c(3, 4, 5, 4, 6), 
-                label=c('Black Death', 'English Civil War', 
-                        'Queen Ann', 'WW1', 'WW2'), srt=90)
-GBR1 <- ggplotPath('year', 'gdppc', data=selMadd, scaley=1000,
-      ylab='GBR GDPpc (2011 K$ppp)', vlines=BlackDeathWWYrs,
-      labels=BlackDeathWW)
-GBR1 + ggplot2::coord_cartesian(xlim=range(selMadd$year[-1]))
-GBR1 + ggplot2::coord_cartesian(xlim=c(1349, 2023)) 
-GBR1 + ggplot2::coord_cartesian(xlim=c(1910, 1950), 
-                                ylim=c(6, 12))
+```{r GBR1kfs1}
+plot(selMadd$year[22:70], EWMA1kfs$a[23:71], type='l')
+abline(v=c(1291, 1296), col='grey', lty='dotted')
+```
+
+These data suggest changes in 1291 and 1296. [The Welsh rebel leader Rhys ap Maredudd](https://en.wikipedia.org/wiki/Rhys_ap_Maredudd) was captured in 1291, and Scots defeated England in the [Battle of Stirling Bridge](https://en.wikipedia.org/wiki/Battle_of_Stirling_Bridge) in 1297. 
+
+The [Black Death](https://en.wikipedia.org/wiki/Black_Death) devastated Europe from 1346 to 1353 and [England](https://en.wikipedia.org/wiki/Black_Death_in_England) in 1348 and 1349, returning again in 1361 and 1362. It ended the [Hundred Years' War](https://en.wikipedia.org/wiki/Hundred_Years%27_War) between England and France in 1353, though another major campaign in France was launched in 1355.  
+
+```{r GBR1kfs2}
+sel1330_60 <- which(with(selMadd, (1329<year) & (year<1361)))
+plot(selMadd$year[sel1330_60], EWMA1kfs$a[sel1330_60+1], type='l')
+abline(v=c(1348, 1353), col='grey', lty='dotted')
+```
+
+What about the later fourteenth century? 
+
+```{r GBR1kfs3}
+sel1360_1400 <- which(with(selMadd, (1359<year) & (year<1401)))
+plot(selMadd$year[sel1360_1400], EWMA1kfs$a[sel1360_1400+1], type='l')
+abline(v=c(1375, 1392), col='grey', lty='dotted')
+```
+
+This suggests turning points in the slope in 1375 and 1392. The Wikipedia ["Timeline of English history"](https://en.wikipedia.org/wiki/Timeline_of_English_history#13th_century) does not suggest any obvious events associated during that period that might have driven the apparent increase in `GDPpc` during that period. We will not mark this on the plot. 
+
+The next major turning point was in 1649 when the English decapitated [King Charles I](https://en.wikipedia.org/wiki/Charles_I_of_England) during the [English Civil War](https://en.wikipedia.org/wiki/English_Civil_War) (1642 to 1651). There was economic instability during the reign of [Queen Ann](https://en.wikipedia.org/wiki/Anne,_Queen_of_Great_Britain) (1702 to 1714). And the slope increased after the [Napoleonic Wars](https://en.wikipedia.org/wiki/Napoleonic_Wars)
+
+```{r GBR1kfs4}
+sel1790_1830 <- which(with(selMadd, (1789<year) & (year<1831)))
+plot(selMadd$year[sel1790_1830], EWMA1kfs$a[sel1790_1830+1], type='l')
+abline(v=1819, col='grey', lty='dotted')
+```
+
+The plot indicates that the rate of economic growth of the United Kingeom began to increase after 1819. That's the year of the [Peterloo Massacre](https://en.wikipedia.org/wiki/Peterloo_Massacre#Reaction_and_aftermath) during which a crowd of roughly 60,000 humans assembled nonviolently to  demand a reform of parliamentary representation and were attacked by a regiment of the English cavalry. Eighteen were killed and between 500 and 700 were injured. While the authorities initially cracked down on dissent and freedom of the press, Peterloo marked "the point of final conversion of provincial England to the struggle for enfranchisement of the working class", as described by `r Citet(bib, "White57")`. 
+
+```{r idPts}
+turningPts <- c(1291, 1296, 1348, 1353, 1642, 1651, 1702, 1714, 1819, 
+                1914, 1918, 1939, 1945) 
+GBRlbls <- data.frame(x=c(mean(turningPts[1:2]),
+                          mean(turningPts[3:4]), 
+                          mean(turningPts[5:6]), 
+                          mean(turningPts[7:8]), 
+                               turningPts[9], 
+                          mean(turningPts[10:11]), 
+                          mean(turningPts[12:13])), 
+                       y=c(5, 3, 5, 5, 6, 4, 6), 
+          label=c('Conflicts with Welsh and Scots', 'Black Death', 
+                  'English Civil War', 'Queen Ann', 'Peterloo', 'WW1', 'WW2'),
+          srt=90)
+(GBR1 <- ggplotPath('year', 'gdppc', data=selMadd[-1, ], scaley=1000,
+      ylab='GBR GDPpc (2011 K$ppp)', vlines=turningPts,
+      labels=GBRlbls))
 ```
 
 What happens when we try to get separate estimates of Q and H? 
@@ -218,7 +252,7 @@ Now fit.
 ```{r GBR2f}
 #fit_drivers <- fitSSM(model_drivers, inits = rep(-1, 6),
 #                      updatefn = ownupdatefn, method = "BFGS")
-EWMA1fit2 <- fitSSM(EWMA1mdl, inits=EWMA1init2, 
+EWMA1fit2 <- fitSSM(EWMA1mdl, inits=EWMA1init2, method = "BFGS", 
                    updatefn = EWMA1updateFn2)
 logLik(EWMA1fit2$model)
 logLik(EWMA1fit1b$model)
@@ -236,21 +270,23 @@ Conclusions:
 ## 2.  Estimate mean and slope 
 
 ```{r EWMA2f}
-EWMA2mdl1 <- growthModel(exp(EWMA1fit1$optim.out$par/2), 
+GBRgrowthMdl1 <- growthModel(exp(EWMA1fit1$optim.out$par/2), 
                                        selMadd$gdppc)
-EWMA2f <- (log(gdppc)~ -1 + SSMbespoke(
+#EWMA2f. <- (log(gdppc)~ -1 + SSMbespoke(GBRgrowthMdl1, selMadd$gdppc) ) #doesn't wk
+growthFormula <- (log(gdppc)~ -1 + SSMbespoke(
              growthModel(exp(EWMA1fit1$optim.out$par/2), selMadd$gdppc) )) 
 ```
 
 ```{r EWMA2m}
-EWMA2m <-SSModel(EWMA2f, selMadd, H=matrix(NA) )
-class(EWMA2m)
+# EWMA2m. <-SSModel(EWMA2f., selMadd, H=matrix(NA) )#doesn't work
+selMadd2m <-SSModel(growthFormula, selMadd, H=matrix(NA) )
+class(selMadd2m)
 ```
 
 Next: 
 
-```{r EWMA2fit}
-EWMA2updateFn1 <- function(pars, model){
+```{r GBRgrowthFit}
+growthUpdateFn1 <- function(pars, model){
 # 1 parameter = variances of both 1-year migration and observation.
   nobs <- nrow(selMadd)
   v1 <- as.numeric(exp(pars[1]))
@@ -275,30 +311,30 @@ EWMA2updateFn1 <- function(pars, model){
   model
 }
 
-is.SSModel(EWMA2m)
-EWMA2mdl2 <- EWMA2updateFn1(EWMA1fit1$optim.out$par, EWMA2m)
-class(EWMA2mdl2)
-is.SSModel(EWMA2mdl2)
+is.SSModel(selMadd2m)
+GBRgrowthMdl2 <- growthUpdateFn1(EWMA1fit1$optim.out$par, selMadd2m)
+class(GBRgrowthMdl2)
+is.SSModel(GBRgrowthMdl2)
 
-EWMA2fit1 <- fitSSM(EWMA2m, inits=EWMA1fit1$optim.out$par, 
-                   updatefn = EWMA2updateFn1)
-(EWMA2logLik1 <- logLik(EWMA2fit1$model))
+GBRgrowthFit1 <- fitSSM(selMadd2m, inits=EWMA1fit1$optim.out$par, 
+                        method = "BFGS", updatefn = growthUpdateFn1)
+(GBRgrowthLogLik1 <- logLik(GBRgrowthFit1$model))
 EWMA1logLik1
 ```
 
-Problem: `EWMA2logLik1` = `r EWMA2logLik1` is much than `EWMA1logLik1` = `r EWMA1logLik1`: It should be greater, unless I misunderstand the likelihood computation. 
+Problem: `GBRgrowthLogLik1` = `r GBRgrowthLogLik1` is much than `EWMA1logLik1` = `r EWMA1logLik1`: It should be greater, unless I misunderstand the likelihood computation. 
 
-If we only allow `Q[1, 1]` to be nonzero, then `fitSSM(EWMA2m, ...` should be equivalent to `EWMA1fit1`.
+If we only allow `Q[1, 1]` to be nonzero, then `fitSSM(selMadd2m, ...)` should be equivalent to `EWMA1fit1`.
 
-```{r EWMA2fit0}
-EWMA2updateFn0 <- function(pars, model){
+```{r GBRgrowthFit0}
+growthUpdateFn0 <- function(pars, model){
 # 1 parameter = variances of both 1-year migration and observation.
   nobs <- nrow(selMadd)
   v1 <- as.numeric(exp(pars[1]))
   model$H[1,1, 1] <- v1 # observation variance 
 #
   Q2 <- array(0, c(2, 2, nobs) )
-# chol(Q2[,,i]) = (sqrt(dYr)) sqr(choose(dYr, 2))*sqrt(signma)
+# chol(Q2[,,i]) = (sqrt(dYr)) sqrt(choose(dYr, 2))*sqrt(sigma)
 #                 (    0           sqr(dYr)     )
 # so 
 # Q2[,,i] = (         dYr          sqrt(dYr*choose(dYr, 2)))*sigma
@@ -316,25 +352,25 @@ EWMA2updateFn0 <- function(pars, model){
   model
 }
 
-is.SSModel(EWMA2m)
-EWMA2mdl0 <- EWMA2updateFn0(EWMA1fit1$optim.out$par, EWMA2m)
-class(EWMA2mdl0)
-is.SSModel(EWMA2mdl0)
+is.SSModel(selMadd2m)
+GBRgrowthMdl0 <- growthUpdateFn0(EWMA1fit1$optim.out$par, selMadd2m)
+class(GBRgrowthMdl0)
+is.SSModel(GBRgrowthMdl0)
 
-EWMA2fit0 <- fitSSM(EWMA2m, inits=EWMA1fit1$optim.out$par, 
-                   updatefn = EWMA2updateFn0)
-EWMA2logLik1
+GBRgrowthFit0 <- fitSSM(selMadd2m, inits=EWMA1fit1$optim.out$par, method = "BFGS", 
+                   updatefn = growthUpdateFn0)
+GBRgrowthLogLik1
 EWMA1logLik1
-(EWMA2logLik0 <- logLik(EWMA2fit0$model))
+(GBRgrowthLogLik0 <- logLik(GBRgrowthFit0$model))
 ```
 
-Interesting: `EWMA2logLik0 > EWMA2logLik1`, which suggests a problem somewhere that I do not understand. 
+Interesting: `GBRgrowthLogLik0 > GBRgrowthLogLik1`, which suggests a problem somewhere that I do not understand. 
 
-Let's ignore this for the moment and plot the level and slope from `EWMA2logLik1`. 
+Let's ignore this for the moment and plot the level and slope from `GBRgrowthLogLik1`. 
 
-```{r EWMA2logLik1plot}
-(EWMA2kfs <- KFS(EWMA2fit1$model))
-(EWMA2kfs0 <- KFS(EWMA2fit0$model))
+```{r GBRgrowthLogLik1plot}
+(EWMA2kfs <- KFS(GBRgrowthFit1$model))
+(EWMA2kfs0 <- KFS(GBRgrowthFit0$model))
 
 a_smooth <- tail(EWMA2kfs$a, -2)
 attributes(a_smooth)
@@ -346,14 +382,14 @@ plot(a_sm, las=1)
 
 plot(exp(a_sm[, 1])/1000, las=1, log='y', xlim=c(1910, 1950), 
      ylim=c(6,13))
-abline(v=BlackDeathWWYrs, lty='dotted', col='grey')
+abline(v=turningPts, lty='dotted', col='grey')
 
 plot(a_sm[, 2], las=1)
 abline(h=0, lty='dotted', col='grey')
-abline(v=BlackDeathWWYrs, lty='dotted', col='grey')
+abline(v=turningPts, lty='dotted', col='grey')
 
 
-EWMA2pred <- predict(EWMA2fit1$model, interval='prediction')
+EWMA2pred <- predict(GBRgrowthFit1$model, interval='prediction')
 head(EWMA2pred, 3)
 tail(EWMA2pred, 2)
 

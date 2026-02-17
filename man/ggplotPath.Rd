@@ -22,7 +22,7 @@ ggplotPath(
 )
 }
 \arguments{
-\item{x}{name of column in \code{data} to pass as \code{x} in
+\item{x}{name of a numeric column in \code{data} to pass as \code{x} in
 \code{aes(x=.data[[x]], ...)}; default = \code{year}.}
 
 \item{y}{name of column in \code{data} to pass as \code{y} in
@@ -114,5 +114,8 @@ Vlines = c(1849, 1929, 1933, 1939, 1945)
        ylab='GDP per capita (2011 PPP K$)', 
        legend.position = NULL, hlines=Hlines, vlines=Vlines, labels=ISOll))  
 
+# do.call(ggplotPath, ...) with 1 line
+list1 <- list(x='Time', y='lvl', data=data.frame(Time=1:4, lvl=sqrt(1:4)))
+doCallPlot <- do.call(ggplotPath, list1)
 }
 \keyword{plot}

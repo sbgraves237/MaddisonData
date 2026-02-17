@@ -13,7 +13,7 @@ test_that("ggplotPath", {
   ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), 
                       label=c('GBR', 'USA'), srt=c(0, 30),
                       col=c('red', 'green'), size=c(2, 9))
-    GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+  GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
                    labels=ISOll, fontsize = 20, color=c('red', 'green'))  
   expect_true(inherits(GBR_USA2, 'ggplot'))
 # vlines 
@@ -27,7 +27,8 @@ test_that("ggplotPath", {
                   legend.position = NULL, hlines=Hlines, vlines=Vlines, 
                   labels=ISOl3, col=c('red', 'green'))  
   expect_true(inherits(GBR_USA3, 'ggplot'))
-#      #  
-#  expect_in('ggplot', class(GBR_USA))
-#  GBR_USA <- plotMaddison(c('GBR', 'USA'))
+# do.call(ggplotPath, ...) with 1 line
+  list1 <- list(x='Time', y='lvl', 
+                data=data.frame(Time=letters[1:4], lvl=sqrt(1:4)))
+  expect_error(do.call(ggplotPath, list1))
 })

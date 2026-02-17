@@ -4,7 +4,7 @@
 #' each group with options for legend placement, horizontal and vertical lines 
 #' and labels.  
 #' 
-#' @param x name of column in `data` to pass as `x` in 
+#' @param x name of a numeric column in `data` to pass as `x` in 
 #' `aes(x=.data[[x]], ...)`; default = `year`.
 #' @param y name of column in `data` to pass as `y` in 
 #' `aes(y=.data[[y]], ...)`; must be supplied. 
@@ -81,6 +81,9 @@
 #'        ylab='GDP per capita (2011 PPP K$)', 
 #'        legend.position = NULL, hlines=Hlines, vlines=Vlines, labels=ISOll))  
 #' 
+#' # do.call(ggplotPath, ...) with 1 line
+#' list1 <- list(x='Time', y='lvl', data=data.frame(Time=1:4, lvl=sqrt(1:4)))
+#' doCallPlot <- do.call(ggplotPath, list1)
 #' @keywords plot
 ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab, 
                        legend.position, hlines, vlines, labels, fontsize=10,
@@ -104,6 +107,10 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
   if(length(X) > 1){
     stop('x = ', x, ' found more once in names(data) = ', 
          paste(names(data), collapse=', '))
+  }
+  if(!is.numeric(data[, X, drop=TRUE])){
+    stop('column x = ', X, ' of data is not numeric; is ', 
+         paste(class(data[, X]), collapse=', '))
   }
 ##
 ## 2. check y

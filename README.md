@@ -55,13 +55,13 @@ GBR_USA1 <- MaddisonData::ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000)
 GBR_USA1+ggplot2::coord_cartesian(xlim=c(1500, 1850)) # for only 1500-1850 
 ```
 
-<img src="man/figures/README-ggplotPath-1.png" width="100%" />
+<img src="man/figures/README-ggplotPath-1.png" alt="" width="100%" />
 
 ``` r
 GBR_USA1+ggplot2::coord_cartesian(xlim=c(1600, 1700), ylim=c(7, 17)) 
 ```
 
-<img src="man/figures/README-ggplotPath-2.png" width="100%" />
+<img src="man/figures/README-ggplotPath-2.png" alt="" width="100%" />
 
 ``` r
 
@@ -79,7 +79,7 @@ Vlines = c(1849, 1929, 1933, 1939, 1945)
        legend.position = NULL, hlines=Hlines, vlines=Vlines, labels=ISOll))  
 ```
 
-<img src="man/figures/README-ggplotPath-3.png" width="100%" />
+<img src="man/figures/README-ggplotPath-3.png" alt="" width="100%" />
 
 LATER:
 

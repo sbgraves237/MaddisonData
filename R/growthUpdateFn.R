@@ -32,6 +32,11 @@
 #' growthMdl1v <- growthUpdateFn(.1, growthMdl1, Time=GBR$year)
 #' growthMdl1v3 <- growthUpdateFn(1:3, growthMdl1, Time=GBR$year)
 #' 
+#' growthFml <- (log(gdppc)~ -1 + SSMbespoke(growthModel(.1, GBR$gdppc) )) 
+#' library(KFAS)
+#' growthSSmdl <-SSModel(growthFml, GBR, H=matrix(NA) )
+#' growthSSmdl1 <- growthUpdateFn(.1, growthSSmdl)
+#' 
 #' @keywords models
 growthUpdateFn <- function(pars, model, Time){
 ##
@@ -48,31 +53,42 @@ growthUpdateFn <- function(pars, model, Time){
   Pars <- c(pars, rep(utils::tail(pars, 1), length=3-length(pars)))
   v <- exp(Pars)
 ##
-## 2. n 
+## 2. y and n
 ##
-  n <- model$n
-  if(is.null(n)){
-    stop("model does not have a component 'n'.") 
-  }
-  if(length(n)!=1){
-    stop('model$n must have length 1; is ', length(n))
-  }
-  N <- as.integer(n)
-  if((N-n != 0) || (n<=0)){
-    stop('model$n must be a positive integer; is ', n)
+  y <- model$y 
+  if(is.null(y)){
+    n <- model$n
+    if(is.null(n)){
+      stop("model must have component y or n; has neither.")
+    } 
+    if(length(n)!=1){
+      stop('model$n must have length 1; is ', length(n))
+    }
+    N <- as.integer(n)
+    if((N-n != 0) || (n<=0)){
+      stop('model$n must be a positive integer; is ', n)
+    }
+  } else {
+    N <- length(y)
   }
 ##
 ## 3. Time 
 ## 
   if(missing(Time)){
-    Tm <- 1:N 
-    NT <- N
-    dT <- rep(1, N)
+    if(is.null(y)){ 
+      Tm <- 1:N 
+      dT <- rep(1, N)
+    } else {
+      Tm <- as.numeric(stats::time(y))
+#      N <- length(Tm)
+      dTm <- diff(Tm)
+      dT <- c(dTm[1], dTm)
+    }
   } else {
     Tm <- Time 
     NT <- length(Time)
     if(NT != N){
-      stop('length(Time) must equal model$n; is ', NT)
+      stop('length(Time) must equal model$n or NROW(model$y); is ', NT)
     }
     if(!is.numeric(Time)){
       stop('Time must be numeric; is ', 
@@ -90,7 +106,7 @@ growthUpdateFn <- function(pars, model, Time){
 ## 
 ## 5. Q 
 ##  
-  Q2 <- array(0, c(2, 2, n) )
+  Q2 <- array(0, c(2, 2, N) )
   # FOR IRREGULAR TIME SERIES:   
   # Q2 = diag(v[1], 0) + sum(i=0:(dT-1), tcrossprod(T^i))*v[2]
   # where T = matrix(c(1, 0, 1, 1), 2) = 0 in lower left and 1 o.w. 

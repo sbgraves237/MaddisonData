@@ -159,8 +159,8 @@
 #' 
 #' # hlines, vlines 
 #' zero <- 0
-#' attr(zero, color) <- 'red'
-#' attr(zero, lty) <- 'dashed'
+#' attr(zero, 'color') <- 'red'
+#' attr(zero, 'lty') <- 'dashed'
 #' Hlines1 <- list(c(1,3, 10, 30), zero) 
 #' Vlines <- c(1649, 1929, 1933, 1945)
 #' 

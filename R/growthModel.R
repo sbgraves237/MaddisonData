@@ -23,7 +23,8 @@
 #' @param Log default = TRUE. 
 #' @param \dots optional arguments passed to [KFAS::SSMcustom()].
 #' 
-#' @returns a list returned by [KFAS::SSMcustom()]. 
+#' @returns a list returned by [KFAS::SSMcustom()] with an additional `Time` 
+#' component. 
 #' 
 #' @export
 #'
@@ -55,9 +56,10 @@ growthModel <- function(sigma, y, a1, Time,
   }
 ##
 ## 3. Time 
+##  
   if(missing(Time)){
     if(stats::is.ts(y)) {
-      Time <- stats::time(y)
+      Time <- as.numeric(stats::time(y))
     } else {
     if(!is.null(dim(y)))
       stop('y should be univariate; dim(y) = ', paste(dim(y), collapse=', '))
@@ -73,6 +75,12 @@ growthModel <- function(sigma, y, a1, Time,
            '; length(y) = ', length(y))
     }
   }
+  Tm <- as.numeric(Time)
+  if(any(is.na(Tm))){
+    stop('Time must be numeric without missing values; contains ', 
+         sum(is.na(Tm)), ' of ', length(Tm), ' values either nonnumeric or ', 
+         'NA.')
+  }
 ## 
 ## 4. Observation matrix Z in y = Z a + e  
 ##  
@@ -82,13 +90,13 @@ growthModel <- function(sigma, y, a1, Time,
 ##
 ## 5. Transition matrices T and R in a = T a + R eta  
 ##  
-  nobs <- length(Time)
+  nobs <- length(Tm)
   T2 <- array(1, c(2, 2, nobs))
   T2[2,1,] <- 0
-  dYr <- diff(Time)
+  dYr <- diff(Tm)
   dY <- c(dYr[1], dYr)
   T2[1,2,] <- dY 
-  dimnames(T2) <- list(stateNames, stateNames, Time)
+  dimnames(T2) <- list(stateNames, stateNames, Tm)
   T2_ <- T2[, , nobs, drop=TRUE]
 #  
   R2 <- array(1, c(2, 2, nobs))
@@ -114,12 +122,13 @@ growthModel <- function(sigma, y, a1, Time,
   Q12 <- choose(dY, 2)*Sig[2]
   Q2[1,2,] <- Q12
   Q2[2,1,] <- Q12
-  dimnames(Q2) <- list(stateNames, stateNames, Time)
+  dimnames(Q2) <- list(stateNames, stateNames, Tm)
   Q2_ <- Q2[,,nobs, drop=TRUE]
 ##
 ## 7. call SSMcustom  
 ##  
   SSMc <- KFAS::SSMcustom(Z=Z, T=T2, R=R2, Q=Q2, a1=a1, n = nobs, 
                     state_names = stateNames)
+  SSMc$Time <- Tm
   SSMc
 }

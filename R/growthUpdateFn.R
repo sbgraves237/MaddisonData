@@ -18,8 +18,9 @@
 #' transition covariance array `Q` and 
 #' `state_names = c('level', 'growthRate')` as returned by [`growthModel`]. 
 #' @param Time = optional integer vector of times at which non-missing 
-#' observations are available. Default = `time(y)` if `model` has a component 
-#' `y` `names(y)` if `!is.null` or `1:n` otherwise. 
+#' observations are available. Default is `model$Time` if available or 
+#' `time(y)` if `model` has a component `y` or `names(y)` if `!is.null` or 
+#' `1:n` otherwise. 
 #' 
 #' @returns a `model` with components `H` and `Q` updated as described. 
 #' 
@@ -75,28 +76,31 @@ growthUpdateFn <- function(pars, model, Time){
 ## 3. Time 
 ## 
   if(missing(Time)){
-    if(is.null(y)){ 
-      Tm <- 1:N 
-      dT <- rep(1, N)
-    } else {
-      Tm <- as.numeric(stats::time(y))
+    Tm <- model$Time
+    if(is.null(Tm)){ 
+      if(is.null(y)){ 
+        Tm <- 1:N 
+        dT <- rep(1, N)
+      } else {
+        Tm <- as.numeric(stats::time(y))
 #      N <- length(Tm)
-      dTm <- diff(Tm)
-      dT <- c(dTm[1], dTm)
+        dTm <- diff(Tm)
+        dT <- c(dTm[1], dTm)
+      }
     }
   } else {
     Tm <- Time 
-    NT <- length(Time)
-    if(NT != N){
+  }
+  NT <- length(Tm)
+  if(NT != N){
       stop('length(Time) must equal model$n or NROW(model$y); is ', NT)
-    }
-    if(!is.numeric(Time)){
+  }
+  if(!is.numeric(Tm)){
       stop('Time must be numeric; is ', 
            paste(class(Time), collapse=', '))
-    }
-    dT_ <- diff(Time)
-    dT <- c(dT_[1], dT_)
   }
+  dT_ <- diff(Tm)
+  dT <- c(dT_[1], dT_)
 ##
 ## 4. H
 ##  
@@ -128,5 +132,6 @@ growthUpdateFn <- function(pars, model, Time){
   stateN <- model$state_names
   dimnames(Q2) <- list(stateN, stateN, Tm)
   Model$Q <- Q2
+  Model$Time <- Tm
   Model
 }

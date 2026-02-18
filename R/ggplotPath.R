@@ -20,8 +20,8 @@
 #' @param logy logical: if `TRUE`, y axis is on a log scale; default = `TRUE`.`
 #' @param ylab y axis label. Default = 
 #' `if(scaley==1) y else paste(y, '/', scaley)`
-#' @param legend.position argument passed to [`theme`]. If `!missing(labels)`, 
-#' default is no legend. Otherwise, default depends on 
+#' @param legend.position argument passed to [`ggplot2::theme`]. If 
+#' `!missing(labels)`, default is no legend. Otherwise, default depends on 
 #' `nGps <- length(unique(data[, group]`: If `nGps` = 1, there is no legend. If 
 #' `nGps > 10`, `legend.position = 'right'`. In between, `legend.position` = 
 #' c(.15, .5) = center left. For alternatives, see [`ggplot2::theme`]. 

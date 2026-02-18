@@ -42,5 +42,10 @@ growthMdl1v0 <- growthUpdateFn(.1, growthMdl1)
 growthMdl1v <- growthUpdateFn(.1, growthMdl1, Time=GBR$year)
 growthMdl1v3 <- growthUpdateFn(1:3, growthMdl1, Time=GBR$year)
 
+growthFml <- (log(gdppc)~ -1 + SSMbespoke(growthModel(.1, GBR$gdppc) )) 
+library(KFAS)
+growthSSmdl <-SSModel(growthFml, GBR, H=matrix(NA) )
+growthSSmdl1 <- growthUpdateFn(.1, growthSSmdl)
+
 }
 \keyword{models}

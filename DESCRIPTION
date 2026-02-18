@@ -23,6 +23,7 @@ Depends:
     R (>= 4.1)
 Language: en-US
 Suggests: 
+    egg,
     ggplot2, 
     ipumsr,
     KFAS, 

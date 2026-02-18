@@ -153,7 +153,8 @@
 #' GBR_KFSp1 <- ggplotPath2(GBR_KFS$a, labels=ISOll1)
 #'                  
 #' GBR_KFSp <- ggplotPath2(GBR_KFS, labels=ISOll1)
-#' ISOll2 <- cbind(ISOll, labelsi=1:2)
+#' ISOll2 <- ISOll1
+#' ISOll2$component <- 1:2
 #' GBR_KFSp2 <- ggplotPath2(GBR_KFS, labels=ISOll2)
 #' 
 #' # hlines, vlines 

@@ -286,38 +286,14 @@ class(selMadd2m)
 Next: 
 
 ```{r GBRgrowthFit}
-growthUpdateFn1 <- function(pars, model){
-# 1 parameter = variances of both 1-year migration and observation.
-  nobs <- nrow(selMadd)
-  v1 <- as.numeric(exp(pars[1]))
-  model$H[1,1, 1] <- v1 # observation variance 
-#
-  Q2 <- array(0, c(2, 2, nobs) )
-# chol(Q2[,,i]) = (sqrt(dYr)) sqr(choose(dYr, 2))*sqrt(signma)
-#                 (    0           sqr(dYr)     )
-# so 
-# Q2[,,i] = (         dYr          sqrt(dYr*choose(dYr, 2)))*sigma
-#         = (sqrt(dYr*choose(dYr, 2))       dYr           )  
-# NOTE: choose(1, 2) = 0, so when dYr=1, Q2=diag(2)  
-  dYr. <- diff(selMadd$year)
-  dYr <- c(5*max(dYr.), dYr.)
-  Q2[1,1,] <- dYr*v1
-  Q2[2,2,] <- dYr*v1
-  Q2[1,2,] <- sqrt(dYr*choose(dYr, 2))*v1
-  Q2[2,1,] <- sqrt(dYr*choose(dYr, 2))*v1
-  stateN <- dimnames(model$Z)[[2]]
-  dimnames(Q2) <- list(stateN, stateN, selMadd$year)
-  model$Q <- Q2
-  model
-}
-
+library(MaddisonData)
 is.SSModel(selMadd2m)
-GBRgrowthMdl2 <- growthUpdateFn1(EWMA1fit1$optim.out$par, selMadd2m)
+GBRgrowthMdl2 <- growthUpdateFn(EWMA1fit1$optim.out$par, selMadd2m)
 class(GBRgrowthMdl2)
 is.SSModel(GBRgrowthMdl2)
 
 GBRgrowthFit1 <- fitSSM(selMadd2m, inits=EWMA1fit1$optim.out$par, 
-                        method = "BFGS", updatefn = growthUpdateFn1)
+                        method = "BFGS", updatefn = growthUpdateFn)
 (GBRgrowthLogLik1 <- logLik(GBRgrowthFit1$model))
 EWMA1logLik1
 ```
@@ -327,38 +303,13 @@ Problem: `GBRgrowthLogLik1` = `r GBRgrowthLogLik1` is much than `EWMA1logLik1` =
 If we only allow `Q[1, 1]` to be nonzero, then `fitSSM(selMadd2m, ...)` should be equivalent to `EWMA1fit1`.
 
 ```{r GBRgrowthFit0}
-growthUpdateFn0 <- function(pars, model){
-# 1 parameter = variances of both 1-year migration and observation.
-  nobs <- nrow(selMadd)
-  v1 <- as.numeric(exp(pars[1]))
-  model$H[1,1, 1] <- v1 # observation variance 
-#
-  Q2 <- array(0, c(2, 2, nobs) )
-# chol(Q2[,,i]) = (sqrt(dYr)) sqrt(choose(dYr, 2))*sqrt(sigma)
-#                 (    0           sqr(dYr)     )
-# so 
-# Q2[,,i] = (         dYr          sqrt(dYr*choose(dYr, 2)))*sigma
-#         = (sqrt(dYr*choose(dYr, 2))       dYr           )  
-# NOTE: choose(1, 2) = 0, so when dYr=1, Q2=diag(2)  
-  dYr. <- diff(selMadd$year)
-  dYr <- c(5*max(dYr.), dYr.)
-  Q2[1,1,] <- dYr*v1
-#  Q2[2,2,] <- dYr*v1
-#  Q2[1,2,] <- sqrt(dYr*choose(dYr, 2))*v1
-#  Q2[2,1,] <- sqrt(dYr*choose(dYr, 2))*v1
-  stateN <- dimnames(model$Z)[[2]]
-  dimnames(Q2) <- list(stateN, stateN, selMadd$year)
-  model$Q <- Q2
-  model
-}
-
 is.SSModel(selMadd2m)
-GBRgrowthMdl0 <- growthUpdateFn0(EWMA1fit1$optim.out$par, selMadd2m)
+GBRgrowthMdl0 <- growthUpdateFn(EWMA1fit1$optim.out$par, selMadd2m)
 class(GBRgrowthMdl0)
 is.SSModel(GBRgrowthMdl0)
 
 GBRgrowthFit0 <- fitSSM(selMadd2m, inits=EWMA1fit1$optim.out$par, method = "BFGS", 
-                   updatefn = growthUpdateFn0)
+                   updatefn = growthUpdateFn)
 GBRgrowthLogLik1
 EWMA1logLik1
 (GBRgrowthLogLik0 <- logLik(GBRgrowthFit0$model))

@@ -42,14 +42,17 @@ test_that("ggplotPath2", {
   growthFormula <- (log(gdppc)~ -1 + SSMbespoke(growthModel(.04, GBR$gdppc) )) 
   library(KFAS)
   GBR2m <-SSModel(growthFormula, GBR, H=matrix(NA) )
-  expect_error(GBR2mp <- ggplotPath2(GBR2m$a))
-
+  # This call first gives a warning and then an error. 
+  expect_warning(expect_error(GBR2mp <- ggplotPath2(GBR2m$a)))
+  expect_error(expect_warning(GBR2mp <- ggplotPath2(GBR2m$a)))
+  
   GBRgrowthFit1 <- fitSSM(GBR2m, inits=-6, method = "BFGS", 
                           updatefn = growthUpdateFn)
   # NOTE: This call ignores Time 
   GBRgrowthFit1t <- fitSSM(GBR2m, inits=-6, method = "BFGS", 
                           updatefn = growthUpdateFn, Time=GBR$year)
-  # NOTE: This call also ignores Time: PROBLEM 
+  # *******
+  # NOTE: This call currently also ignores Time: MUST BE FIXED 
   expect_identical(GBRgrowthFit1, GBRgrowthFit1t)
   
   expect_error(ggplotPath2(GBRgrowthFit1))
@@ -57,6 +60,7 @@ test_that("ggplotPath2", {
   #KFS example 
   GBR_KFS <- KFAS::KFS(GBRgrowthFit1$model)
   GBR_KFSt <- KFAS::KFS(GBRgrowthFit1t$model)
+  GBR_KFSp0 <- ggplotPath2(GBR_KFS)
   GBR_KFSp <- ggplotPath2(GBR_KFS$a)
   GBR_KFStp <- ggplotPath2(GBR_KFSt$a)
 
@@ -68,6 +72,7 @@ test_that("ggplotPath2", {
                       label=c('GBR', 'Napoleon'), srt=c(0, 30),
                       col=c('red', 'green'), size=c(2, 9))
   expect_error(ggplotPath2(GBR_KFS$a, labels=ISOll))
+  
   ISOll1 <- cbind(ISOll, component=1)
   GBR_KFSp1 <- ggplotPath2(GBR_KFS$a, labels=ISOll1)
   ISOll2 <- cbind(ISOll, component=1:2)

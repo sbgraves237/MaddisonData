@@ -109,6 +109,7 @@
 #' # mts example 
 #' MTS <- ts(Mat, 1951)
 #' 
+#' # Do 
 #' Matp <- ggplotPath2(Mat)
 #' Mat1p <- ggplotPath2(Mat1)
 #' Mat2p <- ggplotPath2(Mat2[, 1:3], time=Mat2[, 'year']) 
@@ -129,16 +130,31 @@
 #' library(KFAS)
 #' GBR2m <-SSModel(growthFormula, GBR, H=matrix(NA) )
 #' 
-#' GBRmdlp <- ggplotPath2(GBRgrowthMdl)
-#' 
+#' # NOTE: This call ignores Time 
+#' GBRgrowthFit1 <- fitSSM(GBR2m, inits=-6, method = "BFGS", 
+#'                         updatefn = growthUpdateFn)
+#' # NOTE: This call currently also ignores Time; MUST BE FIXED
+#' GBRgrowthFit1t <- fitSSM(GBR2m, inits=-6, method = "BFGS", 
+#'                          updatefn = growthUpdateFn, Time=GBR$year)
+#'                        
 #' #KFS example 
+#' GBR_KFS <- KFAS::KFS(GBRgrowthFit1$model)
+#' GBR_KFSt <- KFAS::KFS(GBRgrowthFit1t$model)
+#' GBR_KFSp0 <- ggplotPath2(GBR_KFS)
+#' GBR_KFSp <- ggplotPath2(GBR_KFS$a)
+#' GBR_KFStp <- ggplotPath2(GBR_KFSt$a)
+
 #' GBR_KFS <- KFS(GBRgrowthMdl)
 #' GBR_KFSp <- ggplotPath2(GBR_KFS)
 #' 
 #' # label the lines
-#' ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), 
+#' ISOll1 <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), 
 #'                  label=c('GBR', 'Napoleon'), srt=c(0, 30),
-#'                  col=c('red', 'green'), size=c(2, 9))
+#'                  col=c('red', 'green'), size=c(2, 9), 
+#'                  component=1)
+#'
+#' GBR_KFSp1 <- ggplotPath2(GBR_KFS$a, labels=ISOll1)
+
 #'                  
 #' GBR_KFSp <- ggplotPath2(GBR_KFS, ISOll)
 #' ISOll2 <- cbind(ISOll, labelsi=1:2)

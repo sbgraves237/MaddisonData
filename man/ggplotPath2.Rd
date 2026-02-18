@@ -50,6 +50,8 @@ estimation in the \code{KFAS} package, calls
 \code{ggplotPath2(KFAS::KFS(object$a), ...)}.
 }}
 
+\item{...}{optional arguments.}
+
 \item{time}{If present, it must be a numeric vector of length equal to the
 number of rows of the matrix obtained from \code{object} and fed to \code{ggplotPath}
 to create the individual panels of the plot. Default depends on
@@ -164,7 +166,7 @@ List2 <- list(
     level=list('year', 'lvl'), 
     slope=list('year', 'vel'), 
     accel=list('year', 'acc'))
-Mat2l <- ggplot2(List2, data=Mat2)
+Mat2l <- ggplotPath2(List2, data=Mat2)
 
 # State space / Kalman filtering model for GBR
 GBR <- subset(MaddisonData, (ISO=='GBR') & !is.na(gdppc))

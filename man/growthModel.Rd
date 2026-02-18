@@ -41,7 +41,8 @@ or \code{names(y)} if \code{!is.null} or \code{1:length(y)} otherwise.}
 \item{\dots}{optional arguments passed to \code{\link[KFAS:SSModel]{KFAS::SSMcustom()}}.}
 }
 \value{
-a list returned by \code{\link[KFAS:SSModel]{KFAS::SSMcustom()}}.
+a list returned by \code{\link[KFAS:SSModel]{KFAS::SSMcustom()}} with an additional \code{Time}
+component.
 }
 \description{
 \code{growthModel} returns a list returned by \code{\link[KFAS:SSModel]{KFAS::SSMcustom()}} for a model

@@ -210,6 +210,7 @@ attr(zero, 'lty') <- 'dashed'
 Hlines1 <- list(c(1,3, 10, 30), zero) 
 Vlines <- c(1649, 1929, 1933, 1945)
 
-GBR_KFSp3 <- ggplotPath2(GBR_KFS, ISOll2, hlines=Hlines1, vlines=Vlines)
+GBR_KFSp3 <- ggplotPath2(GBR_KFS, labels=ISOll2, hlines=Hlines1, 
+                         vlines=Vlines)
 
 }

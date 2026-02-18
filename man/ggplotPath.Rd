@@ -45,8 +45,8 @@ for which we typically want \code{scaley = 1000}.}
 \item{ylab}{y axis label. Default =
 \code{if(scaley==1) y else paste(y, '/', scaley)}}
 
-\item{legend.position}{argument passed to \code{\link[ggplot2:theme]{ggplot2::theme}}. If \code{!missing(labels)},
-default is no legend. Otherwise, default depends on
+\item{legend.position}{argument passed to \code{\link[ggplot2:theme]{ggplot2::theme}}. If
+\code{!missing(labels)}, default is no legend. Otherwise, default depends on
 \verb{nGps <- length(unique(data[, group]}: If \code{nGps} = 1, there is no legend. If
 \code{nGps > 10}, \code{legend.position = 'right'}. In between, \code{legend.position} =
 c(.15, .5) = center left. For alternatives, see \code{\link[ggplot2:theme]{ggplot2::theme}}.}

@@ -143,9 +143,6 @@
 #' GBR_KFSp0 <- ggplotPath2(GBR_KFS)
 #' GBR_KFSp <- ggplotPath2(GBR_KFS$a)
 #' GBR_KFStp <- ggplotPath2(GBR_KFSt$a)
-
-#' GBR_KFS <- KFS(GBRgrowthMdl)
-#' GBR_KFSp <- ggplotPath2(GBR_KFS)
 #' 
 #' # label the lines
 #' ISOll1 <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), 

@@ -40,11 +40,22 @@ test_that("growthModel", {
   Q123 <- (choose(dT, 2)* v23[2])
   Q23[1, 2, ] <- Q123
   Q23[2, 1, ] <- Q123
-
-#  svd(Q23[,, 1])
-#  eigen(Q23[,, 1])
-  
   expect_identical(growthMdl1v3$Q, Q23)
+#
+  growthFmla <- (log(gdppc)~ -1 + 
+                      KFAS::SSMbespoke(growthModel(.1, GBR$gdppc) )) 
+  growthFml <- (log(gdppc)~ -1 + SSMbespoke(growthModel(.1, GBR$gdppc) )) 
+  library(KFAS)
+  # The following should NOT give an error, but it does. 
+  expect_error(SSModel(growthFmla, GBR, H=matrix(NA) ))
+# Error in model.frame.default(formula = growthFmla, data = GBR, na.action = na.pass) : 
+#   invalid type (list) for variable 'KFAS::SSMbespoke(growthModel(0.1, GBR$gdppc))'
+  growthSSmdl <-SSModel(growthFml, GBR, H=matrix(NA) )
+  growthSSmdl1 <- growthUpdateFn(log(.01), growthSSmdl)
+      
+  expect_equal(growthSSmdl[-c(3, 6)], growthSSmdl1[-c(3, 6)])
+  expect_true(is.na(growthSSmdl$H))
+  expect_true(all(abs(growthSSmdl$Q - growthSSmdl1$Q)<.Machine$double.eps))
 # test for expected errors
   expect_error(growthUpdateFn())
   expect_error(growthUpdateFn(1))

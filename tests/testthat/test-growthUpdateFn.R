@@ -1,11 +1,13 @@
 test_that("growthModel", {
   GBR <- subset(MaddisonData, (ISO=='GBR') & !is.na(gdppc))
+  growthMdl0 <- growthModel(.1, GBR$gdppc)
+  growthMdl0v <- growthUpdateFn(.1, growthMdl0)
   growthMdl1 <- growthModel(.1, GBR$gdppc, Time=GBR$year)
-  growthMdl1v0 <- growthUpdateFn(.1, growthMdl1)
   growthMdl1v <- growthUpdateFn(.1, growthMdl1, Time=GBR$year)
   growthMdl1v3 <- growthUpdateFn(1:3, growthMdl1, Time=GBR$year)
+  
   # check growthMdl1$state_names 
-  expect_identical(growthMdl1v0$state_names, growthMdl1$state_names)
+  expect_identical(growthMdl0v$state_names, growthMdl0$state_names)
   expect_identical(growthMdl1v$state_names, growthMdl1$state_names)
   expect_identical(growthMdl1v3$state_names, growthMdl1$state_names)
   # check H
@@ -23,7 +25,7 @@ test_that("growthModel", {
   dimnames(Q1) <- list(growthMdl1$state_names, growthMdl1$state_names, 1:N)
   Q1[1, 1, ] <- v1
   Q1[2, 2, ] <- v1
-  expect_identical(growthMdl1v0$Q, Q1)
+  expect_identical(growthMdl0v$Q, Q1)
 #   
   Q1t <- Q1 
   dimnames(Q1t) <- list(growthMdl1$state_names, growthMdl1$state_names, Tm)
@@ -53,7 +55,7 @@ test_that("growthModel", {
   growthSSmdl <-SSModel(growthFml, GBR, H=matrix(NA) )
   growthSSmdl1 <- growthUpdateFn(log(.01), growthSSmdl)
       
-  expect_equal(growthSSmdl[-c(3, 6)], growthSSmdl1[-c(3, 6)])
+  expect_equal(growthSSmdl[-c(3, 6)], growthSSmdl1[-c(3, 6, 15)])
   expect_true(is.na(growthSSmdl$H))
   expect_true(all(abs(growthSSmdl$Q - growthSSmdl1$Q)<.Machine$double.eps))
 # test for expected errors

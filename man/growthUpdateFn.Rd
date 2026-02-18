@@ -21,8 +21,9 @@ transition covariance array \code{Q} and
 \code{state_names = c('level', 'growthRate')} as returned by \code{\link{growthModel}}.}
 
 \item{Time}{= optional integer vector of times at which non-missing
-observations are available. Default = \code{time(y)} if \code{model} has a component
-\code{y} \code{names(y)} if \code{!is.null} or \code{1:n} otherwise.}
+observations are available. Default is \code{model$Time} if available or
+\code{time(y)} if \code{model} has a component \code{y} or \code{names(y)} if \code{!is.null} or
+\code{1:n} otherwise.}
 }
 \value{
 a \code{model} with components \code{H} and \code{Q} updated as described.

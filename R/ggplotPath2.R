@@ -94,6 +94,7 @@
 #' `length(color)` should equal `k`. Default is 2:1 for each panel with a 
 #' reference line provided in `object2` and 1 otherwise. See `help(ggplotPath)` 
 #' for options. 
+#' @param ... optional arguments.  
 #' 
 #' @returns an object of class [`ggplot2::ggplot`], which can be subsequently 
 #' edited, and whose [`print`] method produces the desired plot. 
@@ -119,7 +120,7 @@
 #'     level=list('year', 'lvl'), 
 #'     slope=list('year', 'vel'), 
 #'     accel=list('year', 'acc'))
-#' Mat2l <- ggplot2(List2, data=Mat2)
+#' Mat2l <- ggplotPath2(List2, data=Mat2)
 #' 
 #' # State space / Kalman filtering model for GBR
 #' GBR <- subset(MaddisonData, (ISO=='GBR') & !is.na(gdppc))
@@ -496,7 +497,12 @@ ggplotPath2.default <- function(object, time, object2, scaley, logy, ylab,
     callList[[i]]$ylab <- Ylab[i]
     callList[[i]]$hlines <- Hlines[[i]]
     callList[[i]]$vlines <- vlines 
-    if(!missing(labels))callList[[i]]$labels <- subset(Labels, component==i)
+    if(!missing(labels)){ 
+      if(!("component" %in% colnames(Labels))){
+        stop("'component' not in names(labels)")
+      }
+      callList[[i]]$labels <- subset(Labels, component==i)
+    }
     callList[[i]]$fontsize <- fontsize
     if(!missing(color))callList[[i]]$color <- Color[[i]]
     if(!missing(linetype))callList[[i]]$linetype <- Linetype[[i]]

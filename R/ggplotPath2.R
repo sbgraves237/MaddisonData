@@ -152,7 +152,7 @@
 #'
 #' GBR_KFSp1 <- ggplotPath2(GBR_KFS$a, labels=ISOll1)
 #'                  
-#' GBR_KFSp <- ggplotPath2(GBR_KFS, ISOll1)
+#' GBR_KFSp <- ggplotPath2(GBR_KFS, labels=ISOll1)
 #' ISOll2 <- cbind(ISOll, labelsi=1:2)
 #' GBR_KFSp2 <- ggplotPath2(GBR_KFS, labels=ISOll2)
 #' 

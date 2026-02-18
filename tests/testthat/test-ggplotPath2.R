@@ -77,6 +77,7 @@ test_that("ggplotPath2", {
   GBR_KFSp1 <- ggplotPath2(GBR_KFS$a, labels=ISOll1)
   ISOll2 <- cbind(ISOll, component=1:2)
   GBR_KFSp2 <- ggplotPath2(GBR_KFS, labels=ISOll2)
+  
   expect_identical(class(GBR_KFSp2), 
                    c("egg", "gtable", "gTree", "grob", "gDesc") )
 # vlines 

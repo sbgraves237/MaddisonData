@@ -20,30 +20,31 @@ Objectives: Make it relatively easy in R to do the following:
     companies with high `gdppc` based on something narrow like a
     commodity, e.g., oil. \[DONE\]
 
-2.  Support modeling a time series as `c('level', 'growthRate')` using
-    the `KFAS` package with functions `growthModel` and `growthUpdateFn`
-    plus plotting with `ggplotPath` and `ggplotPath2` as documented in
-    vignette `KalmanSmoothing`. \[ALMOST DONE, but `KFAS::fitSSM` seems
-    not to pass optional arguments to `optim` and strips dimnames from
-    components of an `SSModel`. This means that with an irregular time
-    series, e.g., data missing for some years, the gaps are ignored, and
-    esimation assumes the data are contiguous. This impacts especially
-    the state transition matrix `T` and transition variance `Q`. This
-    should be a minor problem problem for series with only a few missing
-    values and will be ignored until convenient to fix.\]
+2.  Support modeling a time series as `c('level', 'growthRate')`.
 
-3.  Ask John Nash for his preferred substitute for `optim`. Also ask him
-    about supporting an optional `fixPar` vector = NA for `par` to fix
-    and the numeric values for others. This could support easy testing
-    testing of submodels.
+2.1. Using the `KFAS` package with functions `growthModel` and
+`growthUpdateFn` plus plotting with `ggplotPath` and `ggplotPath2` as
+documented in vignette `KalmanSmoothing`. \[ALMOST DONE, but
+`KFAS::fitSSM` seems not to pass optional arguments to `optim` and
+strips dimnames from components of an `SSModel`. This means that with an
+irregular time series, e.g., data missing for some years, the gaps are
+ignored, and esimation assumes the data are contiguous. This impacts
+especially the state transition matrix `T` and transition variance `Q`.
+This should be a minor problem problem for series with only a few
+missing values and will be ignored until convenient to fix.\]
 
-4.  Ask Jouni Helske and the other `KFAS` contributors about supporting
-    dimnames and an optional `Time` and `dT` component(s)) of an
-    `SSModel` plus a function `asTime` = `Time` component of a model
-    else `as.Posixct(names(y))` else `as.Date(names(y))` else
-    `as.numeric(names(y))` else \[`ordered(names(y))` with
-    `dT =`1:length(y)`] with`dT\_ = diff(Time)`and`dT = c(dT\[1\],
-    dT)\`.
+2.2. Ask John Nash for his preferred substitute for `optim`. Also ask
+him about supporting an optional `fixPar` vector = NA for `par` to fix
+and the numeric values for others. This could support easy testing
+testing of submodels.
+
+2.3. Ask Jouni Helske and the other `KFAS` and `bssm` contributors about
+supporting dimnames and an optional `Time` and `dT` component(s)) of an
+`SSModel` plus a function `asTime` = `Time` component of a model else
+`as.Posixct(names(y))` else `as.Date(names(y))` else
+`as.numeric(names(y))` else \[`ordered(names(y))` with
+`dT =`1:length(y)`] with`dT\_ = diff(Time)`and`dT = c(dT\[1\],
+dT)`and for`bssm`assuming Student's t migrations of`growthRate\`.
 
 ``` r
 library(MaddisonData)

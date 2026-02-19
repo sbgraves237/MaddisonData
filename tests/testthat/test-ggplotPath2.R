@@ -16,7 +16,7 @@ test_that("ggplotPath2", {
   Mat1p <- ggplotPath2(Mat1)
   expect_equal(class(Mat1p), c("egg", "gtable", "gTree", "grob", "gDesc" ))
   
-  Mat2p <- ggplotPath2(Mat2[, 1:3], time=Mat2[, 'year']) 
+  Mat2p <- ggplotPath2(Mat2[, 1:3], Time=Mat2[, 'year']) 
   expect_equal(class(Mat2p), c("egg", "gtable", "gTree", "grob", "gDesc" ))
   
   MTSp <- ggplotPath2(MTS)
@@ -60,7 +60,7 @@ test_that("ggplotPath2", {
   #KFS example 
   GBR_KFS <- KFAS::KFS(GBRgrowthFit1$model)
   GBR_KFSt <- KFAS::KFS(GBRgrowthFit1t$model)
-  GBR_KFSp0 <- ggplotPath2(GBR_KFS)
+  GBR_KFSp0 <- ggplotPath2(GBR_KFS, Time=GBR$year)
   GBR_KFSp <- ggplotPath2(GBR_KFS$a)
   GBR_KFStp <- ggplotPath2(GBR_KFSt$a)
 

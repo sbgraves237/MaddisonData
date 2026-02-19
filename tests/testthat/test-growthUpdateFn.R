@@ -11,7 +11,7 @@ test_that("growthModel", {
   expect_identical(growthMdl1v$state_names, growthMdl1$state_names)
   expect_identical(growthMdl1v3$state_names, growthMdl1$state_names)
   # check H
-  expect_identical(growthMdl1v0$H, array(exp(.1), c(1, 1, 1)))
+  expect_identical(growthMdl0v$H, array(exp(.1), c(1, 1, 1)))
   expect_identical(growthMdl1v$H, array(exp(.1), c(1, 1, 1)))
   expect_identical(growthMdl1v3$H, array(exp(1), c(1, 1, 1)))
   # check Q

@@ -24,20 +24,22 @@
 #'      `ggplotPath` is called separately for each of the `k` column. Each such 
 #'      call returns a `ggplot` object. Those `ggplot` objects are assembled as 
 #'      separate panels into a `ggplot` object with a shared horizontal axis 
-#'      with no space between the panels. 
+#'      with no space between the panels with at most one more row than 
+#'      `length(Time)` and the first row of `object` is dropped if needed so 
+#'      `n == length(k)`.
 #'    \item `KFS` (defined in package `KFAS`) calls 
 #'      `ggplotPath.matrix(object$a, ...)`. 
 #'    \item `list` with a component `a`, assumed to a model produced from  
 #'      estimation in the `KFAS` package, calls 
 #'      `ggplotPath2(KFAS::KFS(object$a), ...)`.
 #'  }
-#' @param time If present, it must be a numeric vector of length equal to the 
+#' @param Time If present, it must be a numeric vector of length equal to the 
 #' number of rows of the matrix obtained from `object` and fed to `ggplotPath` 
 #' to create the individual panels of the plot. Default depends on 
 #' `class(object)`: 
 #'  \itemize{
-#'    \item `matrix`: Default `time = rownames(object)`. 
-#'    \item `mts`: Default `time = time(object)`. 
+#'    \item `matrix`: Default `Time = rownames(object)`. 
+#'    \item `mts`: Default `Time = time(object)`. 
 #'    \item `KFS` (defined in package `KFAS`): Default = `rownames` or `time` 
 #'      of `object$model$y`. 
 #'    \item `model` (defined in package `KFAS`): Default = `rownames` or `time` 
@@ -112,7 +114,7 @@
 #' # Do 
 #' Matp <- ggplotPath2(Mat)
 #' Mat1p <- ggplotPath2(Mat1)
-#' Mat2p <- ggplotPath2(Mat2[, 1:3], time=Mat2[, 'year']) 
+#' Mat2p <- ggplotPath2(Mat2[, 1:3], Time=Mat2[, 'year']) 
 #' MTSp <- ggplotPath2(MTS)
 #' MTSep <- ggplotPath2(MTS, logy=c('exp_log', 'log', ''))
 #' 
@@ -237,22 +239,23 @@ ggplotPath2.list <- function(object, ...){
 
 #' @rdname ggplotPath2
 #' @export
-ggplotPath2.mts <- function(object, time, ...){
+ggplotPath2.mts <- function(object, Time, ...){
   Obj <- as.data.frame(object)
   N <- NROW(Obj)
-  if(missing(time)){
-    Time <- as.numeric(stats::time(object))
+  if(missing(Time)){
+    Tm <- as.numeric(stats::time(object))
   } else {
-    if(!is.numeric(time)){
-      stop('time must be numeric; is ', paste(class(time), collapse=', '))
+    if(!is.numeric(Time)){
+      stop('Time must be numeric; is ', paste(class(Time), collapse=', '))
     }
-    Time <- time
-    nT <- length(Time)
-    if(nT != N){
-      stop('length(time) = ', nT, ', must = nrow(object) = ', N, '; does not.')
+    Tm <- Time
+    nT <- length(Tm)
+    if(nT != (N-1)){
+      stop('length(time) = ', nT, ', must be 1 less than nrow(object) = ', N, 
+           '; is not.')
     }
   }
-  Args <- list(object=Obj, time=Time)
+  Args <- list(object=Obj, Time=Tm)
   Dots <- list(...)
   if(length(Dots)>0) Args <- c(Args, Dots) 
   do.call(ggplotPath2, Args)
@@ -269,26 +272,26 @@ ggplotPath2.KFS <- function(object, ...){
 
 #' @rdname ggplotPath2
 #' @export
-ggplotPath2.default <- function(object, time, object2, scaley, logy, ylab, 
+ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab, 
         hlines, vlines=numeric(0), labels, fontsize=10, color, linetype, ...){
 ##
 ## 1. object and time? 
 ##  
   Object <- as.data.frame(object)
-  N <- nrow(Object)
+  N <- NROW(Object)
   yNames <- colnames(object)
-  if(missing(time)){
-    time <- rownames(Object)
-    Time <- suppressWarnings(as.numeric(time))
-    if(any(is.na(Time))){
-      warning('time not supplied; using 1:', N)
-      Time <- 1:N
+  if(missing(Time)){
+    Tim <- rownames(Object)
+    Tm <- suppressWarnings(as.numeric(Tim))
+    if(any(is.na(Tm))){
+      warning('Time not supplied; using 1:', N)
+      Tm <- 1:N
     }
   } else {
-    Time <- suppressWarnings(as.numeric(time))
-    if(any(is.na(Time))){
+    Tm <- suppressWarnings(as.numeric(Time))
+    if(any(is.na(Tm))){
       warning('time must be numeric. Is not. Using 1:', N)
-      Time <- 1:N
+      Tm <- 1:N
     }
   }
   k <- ncol(Object)
@@ -318,7 +321,15 @@ ggplotPath2.default <- function(object, time, object2, scaley, logy, ylab,
   }
   List <- vector(mode='list', k)
   names(List) <- yNames
-  Data <- cbind(Object, Time=Time)
+  nT <- length(Tm)
+  if(nT==N){ 
+    Data <- cbind(Object, Time=Tm)
+  } else if((N-nT)==1){ 
+    Data <- cbind(utils::tail(Object, -1), Time=Tm)
+  } else {
+    stop("'Object' and 'Time' not compatible. NROW(Object) = ", N, 
+         "; length(Time) = ", nT)
+  }
   names(Data) <- c(yNames, 'Time')
 ##
 ## 2. object2 

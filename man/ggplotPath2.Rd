@@ -13,13 +13,13 @@ ggplotPath2(object, ...)
 
 \method{ggplotPath2}{list}(object, ...)
 
-\method{ggplotPath2}{mts}(object, time, ...)
+\method{ggplotPath2}{mts}(object, Time, ...)
 
 \method{ggplotPath2}{KFS}(object, ...)
 
 \method{ggplotPath2}{default}(
   object,
-  time,
+  Time,
   object2,
   scaley,
   logy,
@@ -42,7 +42,9 @@ e.g., \code{k} components of a state vector at \code{n} points in time.
 \code{ggplotPath} is called separately for each of the \code{k} column. Each such
 call returns a \code{ggplot} object. Those \code{ggplot} objects are assembled as
 separate panels into a \code{ggplot} object with a shared horizontal axis
-with no space between the panels.
+with no space between the panels with at most one more row than
+\code{length(Time)} and the first row of \code{object} is dropped if needed so
+\code{n == length(k)}.
 \item \code{KFS} (defined in package \code{KFAS}) calls
 \code{ggplotPath.matrix(object$a, ...)}.
 \item \code{list} with a component \code{a}, assumed to a model produced from
@@ -52,13 +54,13 @@ estimation in the \code{KFAS} package, calls
 
 \item{...}{optional arguments.}
 
-\item{time}{If present, it must be a numeric vector of length equal to the
+\item{Time}{If present, it must be a numeric vector of length equal to the
 number of rows of the matrix obtained from \code{object} and fed to \code{ggplotPath}
 to create the individual panels of the plot. Default depends on
 \code{class(object)}:
 \itemize{
-\item \code{matrix}: Default \code{time = rownames(object)}.
-\item \code{mts}: Default \code{time = time(object)}.
+\item \code{matrix}: Default \code{Time = rownames(object)}.
+\item \code{mts}: Default \code{Time = time(object)}.
 \item \code{KFS} (defined in package \code{KFAS}): Default = \code{rownames} or \code{time}
 of \code{object$model$y}.
 \item \code{model} (defined in package \code{KFAS}): Default = \code{rownames} or \code{time}
@@ -158,7 +160,7 @@ MTS <- ts(Mat, 1951)
 # Do 
 Matp <- ggplotPath2(Mat)
 Mat1p <- ggplotPath2(Mat1)
-Mat2p <- ggplotPath2(Mat2[, 1:3], time=Mat2[, 'year']) 
+Mat2p <- ggplotPath2(Mat2[, 1:3], Time=Mat2[, 'year']) 
 MTSp <- ggplotPath2(MTS)
 MTSep <- ggplotPath2(MTS, logy=c('exp_log', 'log', ''))
 

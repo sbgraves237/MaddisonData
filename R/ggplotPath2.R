@@ -517,7 +517,6 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
     callList[[i]] <- list(x='Time', y=yNames[i], data=Dati)
     callList[[i]]$group <- grpi 
     callList[[i]]$scaley <- scaley[i]
-    callList[[i]]$scaley <- scaley[i]
     callList[[i]]$logy <- Logy[i]
     callList[[i]]$ylab <- Ylab[i]
     callList[[i]]$hlines <- Hlines[[i]]

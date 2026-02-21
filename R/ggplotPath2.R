@@ -578,7 +578,8 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
         warning(msgLout)
       }
       if(any(!Lout)) {
-        callList[[i]]$labels <- subset(Labels[!Lout, ], component==i)
+        lblsi <- subset(Labels[!Lout, ], component==i)
+        if(nrow(lblsi)>0)callList[[i]]$labels <- lblsi 
       }
     }
     callList[[i]]$fontsize <- fontsize

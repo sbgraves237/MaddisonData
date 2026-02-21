@@ -8,7 +8,10 @@ test_that("ggplotPath", {
   GBR_USA <- subset(MaddisonData::MaddisonData, ISO %in% c('GBR', 'USA'))
   GBR_USA1 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, scaley=1000)
   expect_true(inherits(GBR_USA1, 'ggplot'))
-
+  GBR_USA1a <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+                          color=c('red', 'blue'))
+  expect_true(inherits(GBR_USA1, 'ggplot'))
+  
 # label the lines
   ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), 
                       label=c('GBR', 'USA'), srt=c(0, 30),

@@ -48,8 +48,10 @@ with no space between the panels with at most one more row than
 \item \code{KFS} (defined in package \code{KFAS}) calls
 \code{ggplotPath.matrix(object$a, ...)}.
 \item \code{list} with a component \code{a}, assumed to a model produced from
-estimation in the \code{KFAS} package, calls
-\code{ggplotPath2(KFAS::KFS(object$a), ...)}.
+estimation in the \code{KFAS} package, calls \code{ggplotPath2(object$a, ...)}.
+\item \code{list} with component \code{model}: If it has a component \code{a}, call
+\code{ggplotPath2(object$model$a, ...)}. Else call
+\code{ggplotPath2(KFAS::KFS(object), ...)}.
 }}
 
 \item{...}{optional arguments.}
@@ -165,7 +167,7 @@ MTS <- ts(Mat, 1951)
 # Do 
 Matp <- ggplotPath2(Mat)
 # with object2 = vector 
-  Matp1 <- ggplotPath2(Mat, object2=2*Mat[, 2])
+  Matp1 <- ggplotPath2(Mat, object2=sqrt(1:5))
 # with object2= = 2 column matrix for first 2 panels. 
 Matp2 <- ggplotPath2(Mat, object2=2*Mat[, 2:1])
 Mat1p <- ggplotPath2(Mat1)
@@ -193,7 +195,8 @@ GBRgrowthFit1 <- fitSSM(GBR2m, inits=-6, method = "BFGS",
 # NOTE: This call currently also ignores Time; MUST BE FIXED
 GBRgrowthFit1t <- fitSSM(GBR2m, inits=-6, method = "BFGS", 
                          updatefn = growthUpdateFn, Time=GBR$year)
-                       
+GBRfitp <- ggplotPath2(GBRgrowthFit1t)
+
 #KFS example 
 GBR_KFS <- KFAS::KFS(GBRgrowthFit1$model)
 GBR_KFSt <- KFAS::KFS(GBRgrowthFit1t$model)

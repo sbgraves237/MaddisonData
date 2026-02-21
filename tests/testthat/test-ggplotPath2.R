@@ -59,7 +59,9 @@ test_that("ggplotPath2", {
   # NOTE: This call currently also ignores Time: MUST BE FIXED 
   expect_identical(GBRgrowthFit1, GBRgrowthFit1t)
   
-  expect_error(ggplotPath2(GBRgrowthFit1))
+  GBRgrowthPlt1 <- ggplotPath2(GBRgrowthFit1)
+  expect_identical(class(GBRgrowthPlt1), 
+                   c("egg", "gtable", "gTree", "grob", "gDesc") )
   
   #KFS example 
   GBR_KFS <- KFAS::KFS(GBRgrowthFit1$model)

@@ -97,9 +97,9 @@
 #' otherwise. See `help(ggplotPath)` for options. 
 #' @param linetype optional vector or list of length `k` of vectors to feed to 
 #' `ggplotPath(..., linetype=linetype[[i]])` for panel `i=1:k`. If present, 
-#' `length(color)` should equal `k`. Default is 2:1 for each panel with a 
-#' reference line provided in `object2` and 1 otherwise. See `help(ggplotPath)` 
-#' for options. 
+#' `length(color)` should equal `k`. Default for each panel with a reference 
+#' line in `object2` = `c(3, 1) = c('dotted', 'solid')` else 1 = `solid`. 
+#' See [`ggplotPath`] for options. 
 #' @param ... optional arguments.  
 #' 
 #' @returns an object of class [`ggplot2::ggplot`], which can be subsequently 
@@ -580,7 +580,11 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
     }
     callList[[i]]$fontsize <- fontsize
     if(!missing(color))callList[[i]]$color <- Color[[i]]
-    if(!missing(linetype))callList[[i]]$linetype <- Linetype[[i]]
+    if(!missing(linetype)){
+      callList[[i]]$linetype <- Linetype[[i]]
+    } else if(i <= k2){
+      callList[[i]]$linetype <- c(3, 1)
+    }
   }
   ggplotPath2(callList, ...)
 }   

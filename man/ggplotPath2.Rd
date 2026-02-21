@@ -163,6 +163,10 @@ MTS <- ts(Mat, 1951)
 
 # Do 
 Matp <- ggplotPath2(Mat)
+# with object2 = vector 
+  Matp1 <- ggplotPath2(Mat, object2=2*Mat[, 2])
+# with object2= = 2 column matrix for first 2 panels. 
+Matp2 <- ggplotPath2(Mat, object2=2*Mat[, 2:1])
 Mat1p <- ggplotPath2(Mat1)
 Mat2p <- ggplotPath2(Mat2[, 1:3], Time=Mat2[, 'year']) 
 MTSp <- ggplotPath2(MTS)

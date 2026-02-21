@@ -8,7 +8,7 @@ test_that("ggplotPath2", {
   
   # mts example 
   MTS <- ts(Mat, 1951)
-  
+
   # Do  
   Matp <- ggplotPath2(Mat)
   expect_equal(class(Matp), c("egg", "gtable", "gTree", "grob", "gDesc" ))
@@ -24,7 +24,7 @@ test_that("ggplotPath2", {
   
   MTSep <- ggplotPath2(MTS, logy=c('', 'log', 'exp_log'))
   expect_equal(class(MTSep), c("egg", "gtable", "gTree", "grob", "gDesc" ))
-  
+
   # list example 
   List2 <- list(
       level=list('year', 'lvl', logy=''), 
@@ -68,28 +68,53 @@ test_that("ggplotPath2", {
                    c("egg", "gtable", "gTree", "grob", "gDesc") )
                    
 # label the lines
-  ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), 
-                      label=c('GBR', 'Napoleon'), srt=c(0, 30),
-                      col=c('red', 'green'), size=c(2, 9))
+  ISOll <- data.frame(x=c(1649, 1800, 1810, 1985), y=c(5, 4, 4, 4), 
+                      label=c('Civil War', 'Napoleon', 'Empire', 'Keynes'), 
+                      srt=c(90, 80, 0, 0), 
+                      col=c('red', 'green'), 
+                      size=c(3, 3, 5, 3))
   expect_error(ggplotPath2(GBR_KFS$a, labels=ISOll))
   
   ISOll1 <- cbind(ISOll, component=1)
-  GBR_KFSp1 <- ggplotPath2(GBR_KFS$a, labels=ISOll1)
-  ISOll2 <- cbind(ISOll, component=1:2)
-  GBR_KFSp2 <- ggplotPath2(GBR_KFS, labels=ISOll2)
+  expect_warning(
+    expect_warning(
+    GBR_KFSp1 <- ggplotPath2(GBR_KFS$a, labels=ISOll1)
+    )
+  )
+  ISOll2 <- cbind(ISOll, component=c(1:2, 1:2))
+
+  expect_warning(
+    expect_warning(
+      GBR_KFSp2 <- ggplotPath2(GBR_KFS, labels=ISOll2)
+    )
+  )
   
   expect_identical(class(GBR_KFSp2), 
                    c("egg", "gtable", "gTree", "grob", "gDesc") )
-# vlines 
+  
+  # vlines 
   zero <- 0
   attr(zero, 'color') <- 'red'
   attr(zero, 'lty') <- 'dashed'
   Hlines1 <- list(c(1,3, 10, 30), zero) 
   Vlines <- c(1649, 1929, 1933, 1945)
-
-  GBR_KFSp3 <- ggplotPath2(GBR_KFS, labels=ISOll2, hlines=Hlines1, 
-                           vlines=Vlines)
+  
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        expect_warning(
+            GBR_KFSp3 <- ggplotPath2(GBR_KFS, labels=ISOll2, hlines=Hlines1, 
+                                     vlines=Vlines)
+        )
+      )
+    )
+  )
+  
   expect_identical(class(GBR_KFSp3), 
                    c("egg", "gtable", "gTree", "grob", "gDesc") )
   
+  GBR_KFSp4 <- ggplotPath2(GBR_KFS, Time=GBR$year, object2=GBR$gdppc, 
+                           scaley=c(1000, .01), 
+                           labels=ISOll2, hlines=Hlines1, vlines=Vlines)
+
 })

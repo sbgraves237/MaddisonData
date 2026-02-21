@@ -30,8 +30,10 @@
 #'    \item `KFS` (defined in package `KFAS`) calls 
 #'      `ggplotPath.matrix(object$a, ...)`. 
 #'    \item `list` with a component `a`, assumed to a model produced from  
-#'      estimation in the `KFAS` package, calls 
-#'      `ggplotPath2(KFAS::KFS(object$a), ...)`.
+#'      estimation in the `KFAS` package, calls `ggplotPath2(object$a, ...)`.
+#'    \item `list` with component `model`: If it has a component `a`, call 
+#'      `ggplotPath2(object$model$a, ...)`. Else call 
+#'      `ggplotPath2(KFAS::KFS(object), ...)`.
 #'  }
 #' @param Time optional numeric vector with lenght being either the number of 
 #' rows of the matrix obtained from `object` or one less and fed to 
@@ -119,7 +121,7 @@
 #' # Do 
 #' Matp <- ggplotPath2(Mat)
 #' # with object2 = vector 
-#'   Matp1 <- ggplotPath2(Mat, object2=2*Mat[, 2])
+#'   Matp1 <- ggplotPath2(Mat, object2=sqrt(1:5))
 #' # with object2= = 2 column matrix for first 2 panels. 
 #' Matp2 <- ggplotPath2(Mat, object2=2*Mat[, 2:1])
 
@@ -148,7 +150,8 @@
 #' # NOTE: This call currently also ignores Time; MUST BE FIXED
 #' GBRgrowthFit1t <- fitSSM(GBR2m, inits=-6, method = "BFGS", 
 #'                          updatefn = growthUpdateFn, Time=GBR$year)
-#'                        
+#' GBRfitp <- ggplotPath2(GBRgrowthFit1t)
+#' 
 #' #KFS example 
 #' GBR_KFS <- KFAS::KFS(GBRgrowthFit1$model)
 #' GBR_KFSt <- KFAS::KFS(GBRgrowthFit1t$model)
@@ -197,8 +200,7 @@ ggplotPath2.list <- function(object, ...){
     if('a' %in% names(object$model)){
       return(ggplotPath2(object$model$a, ...))
     }
-    msgoo <- paste("'object' has component 'model', but 'model' does not ", 
-                   "have component 'a'. Need to call KFAS::KFS?")
+    return(ggplotPath2(KFAS::KFS(object$model), ...))
   }
 ##
 ## 2. A list of lists of args for calls to ggplotPath

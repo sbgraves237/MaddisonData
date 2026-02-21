@@ -12,7 +12,7 @@ test_that("ggplotPath2", {
   # Do  
   Matp <- ggplotPath2(Mat)
   expect_equal(class(Matp), c("egg", "gtable", "gTree", "grob", "gDesc" ))
-  Matp1 <- ggplotPath2(Mat, object2=2*Mat[, 2])
+  Matp1 <- ggplotPath2(Mat, object2=sqrt(1:5))
   expect_equal(class(Matp1), c("egg", "gtable", "gTree", "grob", "gDesc" ))
   Matp2 <- ggplotPath2(Mat, object2=2*Mat[, 2:1])
   expect_equal(class(Matp2), c("egg", "gtable", "gTree", "grob", "gDesc" ))

@@ -12,6 +12,10 @@ test_that("ggplotPath2", {
   # Do  
   Matp <- ggplotPath2(Mat)
   expect_equal(class(Matp), c("egg", "gtable", "gTree", "grob", "gDesc" ))
+  Matp1 <- ggplotPath2(Mat, object2=2*Mat[, 2])
+  expect_equal(class(Matp1), c("egg", "gtable", "gTree", "grob", "gDesc" ))
+  Matp2 <- ggplotPath2(Mat, object2=2*Mat[, 2:1])
+  expect_equal(class(Matp2), c("egg", "gtable", "gTree", "grob", "gDesc" ))
   
   Mat1p <- ggplotPath2(Mat1)
   expect_equal(class(Mat1p), c("egg", "gtable", "gTree", "grob", "gDesc" ))
@@ -68,11 +72,11 @@ test_that("ggplotPath2", {
                    c("egg", "gtable", "gTree", "grob", "gDesc") )
                    
 # label the lines
-  ISOll <- data.frame(x=c(1649, 1800, 1810, 1985), y=c(5, 4, 4, 4), 
+  ISOll <- data.frame(x=c(1649, 1800, 1810, 1985), y=c(5, 8, 6, 6), 
                       label=c('Civil War', 'Napoleon', 'Empire', 'Keynes'), 
-                      srt=c(90, 80, 0, 0), 
+                      srt=c(90, 85, 0, 0), 
                       col=c('red', 'green'), 
-                      size=c(3, 3, 5, 3))
+                      size=c(3, 4, 5, 3))
   expect_error(ggplotPath2(GBR_KFS$a, labels=ISOll))
   
   ISOll1 <- cbind(ISOll, component=1)
@@ -81,7 +85,7 @@ test_that("ggplotPath2", {
     GBR_KFSp1 <- ggplotPath2(GBR_KFS$a, labels=ISOll1)
     )
   )
-  ISOll2 <- cbind(ISOll, component=c(1:2, 1:2))
+  ISOll2 <- cbind(ISOll, component=c(1, 1, 2, 2))
 
   expect_warning(
     expect_warning(
@@ -114,7 +118,14 @@ test_that("ggplotPath2", {
                    c("egg", "gtable", "gTree", "grob", "gDesc") )
   
   GBR_KFSp4 <- ggplotPath2(GBR_KFS, Time=GBR$year, object2=GBR$gdppc, 
-                           scaley=c(1000, .01), 
                            labels=ISOll2, hlines=Hlines1, vlines=Vlines)
+  expect_identical(class(GBR_KFSp4), 
+                   c("egg", "gtable", "gTree", "grob", "gDesc") )
+  GBR_KFSp4a <- ggplotPath2(GBR_KFS, Time=GBR$year, object2=GBR$gdppc, 
+                           scaley=c(1100, .009), 
+                           labels=ISOll2, hlines=Hlines1, vlines=Vlines)
+  expect_identical(class(GBR_KFSp4), 
+                   c("egg", "gtable", "gTree", "grob", "gDesc") )
+  
 
 })

@@ -92,9 +92,9 @@
 #' `ggplotPath(..., fontsize=fontsize); default = 10. 
 #' @param color optional vector or list of length '`k` of vectors to feed to 
 #' `ggplotPath(..., color=color[[i]])` for panel `i=1:k`. If present, 
-#' `length(color)` should equal `k`. Default is 2:1 for each panel with a 
-#' reference line provided in `object2` and 1 otherwise. See `help(ggplotPath)` 
-#' for options. 
+#' `length(color)` should equal `k`. Default is `c('black', 'red')[2:1]` for 
+#' each panel with a reference line provided in `object2` and `black` 
+#' otherwise. See `help(ggplotPath)` for options. 
 #' @param linetype optional vector or list of length `k` of vectors to feed to 
 #' `ggplotPath(..., linetype=linetype[[i]])` for panel `i=1:k`. If present, 
 #' `length(color)` should equal `k`. Default is 2:1 for each panel with a 

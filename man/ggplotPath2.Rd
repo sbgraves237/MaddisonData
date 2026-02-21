@@ -54,9 +54,9 @@ estimation in the \code{KFAS} package, calls
 
 \item{...}{optional arguments.}
 
-\item{Time}{If present, it must be a numeric vector of length equal to the
-number of rows of the matrix obtained from \code{object} and fed to \code{ggplotPath}
-to create the individual panels of the plot. Default depends on
+\item{Time}{optional numeric vector with lenght being either the number of
+rows of the matrix obtained from \code{object} or one less and fed to
+\code{ggplotPath} to create the individual panels of the plot. Default depends on
 \code{class(object)}:
 \itemize{
 \item \code{matrix}: Default \code{Time = rownames(object)}.
@@ -68,15 +68,15 @@ of \code{object$y}.
 }}
 
 \item{object2}{an optional vector or matrix-type object with the same
-number of rows as \code{object} and \code{k2} columns that provide separate reference
-lines to appear in the same panels as the first \code{k2} columns of \code{object}.
-Obviously, \code{k2 <= k}.}
+number of rows as \code{object} or one less and \code{k2} columns that provide
+separate reference lines to appear in the same panels as the first \code{k2}
+columns of \code{object}. Obviously, \code{k2 <= k}.}
 
 \item{scaley}{= optional numeric vector of the length \code{k} fed individually
 as the scaley argument accompanying the different successive calls to
 \code{ggplotPath}. If the matrix obtained from \code{object} has two columns with
 names = c('level', 'slope') or c('level', 'growthRate'), then the default
-for \code{scaley} = c(1000, 100). Otherwise, default = 1.}
+for \code{scaley} = c(1000, .0). Otherwise, default = 1.}
 
 \item{logy}{optional character vector of length \code{k} to control the scales
 used in the individual panels of the plot:
@@ -96,11 +96,13 @@ The default is 'exp_log' for the first panel and '' for the rest.}
 attributes), for horizontal lines in panel \code{i}, feeding \code{hlines[[i]]} to
 \code{ggplotPath(..., hlines = hlines[[i]])} for panel \code{i = 1:k}.
 \verb{color='grey', lty='dotted'} unless \code{color} or \code{colour} and / or \code{lty}
-are available as \code{attr(hlines[[i]], ...)}.}
+are available as \code{attr(hlines[[i]], ...)}. \code{hlines} outside the plot range
+are suppressed with a warning.}
 
 \item{vlines}{optional numeric vector of locations on the \code{x} axis for
 vertical lines using \code{ggplotPath(..., vlines=vlines)} with \verb{color='grey',  lty='dotted'} unless \code{color} or \code{colour} and / or \code{lty} are available as
-\code{attr(vlines, ...)}.}
+\code{attr(vlines, ...)}. \code{vlines} outside the plot range are suppressed with a
+warning.}
 
 \item{labels}{= optional \code{\link{data.frame}} with columns
 \verb{x, y, label, component}, and optionally \verb{srt, col, size}, where \code{x}, \code{y},
@@ -109,7 +111,9 @@ acceptable values for \code{color} in
 \code{with(labels, annotate('text', x=x, y=y, label = label, srt=srt,  color=col, size=size))}. Defaults for \code{srt}, \code{col}, and \code{size}  are 0,
 'black', and 4, respectively. \code{component} is an integer in \code{1:k}.
 \code{labelsi = subset(labels, component==i)} is used in
-\code{ggplotPath(..., labels=labelsi)} to label panel \code{i = 1:k}.}
+\code{ggplotPath(..., labels=labelsi)} to label panel \code{i = 1:k}. \code{labels} outside
+the plot range are suppressed with a warning. \code{labels} near the plot
+boundaries may be clipped.}
 
 \item{fontsize}{optional number for legend and axes labels, used in
 `ggplotPath(..., fontsize=fontsize); default = 10.}

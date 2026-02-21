@@ -70,7 +70,8 @@ of \code{object$y}.
 \item{object2}{an optional vector or matrix-type object with the same
 number of rows as \code{object} or one less and \code{k2} columns that provide
 separate reference lines to appear in the same panels as the first \code{k2}
-columns of \code{object}. Obviously, \code{k2 <= k}.}
+columns of \code{object}. Obviously, \code{k2 <= k}. (Also, \code{legend.position} =
+'none'.)}
 
 \item{scaley}{= optional numeric vector of the length \code{k} fed individually
 as the scaley argument accompanying the different successive calls to
@@ -120,14 +121,14 @@ boundaries may be clipped.}
 
 \item{color}{optional vector or list of length '\code{k} of vectors to feed to
 \code{ggplotPath(..., color=color[[i]])} for panel \code{i=1:k}. If present,
-\code{length(color)} should equal \code{k}. Default is \code{c('black', 'red')[2:1]} for
+\code{length(color)} should equal \code{k}. Default is \code{c('black', 'red')} for
 each panel with a reference line provided in \code{object2} and \code{black}
-otherwise. See \code{help(ggplotPath)} for options.}
+otherwise. See \code{\link{ggplotPath}} for options.}
 
 \item{linetype}{optional vector or list of length \code{k} of vectors to feed to
 \code{ggplotPath(..., linetype=linetype[[i]])} for panel \code{i=1:k}. If present,
-\code{length(color)} should equal \code{k}. Default for each panel with a reference
-line in \code{object2} = \code{c(3, 1) = c('dotted', 'solid')} else 1 = \code{solid}.
+\code{length(linetype)} should equal \code{k}. Default for each panel with a reference
+line in \code{object2} = \code{c(1, 3) = c('solid', 'dotted')} else 1 = \code{solid}.
 See \code{\link{ggplotPath}} for options.}
 }
 \value{

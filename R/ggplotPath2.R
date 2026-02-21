@@ -565,12 +565,11 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
                   (ylimi[2] < Labels[, 'y']))
       Lout <- (xLout | yLout)
       if(any(Lout)){
-        Louti <- which(Lout)
         msgLout <- paste( 'WARNING: labels outside plot range:\n')
-        if(any(xLout)){
+        nxLout <- which(xLout)
+        if(length(nxLout)>0){
           msgLout <- paste(msgLout, ', x out in row')
-          nxLout <- which(xLout)
-          if(length(nxLout)>1)msgLout <- paste0(msgLout, 's')
+          if(length(xLout)>1)msgLout <- paste0(msgLout, 's')
           msgLout <- paste(msgLout, paste(nxLout, collapse=', '), '\n')
         }
         if(any(yLout)){

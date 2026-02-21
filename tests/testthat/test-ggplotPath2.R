@@ -79,14 +79,11 @@ test_that("ggplotPath2", {
                       srt=c(90, 85, 0, 0), 
                       col=c('red', 'green'), 
                       size=c(3, 4, 5, 3))
-  expect_error(ggplotPath2(GBR_KFS$a, labels=ISOll))
+  expect_error(ggplotPath2(GBRgrowthFit1, Time=GBR$year, labels=ISOll))
   
   ISOll1 <- cbind(ISOll, component=1)
-  expect_warning(
-    expect_warning(
-    GBR_KFSp1 <- ggplotPath2(GBR_KFS$a, labels=ISOll1)
-    )
-  )
+  GBR_KFSp1 <- ggplotPath2(GBRgrowthFit1, Time=GBR$year, labels=ISOll1)
+  
   ISOll2 <- cbind(ISOll, component=c(1, 1, 2, 2))
 
   expect_warning(

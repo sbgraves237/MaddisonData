@@ -33,9 +33,9 @@
 #'      estimation in the `KFAS` package, calls 
 #'      `ggplotPath2(KFAS::KFS(object$a), ...)`.
 #'  }
-#' @param Time If present, it must be a numeric vector of length equal to the 
-#' number of rows of the matrix obtained from `object` and fed to `ggplotPath` 
-#' to create the individual panels of the plot. Default depends on 
+#' @param Time optional numeric vector with lenght being either the number of 
+#' rows of the matrix obtained from `object` or one less and fed to 
+#' `ggplotPath` to create the individual panels of the plot. Default depends on 
 #' `class(object)`: 
 #'  \itemize{
 #'    \item `matrix`: Default `Time = rownames(object)`. 
@@ -46,14 +46,14 @@
 #'      of `object$y`. 
 #'  }
 #' @param object2 an optional vector or matrix-type object with the same 
-#' number of rows as `object` and `k2` columns that provide separate reference 
-#' lines to appear in the same panels as the first `k2` columns of `object`. 
-#' Obviously, `k2 <= k`. 
+#' number of rows as `object` or one less and `k2` columns that provide 
+#' separate reference lines to appear in the same panels as the first `k2` 
+#' columns of `object`. Obviously, `k2 <= k`. 
 #' @param scaley = optional numeric vector of the length `k` fed individually 
 #' as the scaley argument accompanying the different successive calls to 
 #' `ggplotPath`. If the matrix obtained from `object` has two columns with 
 #' names = c('level', 'slope') or c('level', 'growthRate'), then the default 
-#' for `scaley` = c(1000, 100). Otherwise, default = 1. 
+#' for `scaley` = c(1000, .0). Otherwise, default = 1. 
 #' @param logy optional character vector of length `k` to control the scales 
 #' used in the individual panels of the plot: 
 #'  \itemize{
@@ -70,11 +70,13 @@
 #' attributes), for horizontal lines in panel `i`, feeding `hlines[[i]]` to 
 #' `ggplotPath(..., hlines = hlines[[i]])` for panel `i = 1:k`. 
 #' `color='grey', lty='dotted'` unless `color` or `colour` and / or `lty` 
-#' are available as `attr(hlines[[i]], ...)`.  
+#' are available as `attr(hlines[[i]], ...)`. `hlines` outside the plot range 
+#' are suppressed with a warning.  
 #' @param vlines optional numeric vector of locations on the `x` axis for 
 #' vertical lines using `ggplotPath(..., vlines=vlines)` with `color='grey', 
 #' lty='dotted'` unless `color` or `colour` and / or `lty` are available as 
-#' `attr(vlines, ...)`.  
+#' `attr(vlines, ...)`. `vlines` outside the plot range are suppressed with a 
+#' warning. 
 #' @param labels = optional [`data.frame`] with columns 
 #' `x, y, label, component`, and optionally `srt, col, size`, where `x`, `y`, 
 #' `srt`, and `size` are are numeric, `label` is character, and `col` are 
@@ -83,7 +85,9 @@
 #' color=col, size=size))`. Defaults for `srt`, `col`, and `size`  are 0, 
 #' 'black', and 4, respectively. `component` is an integer in `1:k`. 
 #' `labelsi = subset(labels, component==i)` is used in 
-#' `ggplotPath(..., labels=labelsi)` to label panel `i = 1:k`. 
+#' `ggplotPath(..., labels=labelsi)` to label panel `i = 1:k`. `labels` outside 
+#' the plot range are suppressed with a warning. `labels` near the plot 
+#' boundaries may be clipped. 
 #' @param fontsize optional number for legend and axes labels, used in 
 #' `ggplotPath(..., fontsize=fontsize); default = 10. 
 #' @param color optional vector or list of length '`k` of vectors to feed to 
@@ -336,9 +340,14 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
 ##
   if(!missing(object2)){
     Nobj2 <- NROW(object2)
-    if(Nobj2 != N){
-      stop('object2 has ', Nobj2, ' rows; must equal nrow(object) = ', 
-                    N, '; does not.')
+    dN2 <- (N-Nobj2)
+    if(dN2 == 1){
+      Data <- Data[1:nT,, drop=FALSE]
+    } else {
+      if(dN2 != 0){
+        stop('object2 has ', Nobj2, ' rows; must match nrow(object) = ', 
+             N, '; does not.')
+      }
     }
     k2 <- NCOL(object2)
     if(k2>k){
@@ -359,7 +368,7 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
     scaley2 <- ((k==2) && (yNames[1] == 'level') && 
                   (yNames[2] %in% (c('slope', 'growthRate'))) )
     if(scaley2){
-      scaley <- c(1000, 100)
+      scaley <- c(1000, .01)
     }
     else {scaley <- rep(1, k)}
   } else {
@@ -417,6 +426,7 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
 ##  
   if(missing(hlines)){
     hlines <- vector(mode='list', length=k)
+    names(hlines) <- Ylab
   } else if(!is.list(hlines)){
     stop('hlines must be a list, is ', paste(class(hlines), collapse=', '))
   } 
@@ -433,7 +443,7 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
 ## 7. vlines
 ##
   if(!is.numeric(vlines)){
-    stop('vlines should be numeric; is ', paste(class(hlines), collapse=', '))
+    stop('vlines should be numeric; is ', paste(class(vlines), collapse=', '))
   }
 ##
 ## 8. labels
@@ -441,7 +451,7 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
   if(!missing(labels)){
     if(!is.data.frame(labels) && !is.matrix(labels)){
       stop('labels must be a data.frame; is ', 
-           paste(class(hlines), collapse=', '))
+           paste(class(labels), collapse=', '))
     }
     Labels <- as.data.frame(labels)
     rqdLbls <- c('x', 'y', 'label','component')
@@ -505,6 +515,7 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
 ##
   callList <- vector(mode='list', length=k)
   names(callList) <- yNames
+  xlim <- range(Data[, 'Time'])
   for(i in 1:k){
     Dati <- Data[c('Time', yNames[i])]
     if(i <= k2) {
@@ -512,20 +523,55 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
       names(Dati2)[1:2] <- names(Dati)
       Dati <- rbind(cbind(Dati, grp=1), Dati2) 
       grpi <- 'grp'
+      Dati$grp <- ordered(Dati$grp)
     } else grpi <- NULL 
     if(logy[i]=='exp_log')Dati[2] <- exp(Dati[2])
+    ylimi <- (range(Dati[, yNames[i]])/scaley[i])
     callList[[i]] <- list(x='Time', y=yNames[i], data=Dati)
     callList[[i]]$group <- grpi 
     callList[[i]]$scaley <- scaley[i]
     callList[[i]]$logy <- Logy[i]
     callList[[i]]$ylab <- Ylab[i]
-    callList[[i]]$hlines <- Hlines[[i]]
-    callList[[i]]$vlines <- vlines 
+#   hlines
+    Hout <- ((Hlines[[i]] < ylimi[1]) | (ylimi[2] < Hlines[[i]]))
+    if(any(Hout)){
+      warning('hlines outside ylim = ', paste(ylimi, collapse=', '), 
+                    '; omitted')
+    }
+    callList[[i]]$hlines <- Hlines[[i]][!Hout]
+#   vlines 
+    Vout <- ((vlines < xlim[1]) | (xlim[2] < vlines))
+    if(any(Vout)){
+      warning('vlines outside xlim = ', paste(xlim, collapse=', '), 
+              '; omitted')
+    }
+    callList[[i]]$vlines <- vlines[!Vout] 
+#   labels 
     if(!missing(labels)){ 
       if(!("component" %in% colnames(Labels))){
         stop("'component' not in names(labels)")
       }
-      callList[[i]]$labels <- subset(Labels, component==i)
+      xLout <- ((Labels[, 'x'] < xlim[1]) | 
+                (xlim[2] < Labels[, 'x']))
+      yLout <- ((Labels[, 'y'] < ylimi[1]) | 
+                  (ylimi[2] < Labels[, 'y']))
+      Lout <- (xLout | yLout)
+      if(any(Lout)){
+        Louti <- which(Lout)
+        msgLout <- paste( 'WARNING: labels outside plot range:\n')
+        if(any(xLout)){
+          msgLout <- paste(msgLout, ', x out in rows ', 
+                           paste(which(xLout), collapse=', '), '\n')
+        }
+        if(any(yLout)){
+          msgLout <- paste(msgLout, ', y out in rows ', 
+                           paste(which(yLout), collapse=', '), '\n')
+        }
+        warning(msgLout)
+      }
+      if(any(!Lout)) {
+        callList[[i]]$labels <- subset(Labels[!Lout, ], component==i)
+      }
     }
     callList[[i]]$fontsize <- fontsize
     if(!missing(color))callList[[i]]$color <- Color[[i]]

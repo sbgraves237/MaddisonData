@@ -559,30 +559,33 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
       if(!("component" %in% colnames(Labels))){
         stop("'component' not in names(labels)")
       }
-      xLout <- ((Labels[, 'x'] < xlim[1]) | 
-                (xlim[2] < Labels[, 'x']))
-      yLout <- ((Labels[, 'y'] < ylimi[1]) | 
-                  (ylimi[2] < Labels[, 'y']))
-      Lout <- (xLout | yLout)
-      if(any(Lout)){
-        msgLout <- paste( 'WARNING: labels outside plot range:\n')
-        nxLout <- which(xLout)
-        if(length(nxLout)>0){
-          msgLout <- paste(msgLout, ', x out in row')
-          if(length(xLout)>1)msgLout <- paste0(msgLout, 's')
-          msgLout <- paste(msgLout, paste(nxLout, collapse=', '), '\n')
+      Lblsi <- subset(Labels, component==i)
+      if(nrow(Lblsi)>0){
+        xLout <- ((Lblsi[, 'x'] < xlim[1]) | 
+                (xlim[2] < Lblsi[, 'x']))
+        yLout <- ((Lblsi[, 'y'] < ylimi[1]) | 
+                  (ylimi[2] < Lblsi[, 'y']))
+        Lout <- (xLout | yLout)
+        if(any(Lout)){
+          msgLout <- paste( 'WARNING: labels outside plot range:\n')
+          nxLout <- which(xLout)
+          if(length(nxLout)>0){
+            msgLout <- paste(msgLout, ', x out in row')
+            if(length(xLout)>1)msgLout <- paste0(msgLout, 's')
+            msgLout <- paste(msgLout, paste(nxLout, collapse=', '), '\n')
+          }
+          if(any(yLout)){
+            msgLout <- paste(msgLout, ', y out in row')
+            nyLout <- which(yLout)
+            if(length(nyLout)>1)msgLout <- paste0(msgLout, 's')
+            msgLout <- paste(msgLout, paste(nyLout, collapse=', '), '\n')
+          }
+          warning(msgLout)
         }
-        if(any(yLout)){
-          msgLout <- paste(msgLout, ', y out in row')
-          nyLout <- which(yLout)
-          if(length(nyLout)>1)msgLout <- paste0(msgLout, 's')
-          msgLout <- paste(msgLout, paste(nyLout, collapse=', '), '\n')
+        if(any(!Lout)) {
+          lblsi <- subset(Lblsi[!Lout, ], component==i)
+          if(nrow(lblsi)>0)callList[[i]]$labels <- lblsi 
         }
-        warning(msgLout)
-      }
-      if(any(!Lout)) {
-        lblsi <- subset(Labels[!Lout, ], component==i)
-        if(nrow(lblsi)>0)callList[[i]]$labels <- lblsi 
       }
     }
     callList[[i]]$fontsize <- fontsize

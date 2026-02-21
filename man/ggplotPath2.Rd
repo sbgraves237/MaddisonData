@@ -126,9 +126,9 @@ otherwise. See \code{help(ggplotPath)} for options.}
 
 \item{linetype}{optional vector or list of length \code{k} of vectors to feed to
 \code{ggplotPath(..., linetype=linetype[[i]])} for panel \code{i=1:k}. If present,
-\code{length(color)} should equal \code{k}. Default is 2:1 for each panel with a
-reference line provided in \code{object2} and 1 otherwise. See \code{help(ggplotPath)}
-for options.}
+\code{length(color)} should equal \code{k}. Default for each panel with a reference
+line in \code{object2} = \code{c(3, 1) = c('dotted', 'solid')} else 1 = \code{solid}.
+See \code{\link{ggplotPath}} for options.}
 }
 \value{
 an object of class \code{\link[ggplot2:ggplot]{ggplot2::ggplot}}, which can be subsequently

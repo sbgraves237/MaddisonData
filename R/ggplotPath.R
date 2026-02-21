@@ -64,7 +64,8 @@
 #' @examples
 #' str(GBR_USA <- subset(MaddisonData::MaddisonData, ISO %in% c('GBR', 'USA')))
 #' GBR_USA1 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000)
-#' GBR_USA1a <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, color=c('red', 'blue'))
+#' GBR_USA1a <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+#'                         color=c('red', 'blue'))
 #' 
 #' GBR_USA1+ggplot2::coord_cartesian(xlim=c(1500, 1850)) # for only 1500-1850 
 #' GBR_USA1+ggplot2::coord_cartesian(xlim=c(1600, 1700), ylim=c(.9, 3)) 

@@ -39,12 +39,13 @@ and the numeric values for others. This could support easy testing
 testing of submodels.
 
 2.3. Ask Jouni Helske and the other `KFAS` and `bssm` contributors about
-supporting dimnames and an optional `Time` and `dT` component(s)) of an
-`SSModel` plus a function `asTime` = `Time` component of a model else
-`as.Posixct(names(y))` else `as.Date(names(y))` else
-`as.numeric(names(y))` else \[`ordered(names(y))` with
-`dT =`1:length(y)`] with`dT\_ = diff(Time)`and`dT = c(dT\[1\],
-dT)`and for`bssm`assuming Student's t migrations of`growthRate\`.
+supporting (a) dimnames and (b) an optional `Time` and `dT`
+component(s)) of an `SSModel` plus (c) a function `asTime` = `Time`
+component of a model else `as.Posixct(names(y))` else
+`as.Date(names(y))` else `as.numeric(names(y))` else
+\[`ordered(names(y))` with `dT =`1:length(y)`] with`dT\_ =
+diff(Time)`and`dT = c(dT\[1\],
+dT)`and  (d) for`bssm`assuming Student's t migrations of`growthRate\`.
 
 ``` r
 library(MaddisonData)

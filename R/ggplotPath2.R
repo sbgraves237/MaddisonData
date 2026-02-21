@@ -48,7 +48,8 @@
 #' @param object2 an optional vector or matrix-type object with the same 
 #' number of rows as `object` or one less and `k2` columns that provide 
 #' separate reference lines to appear in the same panels as the first `k2` 
-#' columns of `object`. Obviously, `k2 <= k`. 
+#' columns of `object`. Obviously, `k2 <= k`. (Also, `legend.position` = 
+#' 'none'.) 
 #' @param scaley = optional numeric vector of the length `k` fed individually 
 #' as the scaley argument accompanying the different successive calls to 
 #' `ggplotPath`. If the matrix obtained from `object` has two columns with 
@@ -92,13 +93,13 @@
 #' `ggplotPath(..., fontsize=fontsize); default = 10. 
 #' @param color optional vector or list of length '`k` of vectors to feed to 
 #' `ggplotPath(..., color=color[[i]])` for panel `i=1:k`. If present, 
-#' `length(color)` should equal `k`. Default is `c('black', 'red')[2:1]` for 
+#' `length(color)` should equal `k`. Default is `c('black', 'red')` for 
 #' each panel with a reference line provided in `object2` and `black` 
-#' otherwise. See `help(ggplotPath)` for options. 
+#' otherwise. See [`ggplotPath`] for options. 
 #' @param linetype optional vector or list of length `k` of vectors to feed to 
 #' `ggplotPath(..., linetype=linetype[[i]])` for panel `i=1:k`. If present, 
-#' `length(color)` should equal `k`. Default for each panel with a reference 
-#' line in `object2` = `c(3, 1) = c('dotted', 'solid')` else 1 = `solid`. 
+#' `length(linetype)` should equal `k`. Default for each panel with a reference 
+#' line in `object2` = `c(1, 3) = c('solid', 'dotted')` else 1 = `solid`. 
 #' See [`ggplotPath`] for options. 
 #' @param ... optional arguments.  
 #' 
@@ -363,7 +364,7 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
       stop('class(object2) must be numeric; is ', class(unlist(object2)))
     }
     if(k2<2){
-      Object2 <- list(object2)
+      Object2 <- matrix(object2, ncol=1)
     } else Object2 <- object2 
   } else k2 <- 0
 ##
@@ -507,7 +508,7 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
     if(klt>k){
       stop('length(linetype) = ', klt, '; > ncol(object) = ', k)
     }
-    if((!is.list(linetype)) && !is.vector(color)){
+    if((!is.list(linetype)) && !is.vector(linetype)){
       stop("'linetype' should be list or a vector; is ", 
            paste(class(linetype), collapse=', '))
     }
@@ -524,7 +525,7 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
   for(i in 1:k){
     Dati <- Data[c('Time', yNames[i])]
     if(i <= k2) {
-      Dati2 <- cbind(Dati[1], Object2[i], grp=2) 
+      Dati2 <- cbind(Dati[1], Object2[, i], grp=2) 
       names(Dati2)[1:2] <- names(Dati)
       Dati <- rbind(cbind(Dati, grp=1), Dati2) 
       grpi <- 'grp'
@@ -579,11 +580,17 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
       }
     }
     callList[[i]]$fontsize <- fontsize
-    if(!missing(color))callList[[i]]$color <- Color[[i]]
+    if(!missing(color)){
+      callList[[i]]$color <- Color[[i]]
+      callList[[i]]$legend.position <- 'none'
+    } else {
+      callList[[i]]$color <- c('black', 'red')
+      callList[[i]]$legend.position <- 'none'
+    }
     if(!missing(linetype)){
       callList[[i]]$linetype <- Linetype[[i]]
     } else if(i <= k2){
-      callList[[i]]$linetype <- c(3, 1)
+      callList[[i]]$linetype <- c(1,3)
     }
   }
   ggplotPath2(callList, ...)

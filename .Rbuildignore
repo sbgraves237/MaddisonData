@@ -4,9 +4,10 @@ inst/extdata
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^LICENSE\.md$
-MaddisonData.rdb
-MaddisonSources.rdb
-MaddisonYears.rdb
-MaddisonCountries.rdb
+\.rdb$
+\.png$
+\.svg$
+^vignettes/\.png
+^vignettes/\.svg
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$

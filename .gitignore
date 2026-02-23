@@ -5,9 +5,10 @@ MaddisonData.Rproj
 .Ruserdata
 .DS_Store
 inst/.gitignore
-MaddisonCountries.rdb
-MaddisonData.rdb
-MaddisonSources.rdb
-MaddisonYears.rdb
+\.rdb$
+\.png$
+\.svg$
+vignettes/*\.html$
+vignettes/*\.svg$
+vignettes/*\.png$
 vignettes/TechLeaders.html
-vignettes/NLD_SGP.svg

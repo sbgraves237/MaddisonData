@@ -107,8 +107,8 @@ attr(Vlines, 'color') <- c(rep('grey', 10), 'red', 'green4', 'grey',
                            'green4', rep('grey', 7))
 Hlines = c(1, 3, 5, 10, 30, 50)
 Orange <- 'darkorange3'
-Lbls <- data.frame(x=c(1500, 1600, 1740, 1870, (x0+x1)/2, 1985), 
-                   y=c(1.35,  5.7, 1.65,  3.5, 13, rep(15, 4), 36, 21, 64, 
+Lbls <- data.frame(x=c(1500, 1450, 1740, 1870, (x0+x1)/2, 1985), 
+                   y=c(1.35,    3, 1.65,  3.5, 9, 7, 8, 15, 15, 36, 21, 64, 
                        1.6, 2.5, 16, 8), 
     label=c('UK', 'Holland', 'US', 'Netherlands', 'English civil war', 
             'Queen Ann', 'War of 1812', 'American Civil War', 'WW1', 'Hoover',
@@ -117,12 +117,12 @@ Lbls <- data.frame(x=c(1500, 1600, 1740, 1870, (x0+x1)/2, 1985),
     col=c('red', Orange, 'blue', Orange, 'red', rep('grey', 4), 'red',
           'green4', rep('grey', 2), rep('red', 2), 'darkolivegreen4') )
 
-(NLD_SGP1 <- ggplotPath(y='gdppc', group='ISO', data=NLD_SGP, scaley=1000, 
-                    ylab='GDP per capita (2011 K)', 
+NLD_SGP1 <- ggplotPath(y='gdppc', group='ISO', data=NLD_SGP, scaley=1000, 
+                    ylab='GDP per capita (2011 K$)', 
                     hlines=Hlines, vlines=Vlines, labels=Lbls, 
                     fontsize=20, 
                     color=c('red', Orange, 'darkolivegreen4', 'blue'), 
-                    linetype=c(1:2, 1, 1)))
+                    linetype=c(1:2, 1, 1))
 ```
 
 Save.
@@ -133,7 +133,59 @@ NLD_SGP1
 dev.off()
 ```
 
-This figure needs to acknowledge Bolt and Van Janden (2024) for the Maddison Data generally, Van Zanden, J. L. and van Leeuwen, B. (2012) for the data on Holland 1348–1807 and the Netherlands 1808-1913, Smits et al (2000) for the data on the Netherlands 1800-1913, Broadberry et al. (2015) for the data on England 1252–1700 and on Great Britain until 1870, and Sugimoto (2011) for Singapore to 2007. 
+Zoom in on the FDR administration.
+
+```{r FDR3}
+Lbls2 <- data.frame(x=c(1942.5, 1943.7, 1942.5, 1931.3, 1938, 1942.7), 
+                   y=c(   11.2,   14.2,    8.4,   10.8, 12.8,   17.7), 
+    label=c('UK', 'US', 'Netherlands', 'Hoover',
+            'F. Roosevelt (FDR)', 'WW2'), 
+    srt=c(0, 0, 0, -65, 50, 0), size=c(13, 13, 6, 12, 8, 10),
+    col=c('red', 'blue', Orange, 'red', 'blue', 'red') )
+NLD_SGP2 <- ggplotPath(y='gdppc', group='ISO', data=NLD_SGP, scaley=1000, 
+                    ylab='GDP per capita (2011 K$)', 
+                    hlines=Hlines, vlines=Vlines, labels=Lbls2, 
+                    fontsize=20, 
+                    color=c('red', Orange, 'darkolivegreen4', 'blue'), 
+                    linetype=c(1:2, 1, 1))
+
+NLD_SGP3 <- (NLD_SGP2 + 
+               ggplot2::coord_cartesian(xlim=c(1929, 1950), ylim=c(8, 17.8))) 
+```
+
+Save.
+
+```{r NLD_SGP3, eval=FALSE}
+svg('NLD_SGP2z.svg')
+NLD_SGP3
+dev.off()
+```
+
+Adjust "English civil war" to support an inset. 
+
+```{r FDR3i}
+Lbls2 <- Lbls 
+Lbls2[5:6,]
+Lbls2[5:6,2] <- c(3.8, 4.5)
+NLD_SGP1a <- ggplotPath(y='gdppc', group='ISO', data=NLD_SGP, scaley=1000, 
+                    ylab='GDP per capita (2011 K$)', 
+                    hlines=Hlines, vlines=Vlines, labels=Lbls2, 
+                    fontsize=20, 
+                    color=c('red', Orange, 'darkolivegreen4', 'blue'), 
+                    linetype=c(1:2, 1, 1))
+```
+
+Save.
+
+```{r NLD_SGP1a, eval=FALSE}
+svg('NLD_SG3.svg')
+NLD_SGP1a
+dev.off()
+```
+
+## Acknowledgements 
+
+These figures needs to acknowledge Bolt and Van Janden (2024) for the Maddison Data generally, Van Zanden, J. L. and van Leeuwen, B. (2012) for the data on Holland 1348–1807 and the Netherlands 1808-1913, Smits et al (2000) for the data on the Netherlands 1800-1913, Broadberry et al. (2015) for the data on England 1252–1700 and on Great Britain until 1870, and Sugimoto (2011) for Singapore to 2007. 
 
 ```{r NLDrefs2}
 (GBRrefs <- getMaddisonSources('GBR'))

@@ -30,6 +30,31 @@ test_that("ggplotPath", {
                   legend.position = NULL, hlines=Hlines, vlines=Vlines, 
                   labels=ISOl3, col=c('red', 'green'))  
   expect_true(inherits(GBR_USA3, 'ggplot'))
+# test error detection 
+  Hlinesec <- Hlines
+  attr(Hlinesec, 'color') <- 1:11
+  expect_error(ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+                    ylab='GDP per capita (2011 PPP K$)', 
+                    legend.position = NULL, hlines=Hlinesec, vlines=Vlines, 
+                    labels=ISOl3, col=c('red', 'green')) ) 
+  Hlineset <- Hlines
+  attr(Hlineset, 'lty') <- 1:11
+  expect_error(ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+                    ylab='GDP per capita (2011 PPP K$)', 
+                    legend.position = NULL, hlines=Hlineset, vlines=Vlines, 
+                    labels=ISOl3, col=c('red', 'green')) ) 
+  Vlinesec <- Vlines
+  attr(Vlinesec, 'color') <- 1:11
+  expect_error(ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+                    ylab='GDP per capita (2011 PPP K$)', 
+                    legend.position = NULL, hlines=Hlines, vlines=Vlinesec, 
+                    labels=ISOl3, col=c('red', 'green')) ) 
+  Vlineset <- Vlines
+  attr(Vlineset, 'lty') <- 1:11
+  expect_error(ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+                    ylab='GDP per capita (2011 PPP K$)', 
+                    legend.position = NULL, hlines=Hlines, vlines=Vlineset, 
+                    labels=ISOl3, col=c('red', 'green')) ) 
 # do.call(ggplotPath, ...) with 1 line
   list1 <- list(x='Time', y='lvl', 
                 data=data.frame(Time=letters[1:4], lvl=sqrt(1:4)))

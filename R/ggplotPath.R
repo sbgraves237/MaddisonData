@@ -222,7 +222,15 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
       )
     hcol <- attr(hlines, 'color')
     if(is.null(hcol)) hcol <- attr(hlines, 'colour')
+    if((!is.null(hcol)) && (length(hcol) != length(hlines))){
+      stop("length(attr(hlines, 'color') = ", length(hcol), 
+           " != length(hlines) = ", length(hlines))
+    }
     hlty <- attr(hlines, 'lty')
+    if((!is.null(hlty)) && (length(hlty) != length(hlines))){
+      stop("length(attr(hlines, 'lty') = ", length(hlty), 
+           " != length(hlines) = ", length(hlines))
+    }
     if(!inherits(hlines, 'numeric')){
       stop('class(hlines) = ', class(hlines), '; must be numeric')
     }
@@ -259,8 +267,18 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
         legend.box.background = ggplot2::element_rect(fill='transparent') #transparent legend panel
       )
     col <- attr(vlines, 'color')
-    if(is.null(col)) col <- attr(vlines, 'colour')
+    if(is.null(col)) {
+      col <- attr(vlines, 'colour')
+    } 
+    if((!is.null(col)) && (length(col) != length(vlines))){
+      stop("length(attr(vlines, 'color') = ", length(col), 
+           " != length(vlines) = ", length(vlines))
+    }
     lty <- attr(vlines, 'lty')
+    if((!is.null(lty)) && (length(lty) != length(vlines))){
+      stop("length(attr(vlines, 'lty') = ", length(lty), 
+           " != length(vlines) = ", length(vlines))
+    }
     if(!inherits(vlines, 'numeric')){
       stop('class(vlines) = ', class(vlines), '; must be numeric')
     }

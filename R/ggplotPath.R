@@ -24,7 +24,8 @@
 #' `!missing(labels)`, default is no legend. Otherwise, default depends on 
 #' `nGps <- length(unique(data[, group]`: If `nGps` = 1, there is no legend. If 
 #' `nGps > 10`, `legend.position = 'right'`. In between, `legend.position` = 
-#' c(.15, .5) = center left. For alternatives, see [`ggplot2::theme`]. 
+#' c(.15, .5) = center left. `legend.position = 'none'` to suppress the legend. 
+#' For other alternatives, see [`ggplot2::theme`]. 
 #' @param hlines numeric vector of locations on the `y` axis for horizontal 
 #' lines using `ggplot2::geom_hline(yintercept = hlines, ...)` 
 #' with `color='grey', lty='dotted'` unless `color` or `colour` and / or `lty` 
@@ -153,7 +154,7 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
            paste(names(dat), collapse=', '))
     }
     if(length(Gp) > 1){
-      stop('group = ', group, ' found more once in names(data) = ', 
+      stop('group = ', group, ' found more than once in names(data) = ', 
            paste(names(dat), collapse=', '))
     }
 #    if(localTrace){

@@ -1,5 +1,5 @@
-#' `ggplot` multiple paths in one panel each with no space between panels and 
-#' a shared horizontal axis on the bottom. 
+#' `ggplotPath` in multiple panels with no space between panels and a shared 
+#' horizontal axis on the bottom. 
 #'
 #' `ggplotPath2` accepts a variety of inputs. The most general is with `object`
 #' = a list of sublists to be fed individually to `do.call(ggplotPath,..)` and 

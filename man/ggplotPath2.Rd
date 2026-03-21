@@ -6,8 +6,8 @@
 \alias{ggplotPath2.mts}
 \alias{ggplotPath2.KFS}
 \alias{ggplotPath2.default}
-\title{\code{ggplot} multiple paths in one panel each with no space between panels and
-a shared horizontal axis on the bottom.}
+\title{\code{ggplotPath} in multiple panels with no space between panels and a shared
+horizontal axis on the bottom.}
 \usage{
 ggplotPath2(object, ...)
 

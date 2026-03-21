@@ -23,9 +23,10 @@
 #' @param legend.position argument passed to [`ggplot2::theme`]. If 
 #' `!missing(labels)`, default is no legend. Otherwise, default depends on 
 #' `nGps <- length(unique(data[, group]`: If `nGps` = 1, there is no legend. If 
-#' `nGps > 10`, `legend.position = 'right'`. In between, `legend.position` = 
-#' c(.15, .5) = center left. `legend.position = 'none'` to suppress the legend. 
-#' For other alternatives, see [`ggplot2::theme`]. 
+#' `nGps < 10, legend.position = c(.15, .5)`. Else if nGps < 2-. 
+#' `legend.position = 'right'`. Else `legend.position = 'none'`. To suppress 
+#' the legend, use `legend.position = 'none'`. For other alternatives, 
+#' see [`ggplot2::theme`]. 
 #' @param hlines numeric vector of locations on the `y` axis for horizontal 
 #' lines using `ggplot2::geom_hline(yintercept = hlines, ...)` 
 #' with `color='grey', lty='dotted'` unless `color` or `colour` and / or `lty` 
@@ -131,19 +132,14 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
          paste(names(data), collapse=', '))
   }
 ##
-## 3. Delete is.na(data[, y]) and rescale if deesired
+## 3. Delete is.na(data[, y]) and rescale if desired
 ##
   dat <- data[!is.na(data[, y]), ]
   dat[, y] <- (dat[, y]/scaley)
 ##
 ## 4. check group
 ## 
-#  if(localTrace){
-#    cat('Check group: x = ', x, '; y = ', y, '\n')
-#  }
   if(missing(group)){
-#    p0 <- ggplot2::ggplot(dat, ggplot2::aes(X=ggplot2::.data[[x]], 
-#                                            Y=ggplot2::.data[[y]]))
     names(dat)[c(X, Y)] <- c('x', 'y')
     p0 <- ggplot2::ggplot(dat, ggplot2::aes(x, y))
     if(missing(linetype))linetype <- 1
@@ -157,27 +153,56 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
       stop('group = ', group, ' found more than once in names(data) = ', 
            paste(names(dat), collapse=', '))
     }
-#    if(localTrace){
-#      cat('found group = ', group, ': x = ', x, '; y = ', y, '\n')
-#    }
-    ngps <- length(unique(dat[, group, drop=TRUE]))
+#    ngps <- length(unique(dat[, group, drop=TRUE]))
+    gps <- unique(dat[, group, drop=TRUE])
+    ngps <- length(gps)
     names(dat)[c(X, Y, Gp)] <- c('x', 'y', 'group')
-#    p0 <- ggplot2::ggplot(dat, ggplot2::aes(x=ggplot2::.data[[x]], 
-#                      y=ggplot2::.data[[y]], group=ggplot2::.data[[group]], 
-#                      color=ggplot2::.data[[group]]))
     p0 <- ggplot2::ggplot(dat, ggplot2::aes(x=x, y=y, group=group, 
                                     color=group, linetype=group))
     if(!missing(color)){
-      ncol <- length(color)
-      if(ncol != ngps){
-        col0 <- paste0('length(color) = ', ncol, 
-                       '; length(unique(data[, group])) = ', ngps, 
-                       ': These numbers should be equal.')
-        stop(col0)
+      if(!is.null(names(color))){
+        oopscg <- which(!(names(color) %in% gps) )
+        oopsgc <- which(!(gps %in% names(color) ) )
+        if(length(c(oopscg, oopsgc))>0){
+          cat('Mismath between names(color) and groups: ') 
+          if(length(oopscg)>0){
+            cat('names(color) = ', paste(names(color)[oopscg], collapse=', '), 
+                '\nnot found in groups = ', paste(gps, collapse=', '), '\n')
+          }
+          if(length(oopsgc)>0){
+            cat('groups = ', paste(gps[oopsgc], collapse=', '), 
+                '\nnot found in names(color) = ', 
+                paste(names(color), collapse=', '), '\n')
+          }
+          stop('names(color) must match groups.')
+        }
+#       names(color) match gps.         
       }
       p0 <- (p0 + ggplot2::scale_color_manual(values = color))
     }
-    if(missing(linetype))linetype <- rep(1:6, length=ngps)
+    if(missing(linetype)){
+      linetype <- rep(1:6, length=ngps)
+    } else {
+      if(!is.null(names(linetype))){
+        oopslg <- which(!(names(linetype) %in% gps) )
+        oopsgl <- which(!(gps %in% names(linetype) ) )
+        if(length(c(oopslg, oopsgl))>0){
+          cat('Mismath between names(linetype) and groups: names(linetype) = ') 
+          if(length(oopslg)>0){
+            cat('names(linetype) = ', 
+                paste(names(linetype)[oopslg], collapse=', '), 
+                '\nnot found in groups = ', paste(gps, collapse=', '), '\n')
+          }
+          if(length(oopsgl)>0){
+            cat('groups = ', paste(gps[oopsgl], collapse=', '), 
+                '\nnot found in names(linetype) = ', 
+                paste(names(linetype), collapse=', '), '\n')
+          }
+          stop('names(linetype) must match groups.')
+        }
+#       names(linetype) match gps.         
+      }
+    }
     p0 <- (p0 + ggplot2::scale_linetype_manual(values=linetype))
   }
 ##
@@ -197,11 +222,13 @@ ggplotPath <- function(x='year', y, group, data, scaley=1, logy=TRUE, ylab,
   } else {
     if(!missing(group)){
       if(missing(legend.position)){
-#       gps <- table(dat[, group])
-        gps <- table(dat[, "group"])
-        if(length(gps)<10) {
+        if(ngps<10) {
           p2 <- (p1 + ggplot2::theme(legend.position=c(.15, .5)))
-        } else p2 <- p1 
+        } else if(ngps<20){
+          p2 <- p1 
+        } else {
+          p2 <- (p1 + ggplot2::theme(legend.position='none'))
+        }
       } else {
         p2 <- (p1 + ggplot2::theme(legend.position=legend.position))
       }

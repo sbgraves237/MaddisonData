@@ -96,6 +96,10 @@ We want multiple annotations on this plot:
 - [Brexit (vote 2016; complete 2020)](https://en.wikipedia.org/wiki/Brexit)
 
 ```{r NLD_SGP1}
+LogScaleMsg <- c('log scale so a constant', 
+                 '% increase looks like a straight line.')
+LogScaleMsg <- c('log scale so a constant % increase', 
+                 'looks like a straight line.')
 x0 <- yr(c('1642-01-04', '1702-03-08', '1812-06-18', '1861-04-12', 
            '1914-07-28', '1929-03-04', '1933-03-04', '1939-09-01', 
            '1981-01-20', '2007-12-15', '2016-06-23')) 
@@ -107,15 +111,17 @@ attr(Vlines, 'color') <- c(rep('grey', 10), 'red', 'green4', 'grey',
                            'green4', rep('grey', 7))
 Hlines = c(1, 3, 5, 10, 30, 50)
 Orange <- 'darkorange3'
-Lbls <- data.frame(x=c(1500, 1450, 1740, 1870, (x0+x1)/2, 1985), 
+Lbls <- data.frame(x=c(1500, 1450, 1740, 1870, (x0+x1)/2, 1985, 1350, 1375), 
                    y=c(1.35,    3, 1.65,  3.5, 9, 7, 8, 15, 15, 36, 21, 64, 
-                       1.6, 2.5, 16, 8), 
+                       1.6, 2.5, 16, 8, 15, 15), 
     label=c('UK', 'Holland', 'US', 'Netherlands', 'English civil war', 
             'Queen Ann', 'War of 1812', 'American Civil War', 'WW1', 'Hoover',
-            'FDR', 'WW2', 'Reagan', 'Great Recession', 'Brexit', 'Singapore'), 
-    srt=c(0, 0, 40, 50, rep(90, 11), 87), 
+            'FDR', 'WW2', 'Reagan', 'Great Recession', 'Brexit', 'Singapore', 
+            LogScaleMsg), 
+    srt=c(0, 0, 40, 50, rep(90, 11), 87, 90, 90), 
     col=c('red', Orange, 'blue', Orange, 'red', rep('grey', 4), 'red',
-          'green4', rep('grey', 2), rep('red', 2), 'darkolivegreen4') )
+          'green4', rep('grey', 2), rep('red', 2), 'darkolivegreen4', 
+          rep('grey', 2)) )
 
 NLD_SGP1 <- ggplotPath(y='gdppc', group='ISO', data=NLD_SGP, scaley=1000, 
                     ylab='GDP per capita (2011 K$)', 
@@ -125,11 +131,25 @@ NLD_SGP1 <- ggplotPath(y='gdppc', group='ISO', data=NLD_SGP, scaley=1000,
                     linetype=c(1:2, 1, 1))
 ```
 
-Save.
+Add arrows.
+
+```{r arrows2LogScMsg, eval=FALSE}
+arrows <- data.frame(x1 = 1350, x2 = 1350, y1 = c(5, 50), y2 = c(2.5, 100))
+arrows <- data.frame(x1 = 1350, x2 = 1350, y1 = 5, y2 = 2.5)
+
+NLD_SGP1a <- (NLD_SGP1 + ggplot2::geom_segment(
+  ggplot2::aes(x = x1, y = y1, xend = x2, yend = y2, colour = "segment"), 
+  data = arrows) )
+# Error in `palette()`:
+# ! Insufficient values in manual scale. 5 needed but only 4 provided.
+# Run `rlang::last_trace()` to see where the error occurred.
+```
+
+Save adding 1 mm margin all around. 
 
 ```{r NLD_SGP1s, eval=FALSE}
 svg('NLD_SGP2.svg')
-NLD_SGP1 
+NLD_SGP1 + ggplot2::theme(plot.margin = ggplot2::margin(3,1,1,1, "mm"))
 dev.off()
 ```
 

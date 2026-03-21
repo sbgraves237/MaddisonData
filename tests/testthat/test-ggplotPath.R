@@ -15,9 +15,10 @@ test_that("ggplotPath", {
 # label the lines
   ISOll <- data.frame(x=c(1500, 1800), y=c(2.5, 1.7), 
                       label=c('GBR', 'USA'), srt=c(0, 30),
-                      col=c('red', 'green'), size=c(2, 9))
+                      col=c('red', 'blue'), size=c(2, 9))
   GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
-                   labels=ISOll, fontsize = 20, color=c('red', 'green'))  
+                   labels=ISOll, fontsize = 20, color=c('red', 'blue'), 
+                   linetype=c('dotted', 'dashed'))  
   expect_true(inherits(GBR_USA2, 'ggplot'))
 # vlines 
   Hlines <- c(1,3, 10, 30)
@@ -59,4 +60,24 @@ test_that("ggplotPath", {
   list1 <- list(x='Time', y='lvl', 
                 data=data.frame(Time=letters[1:4], lvl=sqrt(1:4)))
   expect_error(do.call(ggplotPath, list1))
+# unique(unique(dat[, group, drop=TRUE]) == names(color))
+#  GBR_USA2 <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+#                         labels=ISOll, fontsize = 20, color=c('red', 'blue'), 
+#                         linetype=c('dotted', 'dashed'))  
+  GBR_USA2b <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+                          labels=ISOll, fontsize = 20, 
+                          color=c(GBR='red', USA='blue'), 
+                          linetype=c(GBR='dotted', USA='dashed'))  
+#  expect_equal(GBR_USA2b, GBR_USA2) #plots look the same but aren't internally
+  GBR_USA2c <- ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+                          labels=ISOll, fontsize = 20, 
+                          color=c(USA='blue', GBR='red'), 
+                          linetype=c(GBR='dotted', USA='dashed'))  
+#  expect_equal(GBR_USA2b, GBR_USA2c) #plots look the same but aren't internally
+  expect_error(ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+                            color=c(gbr='red', usa='blue'), 
+                            linetype=c(GBR='dotted', USA='dashed')) )  
+  expect_error(ggplotPath('year', 'gdppc', 'ISO', GBR_USA, 1000, 
+                          color=c(GBR='red', USA='blue'), 
+                          linetype=c(gbr='dotted', usa='dashed'))  )
 })

@@ -48,8 +48,10 @@ for which we typically want \code{scaley = 1000}.}
 \item{legend.position}{argument passed to \code{\link[ggplot2:theme]{ggplot2::theme}}. If
 \code{!missing(labels)}, default is no legend. Otherwise, default depends on
 \verb{nGps <- length(unique(data[, group]}: If \code{nGps} = 1, there is no legend. If
-\code{nGps > 10}, \code{legend.position = 'right'}. In between, \code{legend.position} =
-c(.15, .5) = center left. For alternatives, see \code{\link[ggplot2:theme]{ggplot2::theme}}.}
+\verb{nGps < 10, legend.position = c(.15, .5)}. Else if nGps < 2-.
+\code{legend.position = 'right'}. Else \code{legend.position = 'none'}. To suppress
+the legend, use \code{legend.position = 'none'}. For other alternatives,
+see \code{\link[ggplot2:theme]{ggplot2::theme}}.}
 
 \item{hlines}{numeric vector of locations on the \code{y} axis for horizontal
 lines using \code{ggplot2::geom_hline(yintercept = hlines, ...)}

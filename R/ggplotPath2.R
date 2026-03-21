@@ -246,7 +246,8 @@ ggplotPath2.list <- function(object, ...){
     List[[i]] <- Pi2
   }
   List$ncol <- 1
-  do.call(egg::ggarrange, List)
+  Matp <- do.call(egg::ggarrange, List)
+  Matp 
 }
 
 #' @rdname ggplotPath2

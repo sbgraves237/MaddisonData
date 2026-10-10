@@ -32,7 +32,7 @@ a \code{model} with components \code{H} and \code{Q} updated as described.
 \code{growthUpdateFn}
 }
 \details{
-returns a list returned by \code{\link[KFAS:SSModel]{KFAS::SSMcustom()}} for a model
+returns a list returned by \code{\link[KFAS:SSMcustom]{KFAS::SSMcustom()}} for a model
 with potentially irregularly spaced univariate observations with a
 2-dimensional (\code{level}, \code{growthRate}) state.
 }

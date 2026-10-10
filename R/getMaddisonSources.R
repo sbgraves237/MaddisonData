@@ -43,8 +43,6 @@
 #' }
 #' 
 #' in the format of [`MaddisonSources`].  
-#' 
-#' @export
 #'
 #' @examples
 #' getMaddisonSources() # all 
@@ -57,6 +55,7 @@
 #' getMaddisonSources('AUS') # AUS: no special sources for AUS. 
 #' 
 #' @keywords manip 
+#' @export
 getMaddisonSources <- function(ISO=NULL, plot=TRUE, 
     sources=MaddisonData::MaddisonSources, years=MaddisonData::MaddisonYears){
 ##

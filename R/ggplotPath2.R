@@ -560,6 +560,11 @@ ggplotPath2.default <- function(object, Time, object2, scaley, logy, ylab,
       if(!("component" %in% colnames(Labels))){
         stop("'component' not in names(labels)")
       }
+#      Lblsi <- subset(Labels, component==i)
+# NOTE: ggplotPath2.default: no visible binding for global variable ‘component’      
+#      subsetArgs <- list(x=Labels, component==i)
+#      Lblsi <- do.call(subset, subsetArgs)
+# Error in `ggplotPath2.default()`: ! object 'component' not found     
       Lblsi <- subset(Labels, component==i)
       if(nrow(Lblsi)>0){
         xLout <- ((Lblsi[, 'x'] < xlim[1]) | 

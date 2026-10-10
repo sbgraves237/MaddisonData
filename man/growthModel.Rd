@@ -23,7 +23,7 @@ growthModel(
 \verb{Q[1,2] = Q[2,1] = sqrt((m+1)*choose(m+1,2)*sigma[1]*sigma[2]}.}
 
 \item{y}{= optional numeric vector or \code{ts} object of length at least 2 used
-to estimate the \code{a1} parameter for \code{\link[KFAS:SSModel]{KFAS::SSMcustom()}} if \code{a1} is not
+to estimate the \code{a1} parameter for \code{\link[KFAS:SSMcustom]{KFAS::SSMcustom()}} if \code{a1} is not
 supplied and for \code{Time} if it is not supplied.
 \code{a1 <- (if(Log) log(c(y[1], y[2]/y[1])) else c(y[1], y[2]-y[1]))}.}
 
@@ -38,14 +38,14 @@ or \code{names(y)} if \code{!is.null} or \code{1:length(y)} otherwise.}
 
 \item{Log}{default = TRUE.}
 
-\item{\dots}{optional arguments passed to \code{\link[KFAS:SSModel]{KFAS::SSMcustom()}}.}
+\item{\dots}{optional arguments passed to \code{\link[KFAS:SSMcustom]{KFAS::SSMcustom()}}.}
 }
 \value{
-a list returned by \code{\link[KFAS:SSModel]{KFAS::SSMcustom()}} with an additional \code{Time}
+a list returned by \code{\link[KFAS:SSMcustom]{KFAS::SSMcustom()}} with an additional \code{Time}
 component.
 }
 \description{
-\code{growthModel} returns a list returned by \code{\link[KFAS:SSModel]{KFAS::SSMcustom()}} for a model
+\code{growthModel} returns a list returned by \code{\link[KFAS:SSMcustom]{KFAS::SSMcustom()}} for a model
 with potentially irregularly spaced univariate observations with a
 2-dimensional (\code{level}, \code{growthRate}) state.
 }

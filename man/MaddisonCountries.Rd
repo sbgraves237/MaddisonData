@@ -9,7 +9,11 @@
 
 A data frame with 3 columns:
 \describe{
-\item{ISO}{3-letter ISO country code}
+\item{ISO}{3-letter ISO country code used in the "Maddison original
+sources" tab of the \verb{*.xlsx} Maddison data file. This presumably
+matches
+\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3}{ISO 3166-1 alpha-3},
+but that was not checked in creating this documentation.}
 \item{country}{Country name used by the Maddison project}
 \item{region}{Geographic region including \code{country}}
 }

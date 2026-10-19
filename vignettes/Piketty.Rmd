@@ -1,0 +1,36 @@
+---
+title: "US growth rate 1950 to 1990 to 2020"
+author: "Spencer Graves"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+#output: rmarkdown::word_document
+# output: word_document
+vignette: >
+  %\VignetteIndexEntry{US growth rate 1950 to 1990 to 2020}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Abstract
+
+What do the Maddison Data say about the rate of economic growth in the US between 1950, 1990, and 2020? Thomas Piketty (2021, p. 139) says, "In the United States, the national income per inhabitant rose at a rate ... of 2.2% between 1950 to 1990 when the top tax rate reached on average 72%.  The top rate was then cut in half, with the announced objective of boosting growth.  But in fact, growth fell by half, to 1.1% per annum between 1990 and 2020". 
+
+## Extract the data   
+
+```{r US}
+library(MaddisonData)
+str(US <- subset(MaddisonData, ISO=='USA'))
+(US1950_1990_2020 <- subset(US, year %in% c(1950, 1990, 2020)))
+
+(USdif <- with(US1950_1990_2020, data.frame(
+  Next = tail(gdppc, -1), Last=head(gdppc, -1), dyr=diff(year))))
+(GrowthRt <- with(USdif, (Next/Last)^(1/dyr))-1)
+```
+
+## Bibliography 
+
+Thomas Piketty (2022) *A Brief History of Equality* (Belknap Press)

@@ -62,8 +62,21 @@ getMaddisonSources <- function(ISO=NULL, plot=TRUE,
 ## 1. check ISO
 ## 
   ISO0 <- FALSE 
-  if(is.null(ISO))ISO0 <- TRUE
-  if(NROW(ISO)<1)ISO0 <- TRUE    
+  if(is.null(ISO)){
+    ISO0 <- TRUE
+  } else if(NROW(ISO)<1){ 
+    ISO0 <- TRUE    
+  } else {
+    if(NCOL(ISO)>1){
+      ISO1 <- ISO[, 1, drop=TRUE]
+    } else ISO1 <- ISO
+    In <- (ISO1 %in% MaddisonData::MaddisonData$ISO)
+    if(any(!In)){
+      oops <- paste(ISO1[!In], collapse=', ')
+      notInMsg <- paste('ISO values not in MaddisonData$ISO =\n', oops)
+      stop(notInMsg)
+    }
+  }
   ISOsrc <- data.frame(ISO='', years='1, .., 2022', 
     source=paste('Jutta Bolt and Jan Luiten Van Zanden (2024)', 
         '"Maddison style estimates of the evolution of the world economy:',

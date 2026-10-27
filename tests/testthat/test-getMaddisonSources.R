@@ -58,4 +58,6 @@ test_that("getMaddisonSources", {
 # AUS 
   AUS <- getMaddisonSources('AUS') # AUS: no special sources for AUS. 
   expect_equal(AUS, MDPall[1:3, ])
+# oops
+  expect_error(getMaddisonSources('America'))
 })
